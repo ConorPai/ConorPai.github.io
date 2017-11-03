@@ -87,18 +87,18 @@ duoshuo: false
 wangyiyun: false
 
 #3、畅言
-changyan_appid: 'cytit5AVx'
-changyan_conf: 'prod_6b9097e4eba9365db3b9a2bc61798d2b'
+changyan_appid: false #'cytit5AVx'
+changyan_conf: false #'prod_6b9097e4eba9365db3b9a2bc61798d2b'
 
 #4、Disqus 在hexo根目录的config里也有disqus_shortname字段，优先使用yilia的
 disqus: false
 
 #5、Gitment
-gitment_owner: false      #你的 GitHub ID
-gitment_repo: ''          #存储评论的 repo
+gitment_owner: ConorPai                     #你的 GitHub ID
+gitment_repo: 'ConorPai.github.io'          #存储评论的 repo
 gitment_oauth:
-  client_id: ''           #client ID
-  client_secret: ''       #client secret
+  client_id: 'aac6922172f5d88659e5'           #client ID
+  client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3'       #client secret
 
 # 样式定制 - 一般不需要修改，除非有很强的定制欲望…
 style:
