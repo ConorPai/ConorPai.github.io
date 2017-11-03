@@ -77,7 +77,7 @@ TODO
 ``` bash
 $ ssh-keygen -t rsa -C baiguangnan@163.com
 ```
-2)在用户目录下找到.ssh/id_rsa.pub文件，拷贝其中的内容到GitHub个人设置->SSH and GPG keys->New SSH key中。
+2)在用户目录下找到.ssh/id_rsa.pub文件，用打开文本的方式打开，拷贝其中的内容到GitHub个人设置->SSH and GPG keys->New SSH key中。
 ![设置SSH](confighexo/ssh.png)
 3)验证是否成功
 ``` bash
@@ -98,12 +98,13 @@ $ hexo d
 ## 5.绑定域名
 TODO
 ## 6.博客内容多端同步
-如果需要在多个设备上写博客，就需要将博客源文件进行同步处理，这里推荐使用hexo-git-backup模块，可以将博客源文件上传至Github Pages的分支下。
+如果需要在多个设备上写博客，就需要将博客源文件进行同步处理，这里推荐使用[hexo-git-backup](https://github.com/coneycode/hexo-git-backup)模块，可以将博客源文件上传至Github Pages的分支下。
 **6.1 安装hexo-git-backup模块**
 ``` bash
 $ npm install hexo-git-backup --save
 ```
 **6.2 配置备份位置**
+在`_config.yml`中增加如下配置：
 ![](confighexo/backup.png)
 其中git位置后的backup为分支名称。
 **6.3 备份**
