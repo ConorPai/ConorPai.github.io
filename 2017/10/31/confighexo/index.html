@@ -8,17 +8,21 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>使用Hexo搭建个人博客的详细教程 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.基础环境配置1.1 申请GitHub帐号到GitHub官网注册个人帐号。 1.2 配置node.js1)到Node.js官网下载相应平台的最新版本安装，或者使用系统软件包管理器(Homebrew、apt-get等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。 2)配置淘宝数据源，加快npm模块安装速度1">
+  <meta name="description" content="1.基础环境配置1.1 申请GitHub帐号到GitHub官网注册个人帐号。 1.2 配置node.js1)到Node.js官网下载相应平台的最新版本安装，或者使用系统软件包管理器(Homebrew、apt-get等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。 2)配置淘宝数据源，加快npm模块安装速度。">
 <meta name="keywords" content="hexo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Hexo搭建个人博客的详细教程">
 <meta property="og:url" content="http://yoursite.com/2017/10/31/confighexo/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="1.基础环境配置1.1 申请GitHub帐号到GitHub官网注册个人帐号。 1.2 配置node.js1)到Node.js官网下载相应平台的最新版本安装，或者使用系统软件包管理器(Homebrew、apt-get等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。 2)配置淘宝数据源，加快npm模块安装速度1">
-<meta property="og:updated_time" content="2017-11-01T06:22:51.969Z">
+<meta property="og:description" content="1.基础环境配置1.1 申请GitHub帐号到GitHub官网注册个人帐号。 1.2 配置node.js1)到Node.js官网下载相应平台的最新版本安装，或者使用系统软件包管理器(Homebrew、apt-get等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。 2)配置淘宝数据源，加快npm模块安装速度。">
+<meta property="og:image" content="http://yoursite.com/2017/10/31/confighexo/ssh.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/31/confighexo/deploy.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/31/confighexo/backup.png">
+<meta property="og:updated_time" content="2017-11-03T07:32:28.079Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Hexo搭建个人博客的详细教程">
-<meta name="twitter:description" content="1.基础环境配置1.1 申请GitHub帐号到GitHub官网注册个人帐号。 1.2 配置node.js1)到Node.js官网下载相应平台的最新版本安装，或者使用系统软件包管理器(Homebrew、apt-get等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。 2)配置淘宝数据源，加快npm模块安装速度1">
+<meta name="twitter:description" content="1.基础环境配置1.1 申请GitHub帐号到GitHub官网注册个人帐号。 1.2 配置node.js1)到Node.js官网下载相应平台的最新版本安装，或者使用系统软件包管理器(Homebrew、apt-get等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。 2)配置淘宝数据源，加快npm模块安装速度。">
+<meta name="twitter:image" content="http://yoursite.com/2017/10/31/confighexo/ssh.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -164,21 +168,25 @@
       
         <h2 id="1-基础环境配置"><a href="#1-基础环境配置" class="headerlink" title="1.基础环境配置"></a>1.基础环境配置</h2><p><strong>1.1 申请GitHub帐号</strong><br>到GitHub<a href="https://github.com/" target="_blank" rel="external">官网</a>注册个人帐号。</p>
 <p><strong>1.2 配置node.js</strong><br>1)到Node.js<a href="https://nodejs.org/" target="_blank" rel="external">官网</a>下载相应平台的最新版本安装，或者使用系统软件包管理器(<code>Homebrew</code>、<code>apt-get</code>等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。</p>
-<p>2)配置淘宝数据源，加快npm模块安装速度<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</div></pre></td></tr></table></figure></p>
-<p><strong>1.3 配置git</strong><br>1)安装git<br>2)全局配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git config --global user.email baiguangnan@163.com</div><div class="line">$ git config --global user.name ConorPai</div></pre></td></tr></table></figure></p>
-<p>3)生成密钥，密码设置为空<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C baiguangnan@163.com</div></pre></td></tr></table></figure></p>
+<p>2)配置淘宝数据源，加快npm模块安装速度。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</div></pre></td></tr></table></figure></p>
+<p><strong>1.3 配置git</strong><br>1)安装git。<br>2)全局配置。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git config --global user.email baiguangnan@163.com</div><div class="line">$ git config --global user.name ConorPai</div></pre></td></tr></table></figure></p>
 <p><strong>1.4 安装Hexo</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo</div></pre></td></tr></table></figure></p>
 <h2 id="2-配置Hexo目录"><a href="#2-配置Hexo目录" class="headerlink" title="2.配置Hexo目录"></a>2.配置Hexo目录</h2><p><strong>2.1 命令行进入博客文件存放目录</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkdir myblog</div><div class="line">$ <span class="built_in">cd</span> myblog</div></pre></td></tr></table></figure></p>
 <p><strong>2.2 初始化</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo init</div></pre></td></tr></table></figure></p>
 <p><strong>2.3 安装依赖模块</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install</div></pre></td></tr></table></figure></p>
 <p><strong>2.4 创建新的文章</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"MyNewPost"</span></div></pre></td></tr></table></figure></p>
-<p><strong>2.5 生成博客页面</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo clean 	<span class="comment">#清理之前的缓存</span></div><div class="line">$ hexo g		<span class="comment">#生成博客页面</span></div><div class="line">$ hexo s		<span class="comment">#发布本地服务，访问http://localhost:4000/即可查看</span></div></pre></td></tr></table></figure></p>
+<p><strong>2.5 生成博客页面</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo clean 		<span class="comment">#清理之前的缓存</span></div><div class="line">$ hexo g		<span class="comment">#生成博客页面</span></div><div class="line">$ hexo s		<span class="comment">#发布本地服务，访问http://localhost:4000/即可查看</span></div></pre></td></tr></table></figure></p>
 <p><strong>2.6 修改博客主题</strong><br>目前本博客使用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">yilia</a>主题，配置方式如下：<br>1）下载主题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/litten/hexo-theme-yilia.git themes/yilia</div></pre></td></tr></table></figure></p>
-<p>2）配置主题<br>修改<code>themes/yilia/_config.yml</code>中的各项内容，具体配置可以参考<a href="https://github.com/litten/BlogBackup/blob/master/_config.yml" target="_blank" rel="external">yilia作者博客主题配置</a>及<a href="https://github.com/ConorPai/ConorPai.github.io/blob/backup/themes/yilia/_config.yml" target="_blank" rel="external">本博主题配置</a><br>3）应用主题<br>修改<code>_config.yml</code>中的<code>theme: landscape</code>改为<code>theme: yilia</code><br>4）清理并重新生成<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo g</div></pre></td></tr></table></figure></p>
+<p>2）配置主题<br>修改<code>themes/yilia/_config.yml</code>中的各项内容，具体配置可以参考<a href="https://github.com/litten/BlogBackup/blob/master/_config.yml" target="_blank" rel="external">yilia作者博客主题配置</a>及<a href="https://github.com/ConorPai/ConorPai.github.io/blob/backup/themes/yilia/_config.yml" target="_blank" rel="external">本博主题配置</a>。<br>3）应用主题<br>修改<code>_config.yml</code>中的<code>theme: landscape</code>改为<code>theme: yilia</code>。<br>4）清理并重新生成<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo g</div></pre></td></tr></table></figure></p>
 <h2 id="3-编写博客"><a href="#3-编写博客" class="headerlink" title="3.编写博客"></a>3.编写博客</h2><p>TODO</p>
-<h2 id="4-发布到Github-Pages"><a href="#4-发布到Github-Pages" class="headerlink" title="4.发布到Github Pages"></a>4.发布到Github Pages</h2><p>TODO</p>
+<h2 id="4-发布到Github-Pages"><a href="#4-发布到Github-Pages" class="headerlink" title="4.发布到Github Pages"></a>4.发布到Github Pages</h2><p><strong>4.1 生成本机密钥</strong><br>1)生成密钥，密码设置为空。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C baiguangnan@163.com</div></pre></td></tr></table></figure></p>
+<p>2)在用户目录下找到.ssh/id_rsa.pub文件，拷贝其中的内容到GitHub个人设置-&gt;SSH and GPG keys-&gt;New SSH key中。<br><img src="/2017/10/31/confighexo/ssh.png" alt="设置SSH"><br>3)验证是否成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh -T git@github.com <span class="comment">#注意：邮箱地址不用改</span></div></pre></td></tr></table></figure></p>
+<p><strong>4.2 申请Github Pages</strong><br>新建一个<code>你的用户名.github.io</code>的仓库，比如说我的github用户名是ConorPai，则新建的仓库名称为<code>ConorPai.github.io</code>。<br><strong>4.3 将页面上传至Github</strong><br>1)hexo配置<br>修改<code>_config.yml</code>中有关deploy的部分：<br><img src="/2017/10/31/confighexo/deploy.png" alt=""><br>注意：冒号后边有空格，不加空格上传会出错。<br>2)上传页面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo d</div></pre></td></tr></table></figure></p>
+<p>3)上传之后就可以通过<code>http://你的用户名.github.io</code>进行访问了。</p>
 <h2 id="5-绑定域名"><a href="#5-绑定域名" class="headerlink" title="5.绑定域名"></a>5.绑定域名</h2><p>TODO</p>
-<h2 id="6-博客内容多端同步"><a href="#6-博客内容多端同步" class="headerlink" title="6.博客内容多端同步"></a>6.博客内容多端同步</h2><p>TODO</p>
+<h2 id="6-博客内容多端同步"><a href="#6-博客内容多端同步" class="headerlink" title="6.博客内容多端同步"></a>6.博客内容多端同步</h2><p>如果需要在多个设备上写博客，就需要将博客源文件进行同步处理，这里推荐使用hexo-git-backup模块，可以将博客源文件上传至Github Pages的分支下。<br><strong>6.1 安装hexo-git-backup模块</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-git-backup --save</div></pre></td></tr></table></figure></p>
+<p><strong>6.2 配置备份位置</strong><br><img src="/2017/10/31/confighexo/backup.png" alt=""><br>其中git位置后的backup为分支名称。<br><strong>6.3 备份</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo b</div></pre></td></tr></table></figure></p>
+<p><strong>6.4 续写博客</strong><br>使用该方案目前无法实现从github上更新，所以如果本地的源文件是旧的，需要全部删除从Github的分支上重新下载源文件，使用<code>npm install</code>安装依赖模块之后即可正常编写博客。</p>
 
       
 
