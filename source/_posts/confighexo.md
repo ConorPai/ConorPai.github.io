@@ -69,6 +69,9 @@ $ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia
 $ hexo clean
 $ hexo g
 ```
+5）智能菜单错误处理
+刚配置好的yilia主题智能菜单中的所有文章会有问题，但只要按照提示进行两步处理，再重新生成即可
+
 ## 3.编写博客
 TODO
 ## 4.发布到Github Pages
@@ -90,7 +93,11 @@ $ ssh -T git@github.com #注意：邮箱地址不用改
 修改`_config.yml`中有关deploy的部分：
 ![](confighexo/deploy.png)
 注意：冒号后边有空格，不加空格上传会出错。
-2)上传页面
+2)安装上传模块
+``` bash
+$ npm install hexo-deployer-git --save
+```
+3)上传页面
 ``` bash
 $ hexo d
 ```
