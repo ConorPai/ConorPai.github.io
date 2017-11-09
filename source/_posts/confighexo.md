@@ -104,7 +104,17 @@ $ hexo d
 ```
 3)上传之后就可以通过`http://你的用户名.github.io`进行访问了。
 ## 5.绑定域名
-TODO
+如果拥有自己的域名，可以与Github Pages进行绑定
+###### **5.1 获取Github Pages的IP地址**
+``` bash
+$ ping conorpai.github.io
+```
+![获取IP](confighexo/getip.png)
+###### **5.2 到阿里云控制台配置域名解析**
+![](confighexo/nowww.png)
+![](confighexo/www.png)
+###### **5.3 配置CNAME文件**
+在source目录下新建一个名为CNAME的文件，里面写入域名www.baiguangnan.com，保存并进行上传。经过以上操作后访问域名即可跳转到博客页面。
 ## 6.博客内容多端同步
 如果需要在多个设备上写博客，就需要将博客源文件进行同步处理，这里推荐使用[hexo-git-backup](https://github.com/coneycode/hexo-git-backup)模块，可以将博客源文件上传至Github Pages的分支下。
 ###### **6.1 安装hexo-git-backup模块**
