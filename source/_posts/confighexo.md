@@ -74,6 +74,21 @@ $ hexo g
 刚配置好的yilia主题智能菜单中的所有文章会有问题，但只要按照提示进行两步处理，再重新生成即可
 
 ## 3.编写博客
+###### **3.1 插入图片**
+这里推荐使用[hexo-asset-image](https://github.com/CodeFalling/hexo-asset-image)模块来管理博客图片
+1)安装hexo-asset-image模块
+``` bash
+$ npm install hexo-asset-image --save
+```
+2)设置`_config.yml`中`post_asset_folder: true`
+3)图片存储位置
+新建一个与博客文件同名的文件夹，将该博客使用的图片都放到这个文件夹内
+![图片组织](confighexo/imageassets.png)
+4)在博客内使用图片
+`![获取IP](confighexo/getip.png)`
+###### **3.2 支持评论**
+TODO
+###### **3.3 支持目录**
 TODO
 ## 4.发布到Github Pages
 ###### **4.1 生成本机密钥**
@@ -92,7 +107,7 @@ $ ssh -T git@github.com #注意：邮箱地址不用改
 ###### **4.3 将页面上传至Github**
 1)hexo配置
 修改`_config.yml`中有关deploy的部分：
-![](confighexo/deploy.png)
+![部署](confighexo/deploy.png)
 注意：冒号后边有空格，不加空格上传会出错。
 2)安装上传模块
 ``` bash
@@ -111,8 +126,8 @@ $ ping conorpai.github.io
 ```
 ![获取IP](confighexo/getip.png)
 ###### **5.2 到阿里云控制台配置域名解析**
-![](confighexo/nowww.png)
-![](confighexo/www.png)
+![域名解析](confighexo/nowww.png)
+![域名解析](confighexo/www.png)
 ###### **5.3 配置CNAME文件**
 在source目录下新建一个名为CNAME的文件，里面写入域名www.baiguangnan.com，保存并进行上传。经过以上操作后访问域名即可跳转到博客页面。
 ## 6.博客内容多端同步
@@ -123,7 +138,7 @@ $ npm install hexo-git-backup --save
 ```
 ###### **6.2 配置备份位置**
 在`_config.yml`中增加如下配置：
-![](confighexo/backup.png)
+![备份配置](confighexo/backup.png)
 其中git位置后的backup为分支名称。
 ###### **6.3 备份**
 ``` bash
