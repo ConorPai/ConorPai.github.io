@@ -1,5 +1,5 @@
 ---
-title: 解决自定义控件刷新时闪烁问题
+title: 解决WinForm自定义控件刷新时闪烁问题
 date: 2017-11-14 13:39:04
 tags: C#
 ---
@@ -9,6 +9,19 @@ tags: C#
 自定义地图控件的逻辑是在控件触发OnPaint事件时，将地图内容绘制到控件Graphic上，曾经尝试在OnPaint中做处理，但是没有效果，后来才意识到闪烁的根本原因是控件做了清除操作，变白了再做绘制就会让人感觉到是在闪烁。
 
 在网上找到了这篇文章，[winform控件大小改变是防止背景重绘导致的闪烁](http://www.cnblogs.com/firstdown/p/6420534.html)，在自定义地图控件中重写OnPaintBackground方法后验证此问题得到解决
+
+```cs
+    /// <summary>
+    /// OnPaintBackground 事件
+    /// </summary>
+    /// <param name="e"></param>
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        // 重载基类的背景擦除函数，
+        // 解决窗口刷新，放大，图像闪烁
+        return;
+    }
+```
 
 接下来需要考虑不做清除操作会带来什么问题，比如在图层设置成半透明时，如果不做清屏效果会不会叠加，不做清屏会不会有些不是本次刷新需要显示的内容还残留在地图上等，但是经过验证这些问题都不存在，因为地图的绘制机制会做一个背景填充的操作，效果目前一切正常。
 
