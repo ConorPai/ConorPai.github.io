@@ -86,10 +86,43 @@ $ npm install hexo-asset-image --save
 ![图片组织](confighexo/imageassets.png)
 4)在博客内使用图片
 `![获取IP](confighexo/getip.png)`
-###### **3.2 支持评论**
-TODO
-###### **3.3 支持目录**
-TODO
+###### **3.2 插入音乐**
+浏览器打开网易云音乐，搜索想要的歌曲，点击歌曲名字进入播放器页面，点击“生成外链播放器”。复制到这边就可以了
+```
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=280 height=86 src="https://music.163.com/outchain/player?type=2&id=437292675&auto=0&height=66"></iframe>
+```
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=280 height=86 src="https://music.163.com/outchain/player?type=2&id=437292675&auto=0&height=66"></iframe>
+###### **3.3 插入视频**
+使用iframe标签
+```
+<iframe   
+    height=498 width=510 
+    autoPlay=false 
+    src="https://player.youku.com/embed/XNjcyMDU4Njg0"   
+    frameborder=0 allowfullscreen>  
+</iframe>
+```
+<iframe   
+    height=498 width=510 
+    autoPlay=false 
+    src="https://player.youku.com/embed/XNjcyMDU4Njg0"   
+    frameborder=0 allowfullscreen>  
+</iframe>
+###### **3.4 支持评论**
+yilia主题支持多说、网易云跟贴、畅言、Disqus、Gitment五种评论配置，但是只有畅言和Gitment能用，本博最终选择Gitment做为评论系统，接下来介绍配置流程：
+1）到[Github](https://github.com/settings/applications/new)上创建OAuth Apps
+![创建OAuth Apps](confighexo/gitment.png)
+2）创建之后记录下ClientID和Client Secret
+![记录Client信息](confighexo/clientinfo.png)
+3）修改yilia主题的_config.yml文件
+![配置主题](confighexo/yiliagitment.png)
+###### **3.5 支持目录**
+yilia支持显示文章目录，首先配置yilia主题的_config.yml
+![配置主题](confighexo/tocconfig.png)
+然后在文章的设置中标识显示目录
+![配置文章](confighexo/showtoc.png)
+最终效果
+![最终效果](confighexo/toc.png)
 ## 4.发布到Github Pages
 ###### **4.1 生成本机密钥**
 1)生成密钥，密码设置为空。
