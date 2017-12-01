@@ -193,3 +193,5 @@ public string NetWorkInfo
     }
 }
 ```
+
+还可以获取其它信息，由于工作中没用到就不在这里列出了，具体可以参考源博：[http://www.cnblogs.com/chen110xi/p/6189499.html](http://www.cnblogs.com/chen110xi/p/6189499.html)
