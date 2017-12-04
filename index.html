@@ -142,6 +142,82 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-certificaterequest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/04/certificaterequest/">C#实现带证书http请求</a>
+    </h1>
+  
+
+        
+        <a href="/2017/12/04/certificaterequest/" class="archive-article-date">
+  	<time datetime="2017-12-04T08:01:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用X509Certificates类调用证书<br>1.添加命名空间<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">using</span> System.Security.Cryptography.X509Certificates;</div></pre></td></tr></table></figure></p>
+<p>2.添加验证回调<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">CheckValidationResult</span>(<span class="params"><span class="keyword">object</span> sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors</span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="keyword">if</span> (errors == SslPolicyErrors.None)</div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>3.实现带请书http请求<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//配置证书回调方法</span></div><div class="line">ServicePointManager.ServerCertificateValidationCallback = <span class="keyword">new</span> RemoteCertificateValidationCallback(CheckValidationResult);</div><div class="line"></div><div class="line"><span class="comment">//配置请求</span></div><div class="line">HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sUrl);</div><div class="line">request.Method = <span class="string">"POST"</span>;</div><div class="line">X509Certificate objx509 = <span class="keyword">new</span> X509Certificate(Application.StartupPath + <span class="string">"\\ForestarAuth.cer"</span>);	<span class="comment">//可以在第二个参数中传入证书密码</span></div><div class="line">request.ClientCertificates.Add(objx509);</div><div class="line"></div><div class="line"><span class="comment">//获取请求结果</span></div><div class="line">HttpWebResponse res = (HttpWebResponse)request.GetResponse();</div><div class="line"><span class="keyword">if</span> (res.StatusCode != HttpStatusCode.OK)</div><div class="line">&#123;</div><div class="line">    response = <span class="string">"连接错误，状态码："</span> + res.StatusCode.ToString();</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//读取请求结果</span></div><div class="line">Stream resStream = res.GetResponseStream();</div><div class="line">StreamReader sReader = <span class="keyword">new</span> StreamReader(resStream, Encoding.GetEncoding(<span class="string">"utf-8"</span>));</div><div class="line"><span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">256</span>];</div><div class="line"><span class="keyword">int</span> count = sReader.Read(buffer, <span class="number">0</span>, <span class="number">256</span>);</div><div class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line"><span class="keyword">while</span> (count &gt; <span class="number">0</span>)</div><div class="line">&#123;</div><div class="line">    String sTemp = <span class="keyword">new</span> String(buffer, <span class="number">0</span>, count);</div><div class="line">    sb.Append(sTemp);</div><div class="line">    count = sReader.Read(buffer, <span class="number">0</span>, <span class="number">256</span>);</div><div class="line">&#125;</div><div class="line">response = sb.ToString();</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/12/04/certificaterequest/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-getsysteminfo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -505,11 +581,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
             
             <div class="clearfix"></div>
