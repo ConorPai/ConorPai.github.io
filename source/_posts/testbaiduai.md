@@ -19,4 +19,6 @@ tags: 机器学习
 ![定制识别](testbaiduai/custom.png)
 等待审核
 ![等待审核](testbaiduai/customdone.png)
+审核成功
+![审核成功](testbaiduai/customservice.png)
 
