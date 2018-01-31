@@ -1,10 +1,10 @@
 ---
-title: Ubuntu下安装Postgresql和PostGIS
+title: Ubuntu下安装PostgreSQL和PostGIS
 date: 2018-01-31 11:24:45
 tags: PostGIS
 ---
 
-### 1.安装Postgresql
+### 1.安装PostgreSQL
 使用如下命令，会自动安装最新版，这里为9.5
 ```bash
 sudo apt-get install postgresql
