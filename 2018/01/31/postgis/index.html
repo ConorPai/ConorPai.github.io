@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/6.png">
 <meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/7.png">
 <meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/8.png">
-<meta property="og:updated_time" content="2018-01-31T04:34:14.159Z">
+<meta property="og:updated_time" content="2018-01-31T06:45:32.977Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu下安装Postgresql和PostGIS">
 <meta name="twitter:description" content="1.安装Postgresql使用如下命令，会自动安装最新版，这里为9.51sudo apt-get install postgresql 安装完成后，默认会：（1）创建名为”postgres”的Linux用户（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员（3）创建名为”postgres”的表 安装完成后的一些默认信息如下:12345config /etc/postgr">
@@ -186,10 +186,9 @@
 <p>安装完成后启动程序<br><img src="/2018/01/31/postgis/5.png" alt="5"><br>添加服务器<br><img src="/2018/01/31/postgis/6.png" alt="6"><br><img src="/2018/01/31/postgis/7.png" alt="7"></p>
 <h3 id="5-安装PostGIS"><a href="#5-安装PostGIS" class="headerlink" title="5.安装PostGIS"></a>5.安装PostGIS</h3><p>首先使用如下命令添加UbuntuGIS的PPA用于安装PostGIS扩展<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:ubuntugis/ppa</div><div class="line">sudo apt-get update</div></pre></td></tr></table></figure></p>
 <p>然后使用如下命令安装PostGIS<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgis</div></pre></td></tr></table></figure></p>
-<h3 id="6-数据库扩展PostGIS"><a href="#6-数据库扩展PostGIS" class="headerlink" title="6.数据库扩展PostGIS"></a>6.数据库扩展PostGIS</h3><p>执行命令<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION PostGIS</div></pre></td></tr></table></figure></p>
+<h3 id="6-数据库扩展PostGIS"><a href="#6-数据库扩展PostGIS" class="headerlink" title="6.数据库扩展PostGIS"></a>6.数据库扩展PostGIS</h3><p>执行SQL语句<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION PostGIS</div></pre></td></tr></table></figure></p>
 <p>成功后刷新，数据表中会出现spatial_ref_sys，说明扩展成功<br><img src="/2018/01/31/postgis/8.png" alt="8"></p>
-<p>###下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据</p>
-
+<h3 id="下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据"><a href="#下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据" class="headerlink" title="下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据"></a>下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据</h3>
       
 
       
@@ -424,15 +423,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
             
             <div class="clearfix"></div>
