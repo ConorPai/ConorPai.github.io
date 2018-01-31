@@ -79,4 +79,4 @@ CREATE EXTENSION PostGIS
 成功后刷新，数据表中会出现spatial_ref_sys，说明扩展成功
 ![8](postgis/8.png)
 
-### 下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据
+### 下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。
