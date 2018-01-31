@@ -72,11 +72,11 @@ sudo apt-get update
 sudo apt-get install postgis
 ```
 ### 6.数据库扩展PostGIS
-执行命令
+执行SQL语句
 ```sql
 CREATE EXTENSION PostGIS
 ```
 成功后刷新，数据表中会出现spatial_ref_sys，说明扩展成功
 ![8](postgis/8.png)
 
-###下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据
+### 下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据
