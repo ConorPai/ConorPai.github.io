@@ -149,7 +149,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/31/postgis/">Ubuntu下安装Postgresql和PostGIS</a>
+      <a class="article-title" href="/2018/01/31/postgis/">Ubuntu下安装PostgreSQL和PostGIS</a>
     </h1>
   
 
@@ -162,7 +162,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="1-安装Postgresql"><a href="#1-安装Postgresql" class="headerlink" title="1.安装Postgresql"></a>1.安装Postgresql</h3><p>使用如下命令，会自动安装最新版，这里为9.5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgresql</div></pre></td></tr></table></figure></p>
+        <h3 id="1-安装PostgreSQL"><a href="#1-安装PostgreSQL" class="headerlink" title="1.安装PostgreSQL"></a>1.安装PostgreSQL</h3><p>使用如下命令，会自动安装最新版，这里为9.5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgresql</div></pre></td></tr></table></figure></p>
 <p><img src="/2018/01/31/postgis/1.png" alt="1"><br>安装完成后，默认会：<br>（1）创建名为”postgres”的Linux用户<br>（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员<br>（3）创建名为”postgres”的表</p>
 <p>安装完成后的一些默认信息如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config /etc/postgresql/9.5/main</div><div class="line">data /var/lib/postgresql/9.5/main</div><div class="line">locale en_US.UTF-8</div><div class="line">socket /var/run/postgresql</div><div class="line">port 5432</div></pre></td></tr></table></figure></p>
 <h3 id="2-修改数据库默认帐号的密码"><a href="#2-修改数据库默认帐号的密码" class="headerlink" title="2.修改数据库默认帐号的密码"></a>2.修改数据库默认帐号的密码</h3><p>安装完后会有PostgreSQL的客户端psql，通过 sudo -u postgres psql 进入<br><img src="/2018/01/31/postgis/2.png" alt="2"><br>执行密码更新语句，注意语句后边的分号，不带分号执行不成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">postgres=<span class="comment"># alter user postgres with password '新密码';</span></div></pre></td></tr></table></figure></p>
@@ -833,15 +833,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
             
             <div class="clearfix"></div>
