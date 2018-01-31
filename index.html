@@ -142,6 +142,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-postgis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/31/postgis/">Ubuntu下安装Postgresql和PostGIS</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/31/postgis/" class="archive-article-date">
+  	<time datetime="2018-01-31T03:24:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-31</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>###1.安装Postgresql<br>使用如下命令，会自动安装最新版，这里为9.5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgresql</div></pre></td></tr></table></figure></p>
+<p><img src="/2018/01/31/postgis/testpostgis/1.png" alt="1"><br>安装完成后，默认会：<br>（1）创建名为”postgres”的Linux用户<br>（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员<br>（3）创建名为”postgres”的表</p>
+<p>安装完成后的一些默认信息如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config /etc/postgresql/9.5/main</div><div class="line">data /var/lib/postgresql/9.5/main</div><div class="line">locale en_US.UTF-8</div><div class="line">socket /var/run/postgresql</div><div class="line">port 5432</div></pre></td></tr></table></figure></p>
+<p>###2.修改数据库默认帐号的密码<br>安装完后会有PostgreSQL的客户端psql，通过 sudo -u postgres psql 进入<br><img src="/2018/01/31/postgis/testpostgis/2.png" alt="2"><br>执行密码更新语句，注意语句后边的分号，不带分号执行不成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">postgres=<span class="comment"># alter user postgres with password '新密码';</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2018/01/31/postgis/testpostgis/3.png" alt="3"><br>输入“\q”命令退出psql客户端<br><img src="/2018/01/31/postgis/testpostgis/4.png" alt="4"></p>
+<p>###3.配置数据库以允许远程连接访问<br>安装完成后，默认只能本地才能连接数据库，其他机子访问不了，需要进行配置。</p>
+<p>1)修改监听地址<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gedit /etc/postgresql/9.5/main/postgresql.conf</div></pre></td></tr></table></figure></p>
+<p>将 #listen_addresses = ‘localhost’ 的注释去掉并改为 listen_addresses = ‘*’</p>
+<p>2)修改可访问用户的IP段<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gedit /etc/postgresql/9.5/main/pg_hba.conf</div></pre></td></tr></table></figure></p>
+<p>在文件末尾添加： host all all 0.0.0.0 0.0.0.0 md5 ，表示运行任何IP连接</p>
+<p>3)重启数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /etc/init.d/postgresql restart</div></pre></td></tr></table></figure></p>
+<p>###4.安装图形管理界面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install pgadmin3</div></pre></td></tr></table></figure></p>
+<p>安装完成后启动程序<br><img src="/2018/01/31/postgis/testpostgis/5.png" alt="5"><br>添加服务器<br><img src="/2018/01/31/postgis/testpostgis/6.png" alt="6"><br><img src="/2018/01/31/postgis/testpostgis/7.png" alt="7"></p>
+<p>###5.安装PostGIS<br>首先使用如下命令添加UbuntuGIS的PPA用于安装PostGIS扩展<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:ubuntugis/ppa</div><div class="line">sudo apt-get update</div></pre></td></tr></table></figure></p>
+<p>然后使用如下命令安装PostGIS<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgis</div></pre></td></tr></table></figure></p>
+<p>###6.数据库扩展PostGIS<br>执行命令<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION PostGIS</div></pre></td></tr></table></figure></p>
+<p>成功后刷新，数据表中会出现spatial_ref_sys，说明扩展成功<br><img src="/2018/01/31/postgis/testpostgis/8.png" alt="8"></p>
+<p>###下一篇将介绍使用QGIS向Postgresql中导入以及显示Shapefile数据</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/31/postgis/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-api-ms-win-crt-runtime-l1-1-0" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -748,6 +839,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
             
             <div class="clearfix"></div>
