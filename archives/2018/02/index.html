@@ -6,28 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Ubuntu下安装PostgreSQL和PostGIS | ConorPai的博客</title>
+  <title>Archives: 2018/2 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.安装PostgreSQL使用如下命令，会自动安装最新版，这里为9.51sudo apt-get install postgresql 安装完成后，默认会：（1）创建名为”postgres”的Linux用户（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员（3）创建名为”postgres”的表 安装完成后的一些默认信息如下:12345config /etc/postgr">
-<meta name="keywords" content="PostGIS">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu下安装PostgreSQL和PostGIS">
-<meta property="og:url" content="http://yoursite.com/2018/01/31/postgis/index.html">
+  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ConorPai的博客">
+<meta property="og:url" content="http://yoursite.com/archives/2018/02/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="1.安装PostgreSQL使用如下命令，会自动安装最新版，这里为9.51sudo apt-get install postgresql 安装完成后，默认会：（1）创建名为”postgres”的Linux用户（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员（3）创建名为”postgres”的表 安装完成后的一些默认信息如下:12345config /etc/postgr">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/1.png">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/2.png">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/3.png">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/4.png">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/5.png">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/6.png">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/7.png">
-<meta property="og:image" content="http://yoursite.com/2018/01/31/postgis/8.png">
-<meta property="og:updated_time" content="2018-01-31T06:57:10.579Z">
+<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ubuntu下安装PostgreSQL和PostGIS">
-<meta name="twitter:description" content="1.安装PostgreSQL使用如下命令，会自动安装最新版，这里为9.51sudo apt-get install postgresql 安装完成后，默认会：（1）创建名为”postgres”的Linux用户（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员（3）创建名为”postgres”的表 安装完成后的一些默认信息如下:12345config /etc/postgr">
-<meta name="twitter:image" content="http://yoursite.com/2018/01/31/postgis/1.png">
+<meta name="twitter:title" content="ConorPai的博客">
+<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
   
   
     <link rel="icon" href="/favicon.png">
@@ -151,51 +140,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-postgis" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      Ubuntu下安装PostgreSQL和PostGIS
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2018/02/01/postgisshapefile/" class="archive-article-date">
+  	<time datetime="2018-02-01T02:05:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-01</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2018/02/01/postgisshapefile/">使用QGIS向PostGIS中导入Shapefile数据</a>
     </h1>
   
 
-        
-        <a href="/2018/01/31/postgis/" class="archive-article-date">
-  	<time datetime="2018-01-31T03:24:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-31</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-安装PostgreSQL"><a href="#1-安装PostgreSQL" class="headerlink" title="1.安装PostgreSQL"></a>1.安装PostgreSQL</h3><p>使用如下命令，会自动安装最新版，这里为9.5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgresql</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/01/31/postgis/1.png" alt="1"><br>安装完成后，默认会：<br>（1）创建名为”postgres”的Linux用户<br>（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员<br>（3）创建名为”postgres”的表</p>
-<p>安装完成后的一些默认信息如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config /etc/postgresql/9.5/main</div><div class="line">data /var/lib/postgresql/9.5/main</div><div class="line">locale en_US.UTF-8</div><div class="line">socket /var/run/postgresql</div><div class="line">port 5432</div></pre></td></tr></table></figure></p>
-<h3 id="2-修改数据库默认帐号的密码"><a href="#2-修改数据库默认帐号的密码" class="headerlink" title="2.修改数据库默认帐号的密码"></a>2.修改数据库默认帐号的密码</h3><p>安装完后会有PostgreSQL的客户端psql，通过 sudo -u postgres psql 进入<br><img src="/2018/01/31/postgis/2.png" alt="2"><br>执行密码更新语句，注意语句后边的分号，不带分号执行不成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">postgres=<span class="comment"># alter user postgres with password '新密码';</span></div></pre></td></tr></table></figure></p>
-<p><img src="/2018/01/31/postgis/3.png" alt="3"><br>输入“\q”命令退出psql客户端<br><img src="/2018/01/31/postgis/4.png" alt="4"></p>
-<h3 id="3-配置数据库以允许远程连接访问"><a href="#3-配置数据库以允许远程连接访问" class="headerlink" title="3.配置数据库以允许远程连接访问"></a>3.配置数据库以允许远程连接访问</h3><p>安装完成后，默认只能本地才能连接数据库，其他机子访问不了，需要进行配置。</p>
-<p>1)修改监听地址<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gedit /etc/postgresql/9.5/main/postgresql.conf</div></pre></td></tr></table></figure></p>
-<p>将 #listen_addresses = ‘localhost’ 的注释去掉并改为 listen_addresses = ‘*’</p>
-<p>2)修改可访问用户的IP段<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gedit /etc/postgresql/9.5/main/pg_hba.conf</div></pre></td></tr></table></figure></p>
-<p>在文件末尾添加： host all all 0.0.0.0 0.0.0.0 md5 ，表示运行任何IP连接</p>
-<p>3)重启数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /etc/init.d/postgresql restart</div></pre></td></tr></table></figure></p>
-<h3 id="4-安装图形管理界面"><a href="#4-安装图形管理界面" class="headerlink" title="4.安装图形管理界面"></a>4.安装图形管理界面</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install pgadmin3</div></pre></td></tr></table></figure>
-<p>安装完成后启动程序<br><img src="/2018/01/31/postgis/5.png" alt="5"><br>添加服务器<br><img src="/2018/01/31/postgis/6.png" alt="6"><br><img src="/2018/01/31/postgis/7.png" alt="7"></p>
-<h3 id="5-安装PostGIS"><a href="#5-安装PostGIS" class="headerlink" title="5.安装PostGIS"></a>5.安装PostGIS</h3><p>首先使用如下命令添加UbuntuGIS的PPA用于安装PostGIS扩展<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:ubuntugis/ppa</div><div class="line">sudo apt-get update</div></pre></td></tr></table></figure></p>
-<p>然后使用如下命令安装PostGIS<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgis</div></pre></td></tr></table></figure></p>
-<h3 id="6-数据库扩展PostGIS"><a href="#6-数据库扩展PostGIS" class="headerlink" title="6.数据库扩展PostGIS"></a>6.数据库扩展PostGIS</h3><p>执行SQL语句<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION PostGIS</div></pre></td></tr></table></figure></p>
-<p>成功后刷新，数据表中会出现spatial_ref_sys，说明扩展成功<br><img src="/2018/01/31/postgis/8.png" alt="8"></p>
-<h3 id="下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。"><a href="#下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。" class="headerlink" title="下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。"></a>下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -207,131 +181,19 @@
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/01/31/postgis/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/02/01/postgisshapefile/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          使用QGIS向PostGIS中导入Shapefile数据
-        
-      </div>
-    </a>
   
   
-    <a href="/2018/01/17/api-ms-win-crt-runtime-l1-1-0/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">解决python 3.6.4版本在windows系统上运行报错api-ms-win-crt-runtime-l1-1-0.dll丢失的问题</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
-  <div id="gitment-ctn"></div> 
-<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
-<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  id: "http://yoursite.com/2018/01/31/postgis/",
-  owner: 'ConorPai',
-  repo: 'ConorPai.github.io',
-  oauth: {
-    client_id: 'aac6922172f5d88659e5',
-    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
-  },
-})
-gitment.render('gitment-ctn')
-</script>
-  
+    
 
 
           </div>
@@ -354,8 +216,8 @@ gitment.render('gitment-ctn')
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
