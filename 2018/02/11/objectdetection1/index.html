@@ -6,34 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>使用QGIS向PostGIS中导入Shapefile数据 | ConorPai的博客</title>
+  <title>使用TensorFlow进行目标识别(一)——数据处理 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层2.创建PostGIS连接3.测试连接是否正常4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据5.找到刚刚添加的PostGIS连接6.使用导入功能7.导入Shapefile数据8.导入成功9.刷新PostGIS连接，查看导入数据10.使用pgAdmin查看导入数据11.再次使用添加PostGIS图层功能12.">
-<meta name="keywords" content="PostGIS">
+  <meta name="description" content="最近支付宝集福卡活动和抖音小年抢红包活动都是应用了手掌识别技术，所以我也想使用TensorFlow的object detection实现一个自己的手掌识别。 1.下载手掌图片从Hand Images Databases中下载手掌图片。这里面有两种手掌图片，一种是mobile hand images database (MOHI)，即通过手机摄像头拍摄的图片，清晰度比较高，图片大小比较大；另一种是w">
+<meta name="keywords" content="机器学习,tensorflow,object detection">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用QGIS向PostGIS中导入Shapefile数据">
-<meta property="og:url" content="http://yoursite.com/2018/02/01/postgisshapefile/index.html">
+<meta property="og:title" content="使用TensorFlow进行目标识别(一)——数据处理">
+<meta property="og:url" content="http://yoursite.com/2018/02/11/objectdetection1/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层2.创建PostGIS连接3.测试连接是否正常4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据5.找到刚刚添加的PostGIS连接6.使用导入功能7.导入Shapefile数据8.导入成功9.刷新PostGIS连接，查看导入数据10.使用pgAdmin查看导入数据11.再次使用添加PostGIS图层功能12.">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/1.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/2.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/3.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/4.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/5.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/6.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/7.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/8.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/9.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/10.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/11.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/12.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/13.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/14.png">
-<meta property="og:updated_time" content="2018-02-01T02:23:17.325Z">
+<meta property="og:description" content="最近支付宝集福卡活动和抖音小年抢红包活动都是应用了手掌识别技术，所以我也想使用TensorFlow的object detection实现一个自己的手掌识别。 1.下载手掌图片从Hand Images Databases中下载手掌图片。这里面有两种手掌图片，一种是mobile hand images database (MOHI)，即通过手机摄像头拍摄的图片，清晰度比较高，图片大小比较大；另一种是w">
+<meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/4.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/5.png">
+<meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/6.png">
+<meta property="og:updated_time" content="2018-02-11T06:27:09.050Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用QGIS向PostGIS中导入Shapefile数据">
-<meta name="twitter:description" content="1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层2.创建PostGIS连接3.测试连接是否正常4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据5.找到刚刚添加的PostGIS连接6.使用导入功能7.导入Shapefile数据8.导入成功9.刷新PostGIS连接，查看导入数据10.使用pgAdmin查看导入数据11.再次使用添加PostGIS图层功能12.">
-<meta name="twitter:image" content="http://yoursite.com/2018/02/01/postgisshapefile/1.png">
+<meta name="twitter:title" content="使用TensorFlow进行目标识别(一)——数据处理">
+<meta name="twitter:description" content="最近支付宝集福卡活动和抖音小年抢红包活动都是应用了手掌识别技术，所以我也想使用TensorFlow的object detection实现一个自己的手掌识别。 1.下载手掌图片从Hand Images Databases中下载手掌图片。这里面有两种手掌图片，一种是mobile hand images database (MOHI)，即通过手机摄像头拍摄的图片，清晰度比较高，图片大小比较大；另一种是w">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/11/objectdetection1/1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -157,27 +149,31 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-postgisshapefile" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-objectdetection1" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      使用QGIS向PostGIS中导入Shapefile数据
+      使用TensorFlow进行目标识别(一)——数据处理
     </h1>
   
 
         
-        <a href="/2018/02/01/postgisshapefile/" class="archive-article-date">
-  	<time datetime="2018-02-01T02:05:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-01</time>
+        <a href="/2018/02/11/objectdetection1/" class="archive-article-date">
+  	<time datetime="2018-02-11T05:37:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-11</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层<br><img src="/2018/02/01/postgisshapefile/1.png" alt="1"><br>2.创建PostGIS连接<br><img src="/2018/02/01/postgisshapefile/2.png" alt="1"><br>3.测试连接是否正常<br><img src="/2018/02/01/postgisshapefile/3.png" alt="1"><br>4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据<br><img src="/2018/02/01/postgisshapefile/4.png" alt="1"><br>5.找到刚刚添加的PostGIS连接<br><img src="/2018/02/01/postgisshapefile/5.png" alt="1"><br>6.使用导入功能<br><img src="/2018/02/01/postgisshapefile/6.png" alt="1"><br>7.导入Shapefile数据<br><img src="/2018/02/01/postgisshapefile/7.png" alt="1"><br>8.导入成功<br><img src="/2018/02/01/postgisshapefile/8.png" alt="1"><br>9.刷新PostGIS连接，查看导入数据<br><img src="/2018/02/01/postgisshapefile/9.png" alt="1"><br>10.使用pgAdmin查看导入数据<br><img src="/2018/02/01/postgisshapefile/10.png" alt="1"><br>11.再次使用添加PostGIS图层功能<br><img src="/2018/02/01/postgisshapefile/11.png" alt="1"><br>12.添加完成<br><img src="/2018/02/01/postgisshapefile/12.png" alt="1"><br>13.采编数据<br><img src="/2018/02/01/postgisshapefile/13.png" alt="1"><br>14.录入属性<br><img src="/2018/02/01/postgisshapefile/14.png" alt="1"></p>
+        <p>最近支付宝集福卡活动和抖音小年抢红包活动都是应用了手掌识别技术，所以我也想使用TensorFlow的object detection实现一个自己的手掌识别。</p>
+<p>1.下载手掌图片<br>从<a href="https://www.mutah.edu.jo/biometrix/hand-images-databases.html" target="_blank" rel="noopener">Hand Images Databases</a>中下载手掌图片。<br>这里面有两种手掌图片，一种是mobile hand images database (MOHI)，即通过手机摄像头拍摄的图片，清晰度比较高，图片大小比较大；另一种是webcam hand images database (WEHI)，即通过网络摄 像头拍摄的图片，清晰度一般，图片大小比较小。</p>
+<p>因为总的图片比较多，所以这里进行了拆分，两类图片都有3个Session，每个Session有4个Group，每个Group里面有50个人的手掌图片，每个人有5张图片。</p>
+<p>将下载后的图片解压到Images目录下。<br>2.数据集标注<br>因为TensorFlow的object detection训练使用的数据集为TFRecord格式，需要对数据集进行标注及处理。<br>首先使用<a href="https://github.com/tzutalin/labelImg" target="_blank" rel="noopener">LabelImg</a>工具对图片中手掌的具体位置进行标注。下载Linux版LabelImg标注工具，解压后直接运行labelImg<br><img src="/2018/02/11/objectdetection1/1.png" alt=""><br>打开Images目录<br><img src="/2018/02/11/objectdetection1/2.png" alt=""><br>使用Create RectBox功能拉框标注手掌所在区域<br><img src="/2018/02/11/objectdetection1/3.png" alt=""><br>编辑标注<br><img src="/2018/02/11/objectdetection1/4.png" alt=""><br>如果对框选区域不满意还可以进行编辑<br><img src="/2018/02/11/objectdetection1/5.png" alt=""><br>将标注结果xml保存到Images/xmls目录下，注意保存路径中不能包含中文，否则保存不成功<br><img src="/2018/02/11/objectdetection1/6.png" alt=""></p>
+<p>待续…</p>
 
       
 
@@ -191,7 +187,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">机器学习,tensorflow,object detection</a>
         		</li>
       		
 		</ul>
@@ -247,7 +243,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/02/01/postgisshapefile/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/02/11/objectdetection1/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -261,18 +257,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/02/11/objectdetection1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          使用TensorFlow进行目标识别(一)——数据处理
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/01/31/postgis/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Ubuntu下安装PostgreSQL和PostGIS</div>
+    <a href="/2018/02/01/postgisshapefile/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">使用QGIS向PostGIS中导入Shapefile数据</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -311,7 +298,7 @@
 <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
-  id: "http://yoursite.com/2018/02/01/postgisshapefile/",
+  id: "http://yoursite.com/2018/02/11/objectdetection1/",
   owner: 'ConorPai',
   repo: 'ConorPai.github.io',
   oauth: {
