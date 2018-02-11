@@ -1,10 +1,12 @@
 ---
 title: 使用TensorFlow进行目标识别(一)——数据处理
 date: 2018-02-11 13:37:57
-tags: 机器学习, tensorflow, object detection
+tags: 机器学习
 ---
 
 最近支付宝集福卡活动和抖音小年抢红包活动都是应用了手掌识别技术，所以我也想使用TensorFlow的object detection实现一个自己的手掌识别。
+![](objectdetection1/zhifubao.jpg)
+![](objectdetection1/douyin.jpg)
 
 1.下载手掌图片
 从[Hand Images Databases](https://www.mutah.edu.jo/biometrix/hand-images-databases.html)中下载手掌图片。
