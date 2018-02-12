@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/4.png">
 <meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/5.png">
 <meta property="og:image" content="http://yoursite.com/2018/02/11/objectdetection1/6.png">
-<meta property="og:updated_time" content="2018-02-12T03:14:56.130Z">
+<meta property="og:updated_time" content="2018-02-12T09:02:44.104Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用TensorFlow进行目标识别(一)——数据处理及训练前准备">
 <meta name="twitter:description" content="最近支付宝集福卡活动和抖音小年抢红包活动都是应用了手掌识别技术，所以我也想使用TensorFlow的object detection实现一个自己的手掌识别。 1.下载手掌图片从Hand Images Databases中下载手掌图片。这里面有两种手掌图片，一种是mobile hand images database (MOHI)，即通过手机摄像头拍摄的图片，清晰度比较高，图片大小比较大；另一种是w">
@@ -183,7 +183,7 @@
 <p>接下来的脚本需要tensorflow环境和object_detection_api，这些环境配置将在下一节介绍。<br>调用generate_tfrecord.py(也可以修改代码)，注意要指定–csv_input与–output_path这两个参数。执行下面命令即可生成TFRecord文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python generate_tfrecord.py --csv_input=Images/xmls/hand.csv --output_path=hand.record</div></pre></td></tr></table></figure></p>
 <p>注意一下这个脚本里有两个写死的地方，一个是90行的那个path，即图片所在目录，代码里写死会在当前目录下images文件夹中查找，如果图片目录有变化这里要进行修改；另一个是class_text_to_int方法，这里会把目标类型文本转成数字，本例中需要将raccon改为hand，如果是多目标需要在里面加分支。</p>
 <p>再仿照models/research/object_detection/data/pet_label_map.pbtxt创建hand.pbtxt。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">item &#123;</div><div class="line">  id: 1</div><div class="line">  name: &apos;hand&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>准备的成果是hand.pbtxt和hand.record。</p>
+<p>准备的成果是hand.pbtxt和hand.record，再按照上述方法准备一套用于验证的TFRecord。</p>
 
       
 
