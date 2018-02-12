@@ -22,9 +22,15 @@ tags: 机器学习
 ```bash
 python object_detection/train.py \
 --logtostderr \
---pipeline_config_path=training/faster_rcnn_inception_v2_coco.config \
---train_dir=training/trainingresult
+--pipeline_config_path=/home/paiconor/object-detection/training/faster_rcnn_resnet101_coco.config \
+--train_dir=/home/paiconor/object-detection/training/trainingresult
 ```
 
 实践证明不能用MOHI做训练。。16G内存不够霍霍的。。
 ![](objectdetection2/2.png)
+
+训练过程中可以使用TensorBoard进行监控，指令如下：
+```bash
+tensorboard --logdir=/home/paiconor/object-detection/training/trainingresult
+```
+![](objectdetection2/3.png)

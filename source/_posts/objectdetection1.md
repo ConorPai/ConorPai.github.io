@@ -94,4 +94,4 @@ item {
 }
 ```
 
-准备的成果是hand.pbtxt和hand.record。
+准备的成果是hand.pbtxt和hand.record，再按照上述方法准备一套用于验证的TFRecord。
