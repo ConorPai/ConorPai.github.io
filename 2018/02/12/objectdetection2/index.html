@@ -17,7 +17,7 @@
 <meta property="og:description" content="经过上一节数据准备之后，开始进行配置训练和目标识别 1.配置object detection模型下载Models源码根据object detection安装指引进行配置安装 2.下载并配置COCO数据集预训练模型下载官方文档中提到的COCO-pretrained Faster R-CNN with Resnet-101 model模型，解压之后，将model.ckpt开头的三个文件拷贝到训练目录下">
 <meta property="og:image" content="http://yoursite.com/2018/02/12/objectdetection2/1.png">
 <meta property="og:image" content="http://yoursite.com/2018/02/12/objectdetection2/2.png">
-<meta property="og:updated_time" content="2018-02-12T07:45:39.887Z">
+<meta property="og:updated_time" content="2018-02-12T07:49:36.544Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用TensorFlow进行目标识别(二)——训练和识别">
 <meta name="twitter:description" content="经过上一节数据准备之后，开始进行配置训练和目标识别 1.配置object detection模型下载Models源码根据object detection安装指引进行配置安装 2.下载并配置COCO数据集预训练模型下载官方文档中提到的COCO-pretrained Faster R-CNN with Resnet-101 model模型，解压之后，将model.ckpt开头的三个文件拷贝到训练目录下">
@@ -167,7 +167,7 @@
       
         <p>经过上一节数据准备之后，开始进行配置训练和目标识别</p>
 <p>1.配置object detection模型<br>下载<a href="https://github.com/tensorflow/models" target="_blank" rel="noopener">Models源码</a><br>根据<a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md" target="_blank" rel="noopener">object detection安装指引</a>进行配置安装</p>
-<p>2.下载并配置COCO数据集预训练模型<br>下载<a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md" target="_blank" rel="noopener">官方文档</a>中提到的<a href="http://storage.googleapis.com/download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_11_06_2017.tar.gz" target="_blank" rel="noopener">COCO-pretrained Faster R-CNN with Resnet-101 model</a>模型，解压之后，将model.ckpt开头的三个文件拷贝到训练目录下。<br>拷贝models/research/object_detection/samples/configs/faster_rcnn_inception_v2_coco.config文件到训练目录下。<br>修改faster_rcnn_inception_v2_coco.config文件：<br>1）将num_classes改为1，本例中只有一个分类<br>2）将所有PATH_TO_BE_CONFIGURED改为本机路径，共5处<br><img src="/2018/02/12/objectdetection2/1.png" alt=""></p>
+<p>2.下载并配置COCO数据集预训练模型<br>下载<a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md" target="_blank" rel="noopener">官方文档</a>中提到的<a href="http://storage.googleapis.com/download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_11_06_2017.tar.gz" target="_blank" rel="noopener">COCO-pretrained Faster R-CNN with Resnet-101 model</a>模型，解压之后，将model.ckpt开头的三个文件拷贝到训练目录下。<br>拷贝models/research/object_detection/samples/configs/faster_rcnn_resnet101_coco.config文件到训练目录下。<br>修改faster_rcnn_resnet101_coco.config文件：<br>1）将num_classes改为1，本例中只有一个分类<br>2）将所有PATH_TO_BE_CONFIGURED改为本机路径，共5处<br><img src="/2018/02/12/objectdetection2/1.png" alt=""></p>
 <p>然后执行脚本进行训练<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">python object_detection/train.py \</div><div class="line">--logtostderr \</div><div class="line">--pipeline_config_path=training/faster_rcnn_inception_v2_coco.config \</div><div class="line">--train_dir=training/trainingresult</div></pre></td></tr></table></figure></p>
 <p>实践证明不能用MOHI做训练。。16G内存不够霍霍的。。<br><img src="/2018/02/12/objectdetection2/2.png" alt=""></p>
 
