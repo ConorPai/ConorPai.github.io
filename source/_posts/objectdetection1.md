@@ -1,5 +1,5 @@
 ---
-title: 使用TensorFlow进行目标识别(一)——数据处理
+title: 使用TensorFlow进行目标识别(一)——数据处理及训练前准备
 date: 2018-02-11 13:37:57
 tags: 机器学习
 ---
@@ -31,4 +31,67 @@ tags: 机器学习
 将标注结果xml保存到Images/xmls目录下，注意保存路径中不能包含中文，否则保存不成功。
 ![](objectdetection1/6.png)
 
-待续...
+3.转换成TFRecord格式
+根据[Datitran](https://github.com/datitran/raccoon_dataset)提供的方法进行格式转换。
+
+首先安装pandas模块
+```bash
+pip install pandas
+```
+
+然后修改xml_to_csv.py代码
+```python
+import os
+import glob
+import pandas as pd
+import xml.etree.ElementTree as ET
+
+
+def xml_to_csv():
+    xml_list = []
+    for xml_file in glob.glob('*.xml'):
+        tree = ET.parse(xml_file)
+        root = tree.getroot()
+        for member in root.findall('object'):
+            value = (root.find('filename').text,
+                     int(root.find('size')[0].text),
+                     int(root.find('size')[1].text),
+                     member[0].text,
+                     int(member[4][0].text),
+                     int(member[4][1].text),
+                     int(member[4][2].text),
+                     int(member[4][3].text)
+                     )
+            xml_list.append(value)
+    column_name = ['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax']
+    xml_df = pd.DataFrame(xml_list, columns=column_name)
+    return xml_df
+
+
+def main():
+    xml_df = xml_to_csv()
+    xml_df.to_csv('hand.csv', index=None)
+    print('Successfully converted xml to csv.')
+
+
+main()
+```
+
+在Images/xmls目录下执行该python脚本，即可生成hand.csv。
+
+接下来的脚本需要tensorflow环境和object_detection_api，这些环境配置将在[下一节](www.baiguangnan.com/2018/02/11/objectdetection2/)介绍。
+调用generate_tfrecord.py(也可以修改代码)，注意要指定--csv_input与--output_path这两个参数。执行下面命令即可生成TFRecord文件：
+```bash
+python generate_tfrecord.py --csv_input=Images/xmls/hand.csv --output_path=hand.record
+```
+注意一下这个脚本里有两个写死的地方，一个是90行的那个path，即图片所在目录，代码里写死会在当前目录下images文件夹中查找，如果图片目录有变化这里要进行修改；另一个是class_text_to_int方法，这里会把目标类型文本转成数字，本例中需要将raccon改为hand，如果是多目标需要在里面加分支。
+
+再仿照models/research/object_detection/data/pet_label_map.pbtxt创建hand.pbtxt。
+```text
+item {
+  id: 1
+  name: 'sunglasses'
+}
+```
+
+准备的成果是hand.pbtxt和hand.record。
