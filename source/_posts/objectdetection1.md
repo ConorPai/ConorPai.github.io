@@ -79,7 +79,7 @@ main()
 
 在Images/xmls目录下执行该python脚本，即可生成hand.csv。
 
-接下来的脚本需要tensorflow环境和object_detection_api，这些环境配置将在[下一节](www.baiguangnan.com/2018/02/12/objectdetection2/)介绍。
+接下来的脚本需要tensorflow环境和object_detection_api，这些环境配置将在[下一节](http://www.baiguangnan.com/2018/02/12/objectdetection2/)介绍。
 调用generate_tfrecord.py(也可以修改代码)，注意要指定--csv_input与--output_path这两个参数。执行下面命令即可生成TFRecord文件：
 ```bash
 python generate_tfrecord.py --csv_input=Images/xmls/hand.csv --output_path=hand.record
