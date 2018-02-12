@@ -12,8 +12,8 @@ tags: 机器学习
 
 2.下载并配置COCO数据集预训练模型
 下载[官方文档](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md)中提到的[COCO-pretrained Faster R-CNN with Resnet-101 model](http://storage.googleapis.com/download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_11_06_2017.tar.gz)模型，解压之后，将model.ckpt开头的三个文件拷贝到训练目录下。
-拷贝models/research/object_detection/samples/configs/faster_rcnn_inception_v2_coco.config文件到训练目录下。
-修改faster_rcnn_inception_v2_coco.config文件：
+拷贝models/research/object_detection/samples/configs/faster_rcnn_resnet101_coco.config文件到训练目录下。
+修改faster_rcnn_resnet101_coco.config文件：
 1）将num_classes改为1，本例中只有一个分类
 2）将所有PATH_TO_BE_CONFIGURED改为本机路径，共5处
 ![](objectdetection2/1.png)
