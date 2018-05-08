@@ -12,7 +12,7 @@ tags: C#
 
 头疼了很久也没有找出来解决方案，感觉有可能是内存错乱导致的崩溃，这就比较麻烦了。所以决定完全重写上层代码，用最简模式减少上层干扰，代码重写完成后发现了一个新的问题，代码大概如下：
 ```csharp
-public funtion1()
+public void funtion1()
 {
     //打开数据源
     DataSource ds = IWorkspaceFactory.Open();
@@ -28,7 +28,7 @@ public funtion1()
 但是根据我以往的经验引用型变量在出作用域之后才会被垃圾回收，怎么提前回收了？看了半天发现之后的代码没有再用到数据源，难到是CLR分析到变量不再使用而提前释放了？
 为了验证这个问题，我在StaticClass.StaticFuction之后调用了数据源的一个无关紧要的方法，大概如下：
 ```csharp
-public funtion1()
+public void funtion1()
 {
     //打开数据源
     DataSource ds = IWorkspaceFactory.Open();
