@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/05/09/sqlitertree/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
 <meta property="og:description" content="SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。 问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是">
-<meta property="og:updated_time" content="2018-05-09T09:29:17.686Z">
+<meta property="og:updated_time" content="2018-05-09T09:33:17.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQLite的RTree机制深入理解">
 <meta name="twitter:description" content="SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。 问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是">
@@ -164,10 +164,10 @@
       
         <p>SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。</p>
 <p>问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是空间索引出现了问题，导致显示时在空间索引中没有查询到，于是我们用一个功能重新计算了一遍空间索引，计算之后显示正常。</p>
-<p>通过调试我们发现数据转换使用的空间索引维护SQL和重新计算空间索引的SQL是一致的，但两者的执行结果却是不同的，而且SQL中的数值与执行之后的数值也不一样。</p>
-<p>经过查找资料我们知道了SQLite的RTree，非ID字段使用的是Float类型存储的(也有整型的RTree)，这样对于经纬度坐标在小数点后第5位出现精度损失，这样的差别也是很大的。</p>
-<p>进一步查找资料发现，SQLite对于RTree的维护，会做下界坐标向下舍入，上界坐标向上舍入的处理，即扩大了几何的空间索引框，这样虽然会在空间查询中多查出来一些几何，但也不会有什么影响。经过对比发现数据转换中没有做坐标舍入处理，而且使用的SQLite版本是3.7.9，版本比较老。在3.8之后的SQLite库都做了舍入处理，才会导致今天的问题。</p>
-<p>解决方案有两种，一种是手动外扩空间索引框范围；另一种是更新SQLite版本。</p>
+<p>通过调试我们发现数据转换使用的空间索引维护SQL和重新计算空间索引的SQL是一致的，但两者的执行结果却是不同的，而且SQL中的数值与执行之后在数据库中查询出来的数值也不一样。</p>
+<p>经过查找资料我们知道了SQLite的RTree，非ID字段使用的是Float类型存储的(也有整型的)，这样对于经纬度坐标在小数点后第5位出现精度损失，差别也是很大的。</p>
+<p>进一步查找资料发现，SQLite对于RTree的维护，会做下界坐标向下舍入，上界坐标向上舍入的处理，即扩大了几何的空间索引框，这样虽然会在空间查询中多查出来一些几何，但也不会有什么影响。经过对比发现数据转换中没有做坐标舍入处理，而且使用的SQLite版本是3.7.9，版本比较老。在3.8之后的SQLite库都做了舍入处理，就不会有这样的问题了。</p>
+<p>所以解决方案有两种，一种是手动外扩空间索引框范围；另一种是更新SQLite版本。</p>
 <p>SQLite的RTree详细理解，可以参考<a href="https://sqlite.org/rtree.html" target="_blank" rel="noopener">官方文档</a>。</p>
 
       
@@ -404,11 +404,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
