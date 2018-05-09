@@ -142,6 +142,84 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-controlflash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/14/controlflash/">解决WinForm自定义控件刷新时闪烁问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/14/controlflash/" class="archive-article-date">
+  	<time datetime="2017-11-14T05:39:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近遇到由于窗口内其它控件变动导致自定义地图控件闪烁的问题，体验特别不好，所以需要想办法解决这个问题。</p>
+<p>自定义地图控件的逻辑是在控件触发OnPaint事件时，将地图内容绘制到控件Graphic上，曾经尝试在OnPaint中做处理，但是没有效果，后来才意识到闪烁的根本原因是控件做了清除操作，变白了再做绘制就会让人感觉到是在闪烁。</p>
+<p>在网上找到了这篇文章，<a href="http://www.cnblogs.com/firstdown/p/6420534.html" target="_blank" rel="noopener">winform控件大小改变是防止背景重绘导致的闪烁</a>，在自定义地图控件中重写OnPaintBackground方法后验证此问题得到解决</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> OnPaintBackground 事件</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="e"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPaintBackground</span>(<span class="params">PaintEventArgs e</span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="comment">// 重载基类的背景擦除函数，</span></div><div class="line">    <span class="comment">// 解决窗口刷新，放大，图像闪烁</span></div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接下来需要考虑不做清除操作会带来什么问题，比如在图层设置成半透明时，如果不做清屏效果会不会叠加，不做清屏会不会有些不是本次刷新需要显示的内容还残留在地图上等，但是经过验证这些问题都不存在，因为地图的绘制机制会做一个背景填充的操作，效果目前一切正常。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/11/14/controlflash/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-confighexo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -357,15 +435,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
             
             <div class="clearfix"></div>

@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>C#实现带证书http请求 | ConorPai的博客</title>
+  <title>SQLite的RTree机制深入理解 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="使用X509Certificates类调用证书1.添加命名空间1using System.Security.Cryptography.X509Certificates; 2.添加验证回调123456private static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain">
-<meta name="keywords" content="C#">
+  <meta name="description" content="SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。 问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是">
+<meta name="keywords" content="SpatiaLite">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C#实现带证书http请求">
-<meta property="og:url" content="http://yoursite.com/2017/12/04/certificaterequest/index.html">
+<meta property="og:title" content="SQLite的RTree机制深入理解">
+<meta property="og:url" content="http://yoursite.com/2018/05/09/sqlitertree/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="使用X509Certificates类调用证书1.添加命名空间1using System.Security.Cryptography.X509Certificates; 2.添加验证回调123456private static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain">
-<meta property="og:updated_time" content="2017-12-04T08:15:44.898Z">
+<meta property="og:description" content="SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。 问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是">
+<meta property="og:updated_time" content="2018-05-09T09:29:17.686Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C#实现带证书http请求">
-<meta name="twitter:description" content="使用X509Certificates类调用证书1.添加命名空间1using System.Security.Cryptography.X509Certificates; 2.添加验证回调123456private static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain">
+<meta name="twitter:title" content="SQLite的RTree机制深入理解">
+<meta name="twitter:description" content="SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。 问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是">
   
   
     <link rel="icon" href="/favicon.png">
@@ -142,29 +142,33 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-certificaterequest" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-sqlitertree" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      C#实现带证书http请求
+      SQLite的RTree机制深入理解
     </h1>
   
 
         
-        <a href="/2017/12/04/certificaterequest/" class="archive-article-date">
-  	<time datetime="2017-12-04T08:01:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-04</time>
+        <a href="/2018/05/09/sqlitertree/" class="archive-article-date">
+  	<time datetime="2018-05-09T09:06:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-09</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>使用X509Certificates类调用证书<br>1.添加命名空间<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">using</span> System.Security.Cryptography.X509Certificates;</div></pre></td></tr></table></figure></p>
-<p>2.添加验证回调<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">CheckValidationResult</span>(<span class="params"><span class="keyword">object</span> sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors</span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="keyword">if</span> (errors == SslPolicyErrors.None)</div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>3.实现带请书http请求<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//配置证书回调方法</span></div><div class="line">ServicePointManager.ServerCertificateValidationCallback = <span class="keyword">new</span> RemoteCertificateValidationCallback(CheckValidationResult);</div><div class="line"></div><div class="line"><span class="comment">//配置请求</span></div><div class="line">HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sUrl);</div><div class="line">request.Method = <span class="string">"POST"</span>;</div><div class="line">X509Certificate objx509 = <span class="keyword">new</span> X509Certificate(Application.StartupPath + <span class="string">"\\ForestarAuth.cer"</span>);	<span class="comment">//可以在第二个参数中传入证书密码</span></div><div class="line">request.ClientCertificates.Add(objx509);</div><div class="line"></div><div class="line"><span class="comment">//获取请求结果</span></div><div class="line">HttpWebResponse res = (HttpWebResponse)request.GetResponse();</div><div class="line"><span class="keyword">if</span> (res.StatusCode != HttpStatusCode.OK)</div><div class="line">&#123;</div><div class="line">    response = <span class="string">"连接错误，状态码："</span> + res.StatusCode.ToString();</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//读取请求结果</span></div><div class="line">Stream resStream = res.GetResponseStream();</div><div class="line">StreamReader sReader = <span class="keyword">new</span> StreamReader(resStream, Encoding.GetEncoding(<span class="string">"utf-8"</span>));</div><div class="line"><span class="keyword">char</span>[] buffer = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">256</span>];</div><div class="line"><span class="keyword">int</span> count = sReader.Read(buffer, <span class="number">0</span>, <span class="number">256</span>);</div><div class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line"><span class="keyword">while</span> (count &gt; <span class="number">0</span>)</div><div class="line">&#123;</div><div class="line">    String sTemp = <span class="keyword">new</span> String(buffer, <span class="number">0</span>, count);</div><div class="line">    sb.Append(sTemp);</div><div class="line">    count = sReader.Read(buffer, <span class="number">0</span>, <span class="number">256</span>);</div><div class="line">&#125;</div><div class="line">response = sb.ToString();</div></pre></td></tr></table></figure></p>
+        <p>SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。</p>
+<p>问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是空间索引出现了问题，导致显示时在空间索引中没有查询到，于是我们用一个功能重新计算了一遍空间索引，计算之后显示正常。</p>
+<p>通过调试我们发现数据转换使用的空间索引维护SQL和重新计算空间索引的SQL是一致的，但两者的执行结果却是不同的，而且SQL中的数值与执行之后的数值也不一样。</p>
+<p>经过查找资料我们知道了SQLite的RTree，非ID字段使用的是Float类型存储的(也有整型的RTree)，这样对于经纬度坐标在小数点后第5位出现精度损失，这样的差别也是很大的。</p>
+<p>进一步查找资料发现，SQLite对于RTree的维护，会做下界坐标向下舍入，上界坐标向上舍入的处理，即扩大了几何的空间索引框，这样虽然会在空间查询中多查出来一些几何，但也不会有什么影响。经过对比发现数据转换中没有做坐标舍入处理，而且使用的SQLite版本是3.7.9，版本比较老。在3.8之后的SQLite库都做了舍入处理，才会导致今天的问题。</p>
+<p>解决方案有两种，一种是手动外扩空间索引框范围；另一种是更新SQLite版本。</p>
+<p>SQLite的RTree详细理解，可以参考<a href="https://sqlite.org/rtree.html" target="_blank" rel="noopener">官方文档</a>。</p>
 
       
 
@@ -178,7 +182,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">SpatiaLite</a>
         		</li>
       		
 		</ul>
@@ -234,7 +238,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/12/04/certificaterequest/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/05/09/sqlitertree/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -248,18 +252,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/12/08/testbaiduai/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          试用百度AI
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/12/01/getsysteminfo/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">使用C#获取系统软硬件信息</div>
+    <a href="/2018/05/08/csharpclr/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">C#垃圾回收机制新的理解</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -298,7 +293,7 @@
 <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
-  id: "http://yoursite.com/2017/12/04/certificaterequest/",
+  id: "http://yoursite.com/2018/05/09/sqlitertree/",
   owner: 'ConorPai',
   repo: 'ConorPai.github.io',
   oauth: {
