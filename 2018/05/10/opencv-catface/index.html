@@ -6,17 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/5 | ConorPai的博客</title>
+  <title>使用OpenCV和TensorFlow实现猫主子识别(-)——提取猫脸图片 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/archives/2018/05/index.html">
+  <meta name="description" content="最近某端公司部门技术分享想做一个老板检测软件，即一旦老板出现则马上报警-_-!!!。我也大概想了一下实现思路，而且搜到了OpenCV自带了猫脸检测的分类器，突发奇想干脆给我家五只猫主子做一个动态识别器吧。 12345实现分为几个步骤：1.随机截取五只猫主子的猫脸图片，并进行保存2.对猫脸图片进行分类标注3.使用TensorFlow对分类标注结果进行训练4.对监测时截取的猫脸图片进行识别，看是哪位猫">
+<meta name="keywords" content="机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用OpenCV和TensorFlow实现猫主子识别(-)——提取猫脸图片">
+<meta property="og:url" content="http://yoursite.com/2018/05/10/opencv-catface/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="最近某端公司部门技术分享想做一个老板检测软件，即一旦老板出现则马上报警-_-!!!。我也大概想了一下实现思路，而且搜到了OpenCV自带了猫脸检测的分类器，突发奇想干脆给我家五只猫主子做一个动态识别器吧。 12345实现分为几个步骤：1.随机截取五只猫主子的猫脸图片，并进行保存2.对猫脸图片进行分类标注3.使用TensorFlow对分类标注结果进行训练4.对监测时截取的猫脸图片进行识别，看是哪位猫">
+<meta property="og:image" content="http://yoursite.com/2018/05/10/opencv-catface/result.png">
+<meta property="og:updated_time" content="2018-05-10T01:29:30.086Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="使用OpenCV和TensorFlow实现猫主子识别(-)——提取猫脸图片">
+<meta name="twitter:description" content="最近某端公司部门技术分享想做一个老板检测软件，即一旦老板出现则马上报警-_-!!!。我也大概想了一下实现思路，而且搜到了OpenCV自带了猫脸检测的分类器，突发奇想干脆给我家五只猫主子做一个动态识别器吧。 12345实现分为几个步骤：1.随机截取五只猫主子的猫脸图片，并进行保存2.对猫脸图片进行分类标注3.使用TensorFlow对分类标注结果进行训练4.对监测时截取的猫脸图片进行识别，看是哪位猫">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/10/opencv-catface/result.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,36 +144,42 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-opencv-catface" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/10/opencv-catface/" class="archive-article-date">
-  	<time datetime="2018-05-10T01:09:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/10/opencv-catface/">使用OpenCV和TensorFlow实现猫主子识别(-)——提取猫脸图片</a>
+    <h1 class="article-title" itemprop="name">
+      使用OpenCV和TensorFlow实现猫主子识别(-)——提取猫脸图片
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/05/10/opencv-catface/" class="archive-article-date">
+  	<time datetime="2018-05-10T01:09:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近某端公司部门技术分享想做一个老板检测软件，即一旦老板出现则马上报警-_-!!!。<br>我也大概想了一下实现思路，而且搜到了OpenCV自带了猫脸检测的分类器，突发奇想干脆给我家五只猫主子做一个动态识别器吧。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">实现分为几个步骤：</div><div class="line">1.随机截取五只猫主子的猫脸图片，并进行保存</div><div class="line">2.对猫脸图片进行分类标注</div><div class="line">3.使用TensorFlow对分类标注结果进行训练</div><div class="line">4.对监测时截取的猫脸图片进行识别，看是哪位猫主子飘过</div></pre></td></tr></table></figure>
+<p>今天实现第一步：随机截取五只猫主子的猫脸图片，并进行保存。</p>
+<p>猫脸检测分类器在<a href="https://github.com/opencv/opencv/tree/master/data/haarcascades" target="_blank" rel="noopener">GitHub</a>上可以下载到，其中的<code>haarcascade_frontalcatface.xml</code>和<code>haarcascade_frontalcatface_extended.xml</code>即为猫脸检测的分类器。</p>
+<p>OpenCV使用的检测方法是<code>detectMultiScale()</code>，此方法的作用是，在输入图像中检测不同尺寸的对象，返回包含对象的矩形框。它接收的参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">1.image——输入图像</div><div class="line">2.scaleFactor——表示每轮检测图像齿轮减少的比例</div><div class="line">3.minNeighbors——指明对象要至少被检测到几次才能判定对象确实存在</div><div class="line">4.minSize——检测对象的最小尺寸</div><div class="line">5.maxSize——检测对象的最大尺寸</div></pre></td></tr></table></figure>
+<p>完整实现代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#coding=utf-8</span></div><div class="line"><span class="comment">#作用：从摄像头中提取识别出来的猫脸图片，保存并准备进行下一阶段训练使用</span></div><div class="line"></div><div class="line"><span class="comment">#引用相关库</span></div><div class="line"><span class="keyword">import</span> cv2</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"><span class="comment">#使用OpenCV打开摄像头</span></div><div class="line">cap = cv2.VideoCapture(<span class="number">0</span>)</div><div class="line"><span class="comment">#分类器初始化</span></div><div class="line">cascade_path = <span class="string">'haarcascade_frontalcatface_extended.xml'</span></div><div class="line">cascade = cv2.CascadeClassifier(cascade_path)</div><div class="line"><span class="comment">#循环读取摄像头中的每一帧画面</span></div><div class="line"><span class="keyword">while</span> cap.isOpened():</div><div class="line">    <span class="comment">#读取一帧画面</span></div><div class="line">    _, frame = cap.read()</div><div class="line">    <span class="comment">#灰度处理</span></div><div class="line">    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)</div><div class="line">    <span class="comment">#猫脸检测</span></div><div class="line">    facerect = cascade.detectMultiScale(frame_gray, scaleFactor=<span class="number">1.1</span>, minNeighbors=<span class="number">5</span>, minSize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">    <span class="comment">#如果检测到结果</span></div><div class="line">    <span class="keyword">if</span> len(facerect) &gt; <span class="number">0</span>:</div><div class="line">        <span class="comment">#输出日志</span></div><div class="line">        print(<span class="string">'face detected'</span>)</div><div class="line">        <span class="comment">#获取当前时间，用来保存该帧画面及猫脸图片</span></div><div class="line">        t = datetime.datetime.now()</div><div class="line">        <span class="comment">#循环遍历检测到的猫脸区域</span></div><div class="line">        <span class="keyword">for</span> (i, (x, y, w, h)) <span class="keyword">in</span> enumerate(facerect):</div><div class="line">            <span class="comment">#在猫脸区域画出方框</span></div><div class="line">            cv2.rectangle(frame, (x, y), (x + w, y + h), (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>), thickness=<span class="number">2</span>)</div><div class="line">            <span class="comment">#使用ROI获取猫脸区域图像</span></div><div class="line">            roiImg = frame[y:y + h, x:x + w]</div><div class="line">            <span class="comment">#将猫脸区域图像保存成文件</span></div><div class="line">            cv2.imwrite(<span class="string">'save/'</span> + str(t) + <span class="string">'-'</span> + str(i) + <span class="string">'.jpg'</span>, roiImg)</div><div class="line">        <span class="comment">#将标识出猫脸区域的当前帧保存，方便以后标注</span></div><div class="line">        cv2.imwrite(<span class="string">'save/'</span> + str(t) + <span class="string">'.jpg'</span>, frame)</div><div class="line">    <span class="comment">#未检测到结果</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment">#输出日志</span></div><div class="line">        print(<span class="string">'face not detected'</span>)</div><div class="line">    <span class="comment">#显示标识出猫脸区域的当前帧画面</span></div><div class="line">    cv2.imshow(<span class="string">"capture"</span>, frame)</div><div class="line">    <span class="comment">#检测ESC按钮，按下则退出</span></div><div class="line">    k = cv2.waitKey(<span class="number">100</span>)</div><div class="line">    <span class="keyword">if</span> k == <span class="number">27</span>:</div><div class="line">        <span class="keyword">break</span></div><div class="line"><span class="comment">#释放资源</span></div><div class="line">cap.release()</div><div class="line">cv2.destroyAllWindows()</div></pre></td></tr></table></figure></p>
+<p>实现效果：<br><img src="/2018/05/10/opencv-catface/result.png" alt="实现效果"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -181,95 +191,122 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/05/10/opencv-catface/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/09/sqlitertree/" class="archive-article-date">
-  	<time datetime="2018-05-09T09:06:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-09</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/09/sqlitertree/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SQLite的RTree机制深入理解</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/09/sqlitertree/">SQLite的RTree机制深入理解</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">SpatiaLite</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/08/csharpclr/" class="archive-article-date">
-  	<time datetime="2018-05-08T02:49:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/08/csharpclr/">C#垃圾回收机制新的理解</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/05/10/opencv-catface/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+  
 
 
           </div>
@@ -292,8 +329,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
