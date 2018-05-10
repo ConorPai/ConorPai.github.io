@@ -17,7 +17,7 @@ tags: 机器学习
 
 今天实现第一步：随机截取五只猫主子的猫脸图片，并进行保存。
 
-猫脸检测分类器在[GitHub](https://github.com/opencv/opencv/tree/master/data/haarcascades)上可以下载到，其中的`haarcascade_frontalcatface.xml`和`haarcascade_frontalcatface_extended.xml`即为猫脸检测的分类器。
+猫脸检测分类器在[GitHub](https://github.com/opencv/opencv/tree/master/data/haarcascades)上可以下载到，其中的`haarcascade_frontalcatface.xml`和`haarcascade_frontalcatface_extended.xml`即为猫脸检测的分类器(还有一些其它的分类器，比如人脸检测、笑脸检测、眼睛检测等，有兴趣的可以都试一下)。
 
 OpenCV使用的检测方法是`detectMultiScale()`，此方法的作用是，在输入图像中检测不同尺寸的对象，返回包含对象的矩形框。它接收的参数：
 
@@ -84,3 +84,6 @@ cv2.destroyAllWindows()
 
 实现效果：
 ![实现效果](opencv-catface\result.png)
+这位萌萌的小主叫地黄。。刚满2个月，至于名字的来源：
+![名字1](opencv-catface\name1.png)
+![名字2](opencv-catface\name2.png)
