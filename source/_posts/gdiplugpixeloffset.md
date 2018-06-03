@@ -16,7 +16,7 @@ tags: C++
 
 ##### 解决方案
 在网上搜到了[这篇资料](http://webserver2.tecgraf.puc-rio.br/~scuri/gdiplus/drawimage_scale_problem.html)，测试可以解决。主要是以下几行代码：
-```cplusplus
+```c
 ImageAttributes imAtt;
 imAtt.SetWrapMode(WrapModeTileFlipXY);
 graphics->SetInterpolationMode(InterpolationModeNearestNeighbor);
