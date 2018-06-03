@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>使用GDI+绘制Image拼接处出现白边的问题 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个过程是GDI+">
+  <meta name="description" content="最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。 查找原因最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。 但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。 所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个">
 <meta name="keywords" content="C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用GDI+绘制Image拼接处出现白边的问题">
 <meta property="og:url" content="http://yoursite.com/2018/05/30/gdiplugpixeloffset/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个过程是GDI+">
+<meta property="og:description" content="最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。 查找原因最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。 但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。 所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个">
 <meta property="og:image" content="http://yoursite.com/2018/05/30/gdiplugpixeloffset/webtiles.png">
 <meta property="og:image" content="http://yoursite.com/2018/05/30/gdiplugpixeloffset/normal.png">
-<meta property="og:updated_time" content="2018-05-30T09:49:36.018Z">
+<meta property="og:updated_time" content="2018-06-03T03:27:49.910Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用GDI+绘制Image拼接处出现白边的问题">
-<meta name="twitter:description" content="最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个过程是GDI+">
+<meta name="twitter:description" content="最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。 查找原因最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。 但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。 所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个">
 <meta name="twitter:image" content="http://yoursite.com/2018/05/30/gdiplugpixeloffset/webtiles.png">
   
   
@@ -165,7 +165,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。<br><img src="/2018/05/30/gdiplugpixeloffset/webtiles.png" alt="白边"><br>最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。<br>但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。<br>所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个过程是GDI+绘制的，所以考虑需要通过设置选项来控制的。<br>在网上搜到了<a href="http://webserver2.tecgraf.puc-rio.br/~scuri/gdiplus/drawimage_scale_problem.html" target="_blank" rel="noopener">这篇资料</a>，测试可以解决。<br>可以再详细了解一下参考资料，但主要是以下几行代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ImageAttributes imAtt;</div><div class="line">imAtt.SetWrapMode(WrapModeTileFlipXY);</div><div class="line">graphics-&gt;SetInterpolationMode(InterpolationModeNearestNeighbor);</div><div class="line">graphics-&gt;SetPixelOffsetMode(PixelOffsetModeHalf);</div><div class="line">graphics-&gt;DrawImage(&amp;image, zoomRect, <span class="number">0</span>, <span class="number">0</span>, image.GetWidth(), image.GetHeight(), UnitPixel, &amp;imAtt);</div></pre></td></tr></table></figure></p>
+        <p>最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。<br><img src="/2018/05/30/gdiplugpixeloffset/webtiles.png" alt="白边"></p>
+<h5 id="查找原因"><a href="#查找原因" class="headerlink" title="查找原因"></a>查找原因</h5><p>最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。</p>
+<p>但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。</p>
+<p>所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个过程是GDI+绘制的，所以考虑需要通过设置选项来控制的。</p>
+<h5 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h5><p>在网上搜到了<a href="http://webserver2.tecgraf.puc-rio.br/~scuri/gdiplus/drawimage_scale_problem.html" target="_blank" rel="noopener">这篇资料</a>，测试可以解决。主要是以下几行代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ImageAttributes imAtt;</div><div class="line">imAtt.SetWrapMode(WrapModeTileFlipXY);</div><div class="line">graphics-&gt;SetInterpolationMode(InterpolationModeNearestNeighbor);</div><div class="line">graphics-&gt;SetPixelOffsetMode(PixelOffsetModeHalf);</div><div class="line">graphics-&gt;DrawImage(&amp;image, zoomRect, 0, 0, image.GetWidth(), image.GetHeight(), UnitPixel, &amp;imAtt);</div></pre></td></tr></table></figure></p>
 <p>改正后效果：<br><img src="/2018/05/30/gdiplugpixeloffset/normal.png" alt="正常"></p>
 
       
@@ -403,11 +407,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
