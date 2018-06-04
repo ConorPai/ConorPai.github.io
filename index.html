@@ -142,6 +142,88 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-dronephotoscreatedom2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/04/dronephotoscreatedom2/">利用无人机拼接正射影像图(二)</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/04/dronephotoscreatedom2/" class="archive-article-date">
+  	<time datetime="2018-06-04T07:29:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="6-内业：照片拼接成正射影像图"><a href="#6-内业：照片拼接成正射影像图" class="headerlink" title="6.内业：照片拼接成正射影像图"></a>6.内业：照片拼接成正射影像图</h4><p>经过外业照片采集之后，通过内业软件进行拼接，形成正射影像图。</p>
+<h5 id="内业正射影像图拼接软件有以下几种："><a href="#内业正射影像图拼接软件有以下几种：" class="headerlink" title="内业正射影像图拼接软件有以下几种："></a>内业正射影像图拼接软件有以下几种：</h5><p>1.OpenDroneMap<br>2.PhotoScan<br>3.Pix4dmapper<br>4.ENVI OneButton</p>
+<h6 id="1-OpenDroneMap"><a href="#1-OpenDroneMap" class="headerlink" title="1.OpenDroneMap"></a>1.<a href="http://opendronemap.org" target="_blank" rel="noopener">OpenDroneMap</a></h6><p>OpenDroneMap是一款开源软件，可以对无人机照片进行拼接处理，生成正射影像图、DEM、纹理、点云等，实验证明拼接的效果不是很理想，而且没有UI操作界面用起来难度比较大。具体的拼接流程可以参考<a href="https://mp.weixin.qq.com/s?__biz=MzUzNDc0NjQ5NA==&amp;mid=2247484330&amp;idx=1&amp;sn=2fd17bbb9d9117344c3c0769a6a8bd21&amp;source=41#wechat_redirect" target="_blank" rel="noopener">这篇文章</a>。</p>
+<h5 id="2-PhotoScan"><a href="#2-PhotoScan" class="headerlink" title="2.PhotoScan"></a>2.PhotoScan</h5><p>PhotoScan可以使用GPU加速大大提高拼接效率，GPU加速设置在菜单Tools-Perferences中：<br><img src="/2018/06/04/dronephotoscreatedom2/9.png" alt="GPU加速设置"><br>下面说一下具体的拼接流程：<br>1）新建Workspace<br>点击Workspace组件中工具栏第一个按钮新建Workspace。<br><img src="/2018/06/04/dronephotoscreatedom2/1.png" alt="新建Workspace"><br>2）添加照片<br>点击菜单Workflow-Add Photos添加照片。<br><img src="/2018/06/04/dronephotoscreatedom2/1.1.png" alt="添加照片"><br>3）排列照片<br>点击菜单Workflow-Align Photos。<br><img src="/2018/06/04/dronephotoscreatedom2/2.png" alt="排列照片"><br>4）生成密集点云<br>点击菜单Workflow-Build Dense Cloud。由于有GPU加速，想试一下最高级的效果，不开GPU加速需要2天时间，开了只要20分钟，但是最高级效果在接下来生成三角网过程中报错，因为没有足够大的内存，所以这里选中等级别。<br><img src="/2018/06/04/dronephotoscreatedom2/3.png" alt="生成密集点云"><br>5）生成三角网<br>点击菜单Workflow-Build Mesh。<br><img src="/2018/06/04/dronephotoscreatedom2/4.png" alt="生成三角网"><br>6）生成纹理<br>点击菜单Workflow-Build Texture。<br><img src="/2018/06/04/dronephotoscreatedom2/5.png" alt="生成纹理"><br>7）生成正射影像图<br>点击菜单Workflow-Build Orthomosaic，生成正射影像图前，需要将Workspace生成的成果保存。<br><img src="/2018/06/04/dronephotoscreatedom2/6.png" alt="生成正射影像图"><br>8）导出正射影像图<br>点击菜单File-Export-Export Orthomosaic-Export JPEG/TIFF/PNG。<br><img src="/2018/06/04/dronephotoscreatedom2/7.png" alt="导出正射影像图"><br><img src="/2018/06/04/dronephotoscreatedom2/8.png" alt="导出正射影像图"></p>
+<h5 id="3-Pix4dmapper"><a href="#3-Pix4dmapper" class="headerlink" title="3.Pix4dmapper"></a>3.Pix4dmapper</h5><p>Pix4dmapper在前期设置之后，整个处理过程是完整的，而且会生成报告，体验比较好。<br>下面说一下具体的拼接流程：<br>1）新建项目<br><img src="/2018/06/04/dronephotoscreatedom2/12.png" alt="新建项目"><br>2）添加照片<br><img src="/2018/06/04/dronephotoscreatedom2/13.png" alt="添加照片"><br><img src="/2018/06/04/dronephotoscreatedom2/14.png" alt="添加照片"><br>3）选择输出坐标系<br>这里没有找到4326的WGS84 经纬度坐标系，使用的是3857的WGS84 Web墨卡托投影。<br><img src="/2018/06/04/dronephotoscreatedom2/15.png" alt="添加照片"><br>4）选择处理模板<br><img src="/2018/06/04/dronephotoscreatedom2/16.png" alt="添加照片"><br>5）新建项目完成<br><img src="/2018/06/04/dronephotoscreatedom2/17.png" alt="添加照片"><br>6）项目设置<br>点击左下角“处理选项”即可对项目参数进行设置，这里包括设置GPU加速。<br><img src="/2018/06/04/dronephotoscreatedom2/18.png" alt="添加照片"><br>7）开始处理<br><img src="/2018/06/04/dronephotoscreatedom2/18.1.jpg" alt="添加照片"><br>8）处理结果<br>处理完成之后，在项目目录下就保存了输出成果。<br><img src="/2018/06/04/dronephotoscreatedom2/19.png" alt="添加照片"><br>正射影像图在如下位置：<br><img src="/2018/06/04/dronephotoscreatedom2/20.png" alt="添加照片"></p>
+<h5 id="4-ENVI-OneButton"><a href="#4-ENVI-OneButton" class="headerlink" title="4.ENVI OneButton"></a>4.ENVI OneButton</h5><p>我申请了该软件的试用许可，但是还没有收到回复，等收到了试用许可再实验效果。</p>
+<h5 id="测试正射影像图效果"><a href="#测试正射影像图效果" class="headerlink" title="测试正射影像图效果"></a>测试正射影像图效果</h5><p>目前来看OpenDroneMap成果不理想，PhotoScan和Pix4dmapper成果差不多，Pix4dmapper略好些。<br>和GoogleEarth影像叠加效果：<br><img src="/2018/06/04/dronephotoscreatedom2/10.png" alt="添加照片"><br>放大之后和GoogleEarth影像对比效果：<br><img src="/2018/06/04/dronephotoscreatedom2/11.png" alt="添加照片"></p>
+<p>可以看出，还是有一些偏差的，如果需要提高精度，需要进行下一步：影像校正。</p>
+<h4 id="7-内业：正射影像图校正"><a href="#7-内业：正射影像图校正" class="headerlink" title="7.内业：正射影像图校正"></a>7.内业：正射影像图校正</h4><p>待续</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">无人机</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/04/dronephotoscreatedom2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-dronephotoscreatedom1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -843,96 +925,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/02/01/postgisshapefile/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-postgis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/31/postgis/">Ubuntu下安装PostgreSQL和PostGIS</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/31/postgis/" class="archive-article-date">
-  	<time datetime="2018-01-31T03:24:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-31</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-安装PostgreSQL"><a href="#1-安装PostgreSQL" class="headerlink" title="1.安装PostgreSQL"></a>1.安装PostgreSQL</h3><p>使用如下命令，会自动安装最新版，这里为9.5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgresql</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/01/31/postgis/1.png" alt="1"><br>安装完成后，默认会：<br>（1）创建名为”postgres”的Linux用户<br>（2）创建名为”postgres”、不带密码的默认数据库账号作为数据库管理员<br>（3）创建名为”postgres”的表</p>
-<p>安装完成后的一些默认信息如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config /etc/postgresql/9.5/main</div><div class="line">data /var/lib/postgresql/9.5/main</div><div class="line">locale en_US.UTF-8</div><div class="line">socket /var/run/postgresql</div><div class="line">port 5432</div></pre></td></tr></table></figure></p>
-<h3 id="2-修改数据库默认帐号的密码"><a href="#2-修改数据库默认帐号的密码" class="headerlink" title="2.修改数据库默认帐号的密码"></a>2.修改数据库默认帐号的密码</h3><p>安装完后会有PostgreSQL的客户端psql，通过 sudo -u postgres psql 进入<br><img src="/2018/01/31/postgis/2.png" alt="2"><br>执行密码更新语句，注意语句后边的分号，不带分号执行不成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">postgres=<span class="comment"># alter user postgres with password '新密码';</span></div></pre></td></tr></table></figure></p>
-<p><img src="/2018/01/31/postgis/3.png" alt="3"><br>输入“\q”命令退出psql客户端<br><img src="/2018/01/31/postgis/4.png" alt="4"></p>
-<h3 id="3-配置数据库以允许远程连接访问"><a href="#3-配置数据库以允许远程连接访问" class="headerlink" title="3.配置数据库以允许远程连接访问"></a>3.配置数据库以允许远程连接访问</h3><p>安装完成后，默认只能本地才能连接数据库，其他机子访问不了，需要进行配置。</p>
-<p>1)修改监听地址<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gedit /etc/postgresql/9.5/main/postgresql.conf</div></pre></td></tr></table></figure></p>
-<p>将 #listen_addresses = ‘localhost’ 的注释去掉并改为 listen_addresses = ‘*’</p>
-<p>2)修改可访问用户的IP段<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gedit /etc/postgresql/9.5/main/pg_hba.conf</div></pre></td></tr></table></figure></p>
-<p>在文件末尾添加： host all all 0.0.0.0 0.0.0.0 md5 ，表示运行任何IP连接</p>
-<p>3)重启数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /etc/init.d/postgresql restart</div></pre></td></tr></table></figure></p>
-<h3 id="4-安装图形管理界面"><a href="#4-安装图形管理界面" class="headerlink" title="4.安装图形管理界面"></a>4.安装图形管理界面</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install pgadmin3</div></pre></td></tr></table></figure>
-<p>安装完成后启动程序<br><img src="/2018/01/31/postgis/5.png" alt="5"><br>添加服务器<br><img src="/2018/01/31/postgis/6.png" alt="6"><br><img src="/2018/01/31/postgis/7.png" alt="7"></p>
-<h3 id="5-安装PostGIS"><a href="#5-安装PostGIS" class="headerlink" title="5.安装PostGIS"></a>5.安装PostGIS</h3><p>首先使用如下命令添加UbuntuGIS的PPA用于安装PostGIS扩展<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:ubuntugis/ppa</div><div class="line">sudo apt-get update</div></pre></td></tr></table></figure></p>
-<p>然后使用如下命令安装PostGIS<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install postgis</div></pre></td></tr></table></figure></p>
-<h3 id="6-数据库扩展PostGIS"><a href="#6-数据库扩展PostGIS" class="headerlink" title="6.数据库扩展PostGIS"></a>6.数据库扩展PostGIS</h3><p>执行SQL语句<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION PostGIS</div></pre></td></tr></table></figure></p>
-<p>成功后刷新，数据表中会出现spatial_ref_sys，说明扩展成功<br><img src="/2018/01/31/postgis/8.png" alt="8"></p>
-<h3 id="下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。"><a href="#下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。" class="headerlink" title="下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。"></a>下一篇将介绍如何使用QGIS向PostGIS中导入Shapefile数据，以及加载、编辑PostGIS数据。</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/31/postgis/">展开全文 >></a>
         </p>
       
 
