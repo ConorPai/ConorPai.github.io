@@ -56,21 +56,21 @@ Pix4dmapper在前期设置之后，整个处理过程是完整的，而且会生
 ![添加照片](dronephotoscreatedom2/14.png)
 3）选择输出坐标系
 这里没有找到4326的WGS84 经纬度坐标系，使用的是3857的WGS84 Web墨卡托投影。
-![添加照片](dronephotoscreatedom2/15.png)
+![选择输出坐标系](dronephotoscreatedom2/15.png)
 4）选择处理模板
-![添加照片](dronephotoscreatedom2/16.png)
+![选择处理模板](dronephotoscreatedom2/16.png)
 5）新建项目完成
-![添加照片](dronephotoscreatedom2/17.png)
+![新建项目完成](dronephotoscreatedom2/17.png)
 6）项目设置
 点击左下角“处理选项”即可对项目参数进行设置，这里包括设置GPU加速。
-![添加照片](dronephotoscreatedom2/18.png)
+![项目设置](dronephotoscreatedom2/18.png)
 7）开始处理
-![添加照片](dronephotoscreatedom2/18.1.jpg)
+![开始处理](dronephotoscreatedom2/18.1.jpg)
 8）处理结果
 处理完成之后，在项目目录下就保存了输出成果。
-![添加照片](dronephotoscreatedom2/19.png)
+![处理结果](dronephotoscreatedom2/19.png)
 正射影像图在如下位置：
-![添加照片](dronephotoscreatedom2/20.png)
+![处理结果](dronephotoscreatedom2/20.png)
 
 ##### 4.ENVI OneButton
 我申请了该软件的试用许可，但是还没有收到回复，等收到了试用许可再实验效果。
@@ -85,4 +85,16 @@ Pix4dmapper在前期设置之后，整个处理过程是完整的，而且会生
 可以看出，还是有一些偏差的，如果需要提高精度，需要进行下一步：影像校正。
 
 #### 7.内业：正射影像图校正
-待续
+使用我们的软件或ArcMap都可以进行影像校正，在这里以ArcGIS为例演示校正效果。
+1）在ArcGIS工具栏上添加“地理配准”工具条
+2）为了方便校准，创建矢量图层，在GoogleEarth影像中找到比较明确的地物点，勾绘成矢量成果。
+3）将正射影像图和矢量成果加载到ArcMap中，使用地理配准工具条，向地图中添加影像校正配准点：
+![影像校正](dronephotoscreatedom2/jz1.png)
+所有配准点：
+![影像校正](dronephotoscreatedom2/jz2.png)
+4）导出校正后的影像
+
+可以对比一下校正前后的效果：
+![校正前](dronephotoscreatedom2/11.png)
+![校正后](dronephotoscreatedom2/jz3.png)
+
