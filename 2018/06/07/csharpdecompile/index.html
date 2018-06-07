@@ -6,46 +6,37 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>利用无人机拼接正射影像图(二) | ConorPai的博客</title>
+  <title>试水C#成果反编译(一) | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="6.内业：照片拼接成正射影像图经过外业照片采集之后，通过内业软件进行拼接，形成正射影像图。 内业正射影像图拼接软件有以下几种：1.OpenDroneMap2.PhotoScan3.Pix4dmapper4.ENVI OneButton 1.OpenDroneMapOpenDroneMap是一款开源软件，可以对无人机照片进行拼接处理，生成正射影像图、DEM、纹理、点云等，实验证明拼接的效果不是很理想">
-<meta name="keywords" content="无人机">
+  <meta name="description" content="对于反编译的了解，我之前还停留在将工作成果混淆防止反编译看到源码的阶段，今天看到了一篇文章，不但可以反编译C#成果，而且可以修改其中的部分代码并保存成新的成果来使用，所以打算试一下。 使用的工具是ILSpy加上Reflexil插件，下载地址：https://github.com/icsharpcode/ILSpy/releaseshttps://github.com/sailro/Reflexil">
+<meta name="keywords" content="C#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用无人机拼接正射影像图(二)">
-<meta property="og:url" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/index.html">
+<meta property="og:title" content="试水C#成果反编译(一)">
+<meta property="og:url" content="http://yoursite.com/2018/06/07/csharpdecompile/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="6.内业：照片拼接成正射影像图经过外业照片采集之后，通过内业软件进行拼接，形成正射影像图。 内业正射影像图拼接软件有以下几种：1.OpenDroneMap2.PhotoScan3.Pix4dmapper4.ENVI OneButton 1.OpenDroneMapOpenDroneMap是一款开源软件，可以对无人机照片进行拼接处理，生成正射影像图、DEM、纹理、点云等，实验证明拼接的效果不是很理想">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/9.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/1.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/1.1.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/2.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/3.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/4.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/5.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/6.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/7.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/8.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/12.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/13.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/14.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/15.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/16.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/17.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/18.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/18.1.jpg">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/19.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/20.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/10.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/11.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/jz1.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/jz2.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/11.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/jz3.png">
-<meta property="og:updated_time" content="2018-06-05T07:36:37.954Z">
+<meta property="og:description" content="对于反编译的了解，我之前还停留在将工作成果混淆防止反编译看到源码的阶段，今天看到了一篇文章，不但可以反编译C#成果，而且可以修改其中的部分代码并保存成新的成果来使用，所以打算试一下。 使用的工具是ILSpy加上Reflexil插件，下载地址：https://github.com/icsharpcode/ILSpy/releaseshttps://github.com/sailro/Reflexil">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/4.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/5.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/6.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/7.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/8.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/9.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/10.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/11.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/13.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/14.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/15.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/16.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/07/csharpdecompile/17.png">
+<meta property="og:updated_time" content="2018-06-07T08:03:45.007Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="利用无人机拼接正射影像图(二)">
-<meta name="twitter:description" content="6.内业：照片拼接成正射影像图经过外业照片采集之后，通过内业软件进行拼接，形成正射影像图。 内业正射影像图拼接软件有以下几种：1.OpenDroneMap2.PhotoScan3.Pix4dmapper4.ENVI OneButton 1.OpenDroneMapOpenDroneMap是一款开源软件，可以对无人机照片进行拼接处理，生成正射影像图、DEM、纹理、点云等，实验证明拼接的效果不是很理想">
-<meta name="twitter:image" content="http://yoursite.com/2018/06/04/dronephotoscreatedom2/9.png">
+<meta name="twitter:title" content="试水C#成果反编译(一)">
+<meta name="twitter:description" content="对于反编译的了解，我之前还停留在将工作成果混淆防止反编译看到源码的阶段，今天看到了一篇文章，不但可以反编译C#成果，而且可以修改其中的部分代码并保存成新的成果来使用，所以打算试一下。 使用的工具是ILSpy加上Reflexil插件，下载地址：https://github.com/icsharpcode/ILSpy/releaseshttps://github.com/sailro/Reflexil">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/07/csharpdecompile/1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -169,36 +160,38 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-dronephotoscreatedom2" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-csharpdecompile" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      利用无人机拼接正射影像图(二)
+      试水C#成果反编译(一)
     </h1>
   
 
         
-        <a href="/2018/06/04/dronephotoscreatedom2/" class="archive-article-date">
-  	<time datetime="2018-06-04T07:29:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-04</time>
+        <a href="/2018/06/07/csharpdecompile/" class="archive-article-date">
+  	<time datetime="2018-06-07T06:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="6-内业：照片拼接成正射影像图"><a href="#6-内业：照片拼接成正射影像图" class="headerlink" title="6.内业：照片拼接成正射影像图"></a>6.内业：照片拼接成正射影像图</h4><p>经过外业照片采集之后，通过内业软件进行拼接，形成正射影像图。</p>
-<h5 id="内业正射影像图拼接软件有以下几种："><a href="#内业正射影像图拼接软件有以下几种：" class="headerlink" title="内业正射影像图拼接软件有以下几种："></a>内业正射影像图拼接软件有以下几种：</h5><p>1.OpenDroneMap<br>2.PhotoScan<br>3.Pix4dmapper<br>4.ENVI OneButton</p>
-<h6 id="1-OpenDroneMap"><a href="#1-OpenDroneMap" class="headerlink" title="1.OpenDroneMap"></a>1.<a href="http://opendronemap.org" target="_blank" rel="noopener">OpenDroneMap</a></h6><p>OpenDroneMap是一款开源软件，可以对无人机照片进行拼接处理，生成正射影像图、DEM、纹理、点云等，实验证明拼接的效果不是很理想，而且没有UI操作界面用起来难度比较大。具体的拼接流程可以参考<a href="https://mp.weixin.qq.com/s?__biz=MzUzNDc0NjQ5NA==&amp;mid=2247484330&amp;idx=1&amp;sn=2fd17bbb9d9117344c3c0769a6a8bd21&amp;source=41#wechat_redirect" target="_blank" rel="noopener">这篇文章</a>。</p>
-<h5 id="2-PhotoScan"><a href="#2-PhotoScan" class="headerlink" title="2.PhotoScan"></a>2.PhotoScan</h5><p>PhotoScan可以使用GPU加速大大提高拼接效率，GPU加速设置在菜单Tools-Perferences中：<br><img src="/2018/06/04/dronephotoscreatedom2/9.png" alt="GPU加速设置"><br>下面说一下具体的拼接流程：<br>1）新建Workspace<br>点击Workspace组件中工具栏第一个按钮新建Workspace。<br><img src="/2018/06/04/dronephotoscreatedom2/1.png" alt="新建Workspace"><br>2）添加照片<br>点击菜单Workflow-Add Photos添加照片。<br><img src="/2018/06/04/dronephotoscreatedom2/1.1.png" alt="添加照片"><br>3）排列照片<br>点击菜单Workflow-Align Photos。<br><img src="/2018/06/04/dronephotoscreatedom2/2.png" alt="排列照片"><br>4）生成密集点云<br>点击菜单Workflow-Build Dense Cloud。由于有GPU加速，想试一下最高级的效果，不开GPU加速需要2天时间，开了只要20分钟，但是最高级效果在接下来生成三角网过程中报错，因为没有足够大的内存，所以这里选中等级别。<br><img src="/2018/06/04/dronephotoscreatedom2/3.png" alt="生成密集点云"><br>5）生成三角网<br>点击菜单Workflow-Build Mesh。<br><img src="/2018/06/04/dronephotoscreatedom2/4.png" alt="生成三角网"><br>6）生成纹理<br>点击菜单Workflow-Build Texture。<br><img src="/2018/06/04/dronephotoscreatedom2/5.png" alt="生成纹理"><br>7）生成正射影像图<br>点击菜单Workflow-Build Orthomosaic，生成正射影像图前，需要将Workspace生成的成果保存。<br><img src="/2018/06/04/dronephotoscreatedom2/6.png" alt="生成正射影像图"><br>8）导出正射影像图<br>点击菜单File-Export-Export Orthomosaic-Export JPEG/TIFF/PNG。<br><img src="/2018/06/04/dronephotoscreatedom2/7.png" alt="导出正射影像图"><br><img src="/2018/06/04/dronephotoscreatedom2/8.png" alt="导出正射影像图"></p>
-<h5 id="3-Pix4dmapper"><a href="#3-Pix4dmapper" class="headerlink" title="3.Pix4dmapper"></a>3.Pix4dmapper</h5><p>Pix4dmapper在前期设置之后，整个处理过程是完整的，而且会生成报告，体验比较好。<br>下面说一下具体的拼接流程：<br>1）新建项目<br><img src="/2018/06/04/dronephotoscreatedom2/12.png" alt="新建项目"><br>2）添加照片<br><img src="/2018/06/04/dronephotoscreatedom2/13.png" alt="添加照片"><br><img src="/2018/06/04/dronephotoscreatedom2/14.png" alt="添加照片"><br>3）选择输出坐标系<br>这里没有找到4326的WGS84 经纬度坐标系，使用的是3857的WGS84 Web墨卡托投影。<br><img src="/2018/06/04/dronephotoscreatedom2/15.png" alt="选择输出坐标系"><br>4）选择处理模板<br><img src="/2018/06/04/dronephotoscreatedom2/16.png" alt="选择处理模板"><br>5）新建项目完成<br><img src="/2018/06/04/dronephotoscreatedom2/17.png" alt="新建项目完成"><br>6）项目设置<br>点击左下角“处理选项”即可对项目参数进行设置，这里包括设置GPU加速。<br><img src="/2018/06/04/dronephotoscreatedom2/18.png" alt="项目设置"><br>7）开始处理<br><img src="/2018/06/04/dronephotoscreatedom2/18.1.jpg" alt="开始处理"><br>8）处理结果<br>处理完成之后，在项目目录下就保存了输出成果。<br><img src="/2018/06/04/dronephotoscreatedom2/19.png" alt="处理结果"><br>正射影像图在如下位置：<br><img src="/2018/06/04/dronephotoscreatedom2/20.png" alt="处理结果"></p>
-<h5 id="4-ENVI-OneButton"><a href="#4-ENVI-OneButton" class="headerlink" title="4.ENVI OneButton"></a>4.ENVI OneButton</h5><p>我申请了该软件的试用许可，但是还没有收到回复，等收到了试用许可再实验效果。</p>
-<h5 id="测试正射影像图效果"><a href="#测试正射影像图效果" class="headerlink" title="测试正射影像图效果"></a>测试正射影像图效果</h5><p>目前来看OpenDroneMap成果不理想，PhotoScan和Pix4dmapper成果差不多，Pix4dmapper略好些。<br>和GoogleEarth影像叠加效果：<br><img src="/2018/06/04/dronephotoscreatedom2/10.png" alt="添加照片"><br>放大之后和GoogleEarth影像对比效果：<br><img src="/2018/06/04/dronephotoscreatedom2/11.png" alt="添加照片"></p>
-<p>可以看出，还是有一些偏差的，如果需要提高精度，需要进行下一步：影像校正。</p>
-<h4 id="7-内业：正射影像图校正"><a href="#7-内业：正射影像图校正" class="headerlink" title="7.内业：正射影像图校正"></a>7.内业：正射影像图校正</h4><p>使用我们的软件或ArcMap都可以进行影像校正，在这里以ArcGIS为例演示校正效果。<br>1）在ArcGIS工具栏上添加“地理配准”工具条<br>2）为了方便校准，创建矢量图层，在GoogleEarth影像中找到比较明确的地物点，勾绘成矢量成果。<br>3）将正射影像图和矢量成果加载到ArcMap中，使用地理配准工具条，向地图中添加影像校正配准点：<br><img src="/2018/06/04/dronephotoscreatedom2/jz1.png" alt="影像校正"><br>所有配准点：<br><img src="/2018/06/04/dronephotoscreatedom2/jz2.png" alt="影像校正"><br>4）导出校正后的影像</p>
-<p>可以对比一下校正前后的效果：<br><img src="/2018/06/04/dronephotoscreatedom2/11.png" alt="校正前"><br><img src="/2018/06/04/dronephotoscreatedom2/jz3.png" alt="校正后"></p>
+        <p>对于反编译的了解，我之前还停留在将工作成果混淆防止反编译看到源码的阶段，今天看到了一篇文章，不但可以反编译C#成果，而且可以修改其中的部分代码并保存成新的成果来使用，所以打算试一下。</p>
+<p>使用的工具是ILSpy加上Reflexil插件，下载地址：<br><a href="https://github.com/icsharpcode/ILSpy/releases" target="_blank" rel="noopener">https://github.com/icsharpcode/ILSpy/releases</a><br><a href="https://github.com/sailro/Reflexil/releases" target="_blank" rel="noopener">https://github.com/sailro/Reflexil/releases</a>，下载reflexil.for.ILSpy.2.2.AIO.bin.zip，AIO的意思是All In One。</p>
+<p>下载后解压到同一个目录下，打开ILSpy软件，在View菜单中可以看到Reflexil v2.2菜单即可。<br><img src="/2018/06/07/csharpdecompile/1.png" alt="配置成功"></p>
+<p>建新一个简单的WinForm工程，简单的写几行代码，点击按钮弹出提示框，接下来要做的是修改提示框标题。<br><img src="/2018/06/07/csharpdecompile/2.png" alt="原始效果"><br>代码如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">using</span> System;</div><div class="line"><span class="keyword">using</span> System.Collections.Generic;</div><div class="line"><span class="keyword">using</span> System.ComponentModel;</div><div class="line"><span class="keyword">using</span> System.Data;</div><div class="line"><span class="keyword">using</span> System.Drawing;</div><div class="line"><span class="keyword">using</span> System.Linq;</div><div class="line"><span class="keyword">using</span> System.Text;</div><div class="line"><span class="keyword">using</span> System.Windows.Forms;</div><div class="line"></div><div class="line"><span class="keyword">namespace</span> <span class="title">TestDecompile</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">Form1</span> : <span class="title">Form</span></div><div class="line">    &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Form1</span>(<span class="params"></span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            InitializeComponent();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ShowMessage</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            MessageBox.Show(<span class="keyword">string</span>.Format(<span class="string">"&#123;0&#125;+&#123;1&#125;=&#123;2&#125;"</span>, x, y, x + y));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">button1_Click</span>(<span class="params"><span class="keyword">object</span> sender, EventArgs e</span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            ShowMessage(<span class="number">3</span>, <span class="number">4</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用ILSpy打开exe，即可看到程序源码。<br><img src="/2018/06/07/csharpdecompile/3.png" alt="ILSpy反编译源码"></p>
+<p>对于简单的程序，可以将程序源码导出后重新编译，但是对于复杂的程序这样会比较麻烦，所以考虑直接修改exe。<br><img src="/2018/06/07/csharpdecompile/4.png" alt="ILSpy保存源码"></p>
+<p>点击View-Reflexil v2.2菜单，打开Reflexil界面，并且定位到要修改的ShowMessage函数。<br><img src="/2018/06/07/csharpdecompile/5.png" alt="准备修改"></p>
+<p>第一种方法是比较简单的方法，在Reflexil界面右键，点击Replace all with code，弹出如下界面：<br><img src="/2018/06/07/csharpdecompile/6.png" alt="准备修改"><br>在ShowMessage中添加代码，然后点击左下角的Compile按钮，确认没有问题之后点击Ok按钮。<br><img src="/2018/06/07/csharpdecompile/7.png" alt="修改完成"><br>修改完成之后，在程序的根节点上右键Save as，即可将修改结果保存成新的exe，默认在原文件名的基础上增加Patched字符。<br><img src="/2018/06/07/csharpdecompile/8.png" alt="保存修改"><br>修改之后的效果：<br><img src="/2018/06/07/csharpdecompile/9.png" alt="修改效果"></p>
+<p>这种方式确实很方便，对于我们也很友好，但是在某些情况下修改代码之后编译失败，那就需要修改IL代码，即Reflexil界面中显示的那一堆。。<br><img src="/2018/06/07/csharpdecompile/10.png" alt="IL代码"></p>
+<p>关于IL相关的知识可以去网上再了解一下，在这里就不再重复了，接下来介绍如何通过修改IL代码实现一样的效果。<br>在IL代码中，索引是11的那一行，可以看出是调用了MessageBox的Show方法，之前的代码是在构建Show的参数，消息字符串，所以需要在Show之前传入第二个参数，并修改Show的实现方法。<br>首先，创建消息标题字符串：<br><img src="/2018/06/07/csharpdecompile/11.png" alt="创建标题字符串"><br><img src="/2018/06/07/csharpdecompile/12.png" alt="创建标题字符串"><br>创建完成之后默认是添加在最后一行，拖动到Show方法之前即可：<br><img src="/2018/06/07/csharpdecompile/13.png" alt="创建标题字符串"><br>右键点击Show方法，点击Edit菜单：<br><img src="/2018/06/07/csharpdecompile/14.png" alt="修改Show方法"><br>弹出对话框中点击Show方法后边的下拉按钮，在弹出列表中选择两个字符串参数的方法，选中之后Update即可。<br><img src="/2018/06/07/csharpdecompile/15.png" alt="修改Show方法"><br>修改完成效果：<br><img src="/2018/06/07/csharpdecompile/16.png" alt="修改完成"><br>重复之前保存exe方法，效果与之前一致。</p>
+<p>如果想避免自己的成果被反编译和破解，最好使用混淆方法，目前我们的成果做了混淆，会导致ILSpy报错，效果如下：<br><img src="/2018/06/07/csharpdecompile/17.png" alt="代码混淆"></p>
+<p>下一篇将会介绍如何使用ILSpy和Reflexil对一个复杂软件进行破解。</p>
 
       
 
@@ -212,7 +205,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">无人机</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
         		</li>
       		
 		</ul>
@@ -268,7 +261,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/06/04/dronephotoscreatedom2/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/06/07/csharpdecompile/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -282,18 +275,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/06/07/csharpdecompile/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          试水C#成果反编译(一)
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/03/dronephotoscreatedom1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">利用无人机拼接正射影像图(一)</div>
+    <a href="/2018/06/04/dronephotoscreatedom2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">利用无人机拼接正射影像图(二)</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -332,7 +316,7 @@
 <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
-  id: "http://yoursite.com/2018/06/04/dronephotoscreatedom2/",
+  id: "http://yoursite.com/2018/06/07/csharpdecompile/",
   owner: 'ConorPai',
   repo: 'ConorPai.github.io',
   oauth: {
