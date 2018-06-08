@@ -6,9 +6,7 @@ tags: C#
 
 上一篇介绍了使用ILSpy和Reflexil插件对简单程序的反编译和破解。现在用一个真实软件为例，对其进行破解。
 
-这里破解的软件是代码转换工具[Converters](https://www.tangiblesoftwaresolutions.com/product_details/products.html)，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。
-
-由于最近需要将C#代码转成Java的，搜到了这篇[参考文章](http://www.cnblogs.com/yiyan127/p/CSharp_CrackJava2CSharpConverter.html)，所以也想试试对其进行破解。
+这里破解的软件是代码转换工具[Converters](https://www.tangiblesoftwaresolutions.com/product_details/products.html)，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。在网上看到了这篇[参考文章](http://www.cnblogs.com/yiyan127/p/CSharp_CrackJava2CSharpConverter.html)，所以也想试试对其进行破解。
 
 首先用ILSpy打开CSharp to Java Converter软件
 ![打开软件](csharpdecompile2/1.png)
@@ -56,7 +54,7 @@ tags: C#
 ![修改代码](csharpdecompile2/20.png)
 ![修改代码](csharpdecompile2/21.png)
 
-修改之后启动程序并没有达到想要的效果，使用ILSpy打开破解之后的程序，发现这里的代码不并是return true，有些不是很理解，在一个简单程序上做如下修改，确是正常的。
+修改之后启动程序并没有达到想要的效果，使用ILSpy打开破解之后的程序，发现这里的代码不并是return true，有些不是很理解，在一个简单程序上做如下修改，却是正常的。
 ![修改代码](csharpdecompile2/22.png)
 
 憋了很久，打算硬着头皮试一下，猜想这6行代码里，ldc.i4.1是创建了一个数值为1的int变量，ret是返回，是不是只保留这两行就可以了呢？修改并验证：
