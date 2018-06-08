@@ -163,8 +163,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>上一篇介绍了使用ILSpy和Reflexil插件对简单程序的反编译和破解。现在用一个真实软件为例，对其进行破解。</p>
-<p>这里破解的软件是代码转换工具<a href="https://www.tangiblesoftwaresolutions.com/product_details/products.html" target="_blank" rel="noopener">Converters</a>，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。</p>
-<p>由于最近需要将C#代码转成Java的，搜到了这篇<a href="http://www.cnblogs.com/yiyan127/p/CSharp_CrackJava2CSharpConverter.html" target="_blank" rel="noopener">参考文章</a>，所以也想试试对其进行破解。</p>
+<p>这里破解的软件是代码转换工具<a href="https://www.tangiblesoftwaresolutions.com/product_details/products.html" target="_blank" rel="noopener">Converters</a>，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。在网上看到了这篇<a href="http://www.cnblogs.com/yiyan127/p/CSharp_CrackJava2CSharpConverter.html" target="_blank" rel="noopener">参考文章</a>，所以也想试试对其进行破解。</p>
 <p>首先用ILSpy打开CSharp to Java Converter软件<br><img src="/2018/06/08/csharpdecompile2/1.png" alt="打开软件"><br>可以看到，这个成果是做过混淆的，里面的类名称、函数名称和变量名称都变成了意义不明的代号。</p>
 <p>因为ILSpy中的搜索不是很好用，所以需要将代码保存之后，用VS打开查找和定位相关代码。<br><img src="/2018/06/08/csharpdecompile2/2.png" alt="保存代码"><br><img src="/2018/06/08/csharpdecompile2/3.png" alt="保存代码"></p>
 <p>我们想破解这个软件对用户授权的判断，就需要找一个突破口。在这里我以程序标题提示Free Edition为突破口，来查找授权判断代码。<br><img src="/2018/06/08/csharpdecompile2/4.png" alt="突破口"></p>
@@ -172,7 +171,7 @@
 <p>返回ILSpy软件，搜索Copyright_Tangible_Software_Solutions_g30：<br><img src="/2018/06/08/csharpdecompile2/9.png" alt="定位代码"><br>打开Reflexil插件，先用Replace All with Code方法修改：<br><img src="/2018/06/08/csharpdecompile2/10.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/11.png" alt="修改代码"><br>用这种方法修改的代码编译报错，所以这种方法行不通，考虑修改IL源码。</p>
 <p>对于修改IL源码不是特别清楚的小伙伴，可以新建一个简单的工程，将写好后的代码编译并在ILSpy中打开，照着原样拷贝到这里即可。<br><img src="/2018/06/08/csharpdecompile2/12.png" alt="修改代码"><br>就是这里的6行代码。</p>
 <p>清除所有<br><img src="/2018/06/08/csharpdecompile2/13.png" alt="修改代码"><br>依次创建<br><img src="/2018/06/08/csharpdecompile2/14.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/15.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/16.png" alt="修改代码"><br>由于第4行是一个跳转指令，所以最后创建<br><img src="/2018/06/08/csharpdecompile2/17.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/18.png" alt="修改代码"><br>添加跳转指令<br><img src="/2018/06/08/csharpdecompile2/19.png" alt="修改代码"><br>默认添加是在最后一行，需要拖拽到相应位置<br><img src="/2018/06/08/csharpdecompile2/20.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/21.png" alt="修改代码"></p>
-<p>修改之后启动程序并没有达到想要的效果，使用ILSpy打开破解之后的程序，发现这里的代码不并是return true，有些不是很理解，在一个简单程序上做如下修改，确是正常的。<br><img src="/2018/06/08/csharpdecompile2/22.png" alt="修改代码"></p>
+<p>修改之后启动程序并没有达到想要的效果，使用ILSpy打开破解之后的程序，发现这里的代码不并是return true，有些不是很理解，在一个简单程序上做如下修改，却是正常的。<br><img src="/2018/06/08/csharpdecompile2/22.png" alt="修改代码"></p>
 <p>憋了很久，打算硬着头皮试一下，猜想这6行代码里，ldc.i4.1是创建了一个数值为1的int变量，ret是返回，是不是只保留这两行就可以了呢？修改并验证：<br><img src="/2018/06/08/csharpdecompile2/23.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/24.png" alt="修改代码"><br>发现代码正常了，启动软件测试：<br><img src="/2018/06/08/csharpdecompile2/25.png" alt="验证结果"><br>发现程序标题中的Free Edition已经没有了，原来Unlock the Premium Edition按钮也没有了，测试转换代码也没有行数之类的限制，破解生效了。</p>
 <p>俗话说，知己知彼百战不殆，了解反编译和破解过程，是为了更好的保护自主知识版权，希望大家多多支持正版软件。</p>
 
