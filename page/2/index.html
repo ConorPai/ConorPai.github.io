@@ -142,6 +142,91 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-objectdetection1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/11/objectdetection1/">使用TensorFlow进行目标识别(一)——数据处理及训练前准备</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/11/objectdetection1/" class="archive-article-date">
+  	<time datetime="2018-02-11T05:37:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近支付宝集福卡活动和抖音小年抢红包活动都是应用了手掌识别技术，所以我也想使用TensorFlow的object detection实现一个自己的手掌识别。<br><img src="/2018/02/11/objectdetection1/zhifubao.jpg" alt=""><br><img src="/2018/02/11/objectdetection1/douyin.jpg" alt=""></p>
+<p>1.下载手掌图片<br>从<a href="https://www.mutah.edu.jo/biometrix/hand-images-databases.html" target="_blank" rel="noopener">Hand Images Databases</a>中下载手掌图片。<br><img src="/2018/02/11/objectdetection1/0.png" alt=""><br>这里面有两种手掌图片，一种是mobile hand images database (MOHI)，即通过手机摄像头拍摄的图片，清晰度比较高，图片大小比较大；另一种是webcam hand images database (WEHI)，即通过网络摄 像头拍摄的图片，清晰度一般，图片大小比较小。</p>
+<p>因为总的图片比较多，所以这里进行了拆分，两类图片都有3个Session，每个Session有4个Group，每个Group里面有50个人的手掌图片，每个人有5张图片。</p>
+<p>将下载后的图片解压到Images目录下。<br>2.数据集标注<br>因为TensorFlow的object detection训练使用的数据集为TFRecord格式，需要对数据集进行标注及处理。<br>首先使用<a href="https://github.com/tzutalin/labelImg" target="_blank" rel="noopener">LabelImg</a>工具对图片中手掌的具体位置进行标注。下载Linux版LabelImg标注工具，解压、赋权限后直接运行labelImg可执行文件。<br><img src="/2018/02/11/objectdetection1/1.png" alt=""><br>打开Images目录。<br><img src="/2018/02/11/objectdetection1/2.png" alt=""><br>使用Create RectBox功能拉框标注手掌所在区域。<br><img src="/2018/02/11/objectdetection1/3.png" alt=""><br>编辑标注。<br><img src="/2018/02/11/objectdetection1/4.png" alt=""><br>如果对框选区域不满意还可以进行编辑。<br><img src="/2018/02/11/objectdetection1/5.png" alt=""><br>将标注结果xml保存到Images/xmls目录下，注意保存路径中不能包含中文，否则保存不成功。<br><img src="/2018/02/11/objectdetection1/6.png" alt=""></p>
+<p>3.转换成TFRecord格式<br>根据<a href="https://github.com/datitran/raccoon_dataset" target="_blank" rel="noopener">Datitran</a>提供的方法进行格式转换。</p>
+<p>首先安装pandas模块<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install pandas</div></pre></td></tr></table></figure></p>
+<p>然后修改xml_to_csv.py代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> glob</div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> xml.etree.ElementTree <span class="keyword">as</span> ET</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">xml_to_csv</span><span class="params">()</span>:</span></div><div class="line">    xml_list = []</div><div class="line">    <span class="keyword">for</span> xml_file <span class="keyword">in</span> glob.glob(<span class="string">'*.xml'</span>):</div><div class="line">        tree = ET.parse(xml_file)</div><div class="line">        root = tree.getroot()</div><div class="line">        <span class="keyword">for</span> member <span class="keyword">in</span> root.findall(<span class="string">'object'</span>):</div><div class="line">            value = (root.find(<span class="string">'filename'</span>).text,</div><div class="line">                     int(root.find(<span class="string">'size'</span>)[<span class="number">0</span>].text),</div><div class="line">                     int(root.find(<span class="string">'size'</span>)[<span class="number">1</span>].text),</div><div class="line">                     member[<span class="number">0</span>].text,</div><div class="line">                     int(member[<span class="number">4</span>][<span class="number">0</span>].text),</div><div class="line">                     int(member[<span class="number">4</span>][<span class="number">1</span>].text),</div><div class="line">                     int(member[<span class="number">4</span>][<span class="number">2</span>].text),</div><div class="line">                     int(member[<span class="number">4</span>][<span class="number">3</span>].text)</div><div class="line">                     )</div><div class="line">            xml_list.append(value)</div><div class="line">    column_name = [<span class="string">'filename'</span>, <span class="string">'width'</span>, <span class="string">'height'</span>, <span class="string">'class'</span>, <span class="string">'xmin'</span>, <span class="string">'ymin'</span>, <span class="string">'xmax'</span>, <span class="string">'ymax'</span>]</div><div class="line">    xml_df = pd.DataFrame(xml_list, columns=column_name)</div><div class="line">    <span class="keyword">return</span> xml_df</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    xml_df = xml_to_csv()</div><div class="line">    xml_df.to_csv(<span class="string">'hand.csv'</span>, index=<span class="keyword">None</span>)</div><div class="line">    print(<span class="string">'Successfully converted xml to csv.'</span>)</div><div class="line"></div><div class="line"></div><div class="line">main()</div></pre></td></tr></table></figure></p>
+<p>在Images/xmls目录下执行该python脚本，即可生成hand.csv。</p>
+<p>接下来的脚本需要tensorflow环境和object_detection_api，这些环境配置将在下一节介绍。<br>调用generate_tfrecord.py(也可以修改代码)，注意要指定–csv_input与–output_path这两个参数。执行下面命令即可生成TFRecord文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python generate_tfrecord.py --csv_input=Images/xmls/hand.csv --output_path=hand.record</div></pre></td></tr></table></figure></p>
+<p>注意一下这个脚本里有两个写死的地方，一个是90行的那个path，即图片所在目录，代码里写死会在当前目录下images文件夹中查找，如果图片目录有变化这里要进行修改；另一个是class_text_to_int方法，这里会把目标类型文本转成数字，本例中需要将raccon改为hand，如果是多目标需要在里面加分支。</p>
+<p>再仿照models/research/object_detection/data/pet_label_map.pbtxt创建hand.pbtxt。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">item &#123;</div><div class="line">  id: 1</div><div class="line">  name: &apos;hand&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>准备的成果是hand.pbtxt和hand.record，再按照上述方法准备一套用于验证的TFRecord。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/11/objectdetection1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-postgisshapefile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

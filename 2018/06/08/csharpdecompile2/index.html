@@ -6,17 +6,45 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | ConorPai的博客</title>
+  <title>试水C#成果反编译(二) | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/archives/page/2/index.html">
+  <meta name="description" content="上一篇介绍了使用ILSpy和Reflexil插件对简单程序的反编译和破解。现在用一个真实软件为例，对其进行破解。 这里破解的软件是代码转换工具Converters，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。 由于最近需要将C#代码转成Java的，搜到了这篇参考文章，所以也想试试对其进行破解。 首先用ILS">
+<meta name="keywords" content="C#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="试水C#成果反编译(二)">
+<meta property="og:url" content="http://yoursite.com/2018/06/08/csharpdecompile2/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="上一篇介绍了使用ILSpy和Reflexil插件对简单程序的反编译和破解。现在用一个真实软件为例，对其进行破解。 这里破解的软件是代码转换工具Converters，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。 由于最近需要将C#代码转成Java的，搜到了这篇参考文章，所以也想试试对其进行破解。 首先用ILS">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/4.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/5.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/6.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/7.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/8.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/9.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/10.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/11.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/13.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/14.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/15.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/16.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/17.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/18.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/19.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/20.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/21.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/22.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/23.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/24.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/25.png">
+<meta property="og:updated_time" content="2018-06-08T03:11:40.485Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="试水C#成果反编译(二)">
+<meta name="twitter:description" content="上一篇介绍了使用ILSpy和Reflexil插件对简单程序的反编译和破解。现在用一个真实软件为例，对其进行破解。 这里破解的软件是代码转换工具Converters，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。 由于最近需要将C#代码转成Java的，搜到了这篇参考文章，所以也想试试对其进行破解。 首先用ILS">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/08/csharpdecompile2/1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,236 +168,47 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-csharpdecompile2" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      试水C#成果反编译(二)
+    </h1>
+  
+
+        
+        <a href="/2018/06/08/csharpdecompile2/" class="archive-article-date">
+  	<time datetime="2018-06-08T01:49:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-08</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上一篇介绍了使用ILSpy和Reflexil插件对简单程序的反编译和破解。现在用一个真实软件为例，对其进行破解。</p>
+<p>这里破解的软件是代码转换工具<a href="https://www.tangiblesoftwaresolutions.com/product_details/products.html" target="_blank" rel="noopener">Converters</a>，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。</p>
+<p>由于最近需要将C#代码转成Java的，搜到了这篇<a href="http://www.cnblogs.com/yiyan127/p/CSharp_CrackJava2CSharpConverter.html" target="_blank" rel="noopener">参考文章</a>，所以也想试试对其进行破解。</p>
+<p>首先用ILSpy打开CSharp to Java Converter软件<br><img src="/2018/06/08/csharpdecompile2/1.png" alt="打开软件"><br>可以看到，这个成果是做过混淆的，里面的类名称、函数名称和变量名称都变成了意义不明的代号。</p>
+<p>因为ILSpy中的搜索不是很好用，所以需要将代码保存之后，用VS打开查找和定位相关代码。<br><img src="/2018/06/08/csharpdecompile2/2.png" alt="保存代码"><br><img src="/2018/06/08/csharpdecompile2/3.png" alt="保存代码"></p>
+<p>我们想破解这个软件对用户授权的判断，就需要找一个突破口。在这里我以程序标题提示Free Edition为突破口，来查找授权判断代码。<br><img src="/2018/06/08/csharpdecompile2/4.png" alt="突破口"></p>
+<p>全局搜索Free Edition，找到拼接程序标题的代码：<br><img src="/2018/06/08/csharpdecompile2/5.png" alt="定位代码"><br><img src="/2018/06/08/csharpdecompile2/6.png" alt="定位代码"><br>可以看出标题是否显示FreeEdition是由App._g13变量控制的，现在只需要找到App._g13变量在哪里赋值即可：<br><img src="/2018/06/08/csharpdecompile2/7.png" alt="定位代码"><br>可以看出在程序启动后，通过App.Copyright_Tangible_Software_Solutions_g30方法对App._g13进行赋值，定位Copyright_Tangible_Software_Solutions_g30方法：<br><img src="/2018/06/08/csharpdecompile2/8.png" alt="定位代码"><br>也就是说只需要把这个方法的返回值直接改为true即可。</p>
+<p>返回ILSpy软件，搜索Copyright_Tangible_Software_Solutions_g30：<br><img src="/2018/06/08/csharpdecompile2/9.png" alt="定位代码"><br>打开Reflexil插件，先用Replace All with Code方法修改：<br><img src="/2018/06/08/csharpdecompile2/10.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/11.png" alt="修改代码"><br>用这种方法修改的代码编译报错，所以这种方法行不通，考虑修改IL源码。</p>
+<p>对于修改IL源码不是特别清楚的小伙伴，可以新建一个简单的工程，将写好后的代码编译并在ILSpy中打开，照着原样拷贝到这里即可。<br><img src="/2018/06/08/csharpdecompile2/12.png" alt="修改代码"><br>就是这里的6行代码。</p>
+<p>清除所有<br><img src="/2018/06/08/csharpdecompile2/13.png" alt="修改代码"><br>依次创建<br><img src="/2018/06/08/csharpdecompile2/14.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/15.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/16.png" alt="修改代码"><br>由于第4行是一个跳转指令，所以最后创建<br><img src="/2018/06/08/csharpdecompile2/17.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/18.png" alt="修改代码"><br>添加跳转指令<br><img src="/2018/06/08/csharpdecompile2/19.png" alt="修改代码"><br>默认添加是在最后一行，需要拖拽到相应位置<br><img src="/2018/06/08/csharpdecompile2/20.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/21.png" alt="修改代码"></p>
+<p>修改之后启动程序并没有达到想要的效果，使用ILSpy打开破解之后的程序，发现这里的代码不并是return true，有些不是很理解，在一个简单程序上做如下修改，确是正常的。<br><img src="/2018/06/08/csharpdecompile2/22.png" alt="修改代码"></p>
+<p>憋了很久，打算硬着头皮试一下，猜想这6行代码里，ldc.i4.1是创建了一个数值为1的int变量，ret是返回，是不是只保留这两行就可以了呢？修改并验证：<br><img src="/2018/06/08/csharpdecompile2/23.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/24.png" alt="修改代码"><br>发现代码正常了，启动软件测试：<br><img src="/2018/06/08/csharpdecompile2/25.png" alt="验证结果"><br>发现程序标题中的Free Edition已经没有了，原来Unlock the Premium Edition按钮也没有了，测试转换代码也没有行数之类的限制，破解生效了。</p>
+<p>俗话说，知己知彼百战不殆，了解反编译和破解过程，是为了更好的保护自主知识版权，希望大家多多支持正版软件。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/11/objectdetection1/" class="archive-article-date">
-  	<time datetime="2018-02-11T05:37:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/11/objectdetection1/">使用TensorFlow进行目标识别(一)——数据处理及训练前准备</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/01/postgisshapefile/" class="archive-article-date">
-  	<time datetime="2018-02-01T02:05:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/01/postgisshapefile/">使用QGIS向PostGIS中导入Shapefile数据</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/31/postgis/" class="archive-article-date">
-  	<time datetime="2018-01-31T03:24:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/31/postgis/">Ubuntu下安装PostgreSQL和PostGIS</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/17/api-ms-win-crt-runtime-l1-1-0/" class="archive-article-date">
-  	<time datetime="2018-01-17T08:01:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/17/api-ms-win-crt-runtime-l1-1-0/">解决python 3.6.4版本在windows系统上运行报错api-ms-win-crt-runtime-l1-1-0.dll丢失的问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-      
-        </div></section>
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/08/testbaiduai/" class="archive-article-date">
-  	<time datetime="2017-12-08T08:31:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/08/testbaiduai/">试用百度AI</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/04/certificaterequest/" class="archive-article-date">
-  	<time datetime="2017-12-04T08:01:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/04/certificaterequest/">C#实现带证书http请求</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -381,136 +220,121 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/06/08/csharpdecompile2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/01/getsysteminfo/" class="archive-article-date">
-  	<time datetime="2017-12-01T09:01:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-01</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/06/07/csharpdecompile/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">试水C#成果反编译(一)</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/01/getsysteminfo/">使用C#获取系统软硬件信息</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/14/controlflash/" class="archive-article-date">
-  	<time datetime="2017-11-14T05:39:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/14/controlflash/">解决WinForm自定义控件刷新时闪烁问题</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/31/confighexo/" class="archive-article-date">
-  	<time datetime="2017-10-31T14:18:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/31/confighexo/">使用Hexo搭建个人博客的详细教程</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
-    </nav>
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/06/08/csharpdecompile2/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
   
 
 
@@ -534,8 +358,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
