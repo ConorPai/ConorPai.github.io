@@ -6,17 +6,30 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: hexo | ConorPai的博客</title>
+  <title>阿里云CDN加速配置 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/tags/hexo/index.html">
+  <meta name="description" content="个人网站和博客搭建已经快一年了，最大的一块心病就是图片加载太慢了。。 想当初刚买到阿里云服务器兴冲冲的部署写好的个人网站，首次在浏览器上打开花了一分多钟才刷出图片来，心情真是down到谷底。当时以为是哪里没配置好，最后才发现买的阿里云服务器网络带宽是1M，下载图片太慢了。 2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩">
+<meta name="keywords" content="个人网站搭建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云CDN加速配置">
+<meta property="og:url" content="http://yoursite.com/2018/06/12/configcdn/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="个人网站和博客搭建已经快一年了，最大的一块心病就是图片加载太慢了。。 想当初刚买到阿里云服务器兴冲冲的部署写好的个人网站，首次在浏览器上打开花了一分多钟才刷出图片来，心情真是down到谷底。当时以为是哪里没配置好，最后才发现买的阿里云服务器网络带宽是1M，下载图片太慢了。 2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/0.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/4.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/5.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/6.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/8.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/7.png">
+<meta property="og:updated_time" content="2018-06-12T08:57:41.152Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="阿里云CDN加速配置">
+<meta name="twitter:description" content="个人网站和博客搭建已经快一年了，最大的一块心病就是图片加载太慢了。。 想当初刚买到阿里云服务器兴冲冲的部署写好的个人网站，首次在浏览器上打开花了一分多钟才刷出图片来，心情真是down到谷底。当时以为是哪里没配置好，最后才发现买的阿里云服务器网络带宽是1M，下载图片太慢了。 2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/12/configcdn/0.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,60 +153,174 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-configcdn" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/31/confighexo/" class="archive-article-date">
-  	<time datetime="2017-10-31T14:18:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-31</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/31/confighexo/">使用Hexo搭建个人博客的详细教程</a>
+    <h1 class="article-title" itemprop="name">
+      阿里云CDN加速配置
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/06/12/configcdn/" class="archive-article-date">
+  	<time datetime="2018-06-12T06:10:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://photos.baiguangnan.com" target="_blank" rel="noopener">个人网站</a>和<a href="http://baiguangnan.com" target="_blank" rel="noopener">博客</a>搭建已经快一年了，最大的一块心病就是图片加载太慢了。。</p>
+<p>想当初刚买到阿里云服务器兴冲冲的部署写好的个人网站，首次在浏览器上打开花了一分多钟才刷出图片来，心情真是down到谷底。当时以为是哪里没配置好，最后才发现买的阿里云服务器网络带宽是1M，下载图片太慢了。</p>
+<p>2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩吧。<br><img src="/2018/06/12/configcdn/0.png" alt="购买CDN"></p>
+<p>后来用七牛云比较多，再加上网上的了解，知道CDN可以解决我的个人网站和博客图片加载速度慢的问题，就试了一下。官方配置文档在<a href="https://help.aliyun.com/document_detail/27112.html?spm=a2c4g.11186623.6.553.mMaNIz" target="_blank" rel="noopener">这里</a></p>
+<p>首先进入<a href="http://cdn.console.aliyun.com" target="_blank" rel="noopener">CDN控制台</a>，在域名管理页面中添加域名。<br><img src="/2018/06/12/configcdn/1.png" alt="域名管理"><br><img src="/2018/06/12/configcdn/2.png" alt="添加域名"><br>因为博客使用的是Github Pages：<a href="http://conorpai.github.io" target="_blank" rel="noopener">http://conorpai.github.io</a>，所以IP需要添加Github Pages的IP，使用ping命令获取其IP。<br><img src="/2018/06/12/configcdn/3.png" alt="获取IP"></p>
+<p>添加域名完成之后，会分配CNAME，拷贝待用。<br><img src="/2018/06/12/configcdn/1.png" alt="添加域名完成"></p>
+<p>进入域名管理控制台：<br><img src="/2018/06/12/configcdn/4.png" alt="域名管理"></p>
+<p>修改baiguangnan.com的解析，将@.baiguangnan.com的记录类型由之前的A换成CNAME，并在记录值中添加之前拷贝的CNAME。<br><img src="/2018/06/12/configcdn/5.png" alt="域名DNS解析"></p>
+<p>修改时可能会遇到一些冲突，我是把冲突的删掉了，暂时还不清楚后果是什么。。</p>
+<p>同理，修改photos.baiguangnan.com的DNS解析：<br><img src="/2018/06/12/configcdn/6.png" alt="域名DNS解析"></p>
+<p>保存之后就可以感受CDN加速的效果了(可能有一些延迟)。<br><img src="/2018/06/12/configcdn/8.png" alt="CDN生效"></p>
+<p>因为之前申请了其它域名，但是只有baiguangnan.com做了备案，没有备案的域名不能使用CDN加速。。<br><img src="/2018/06/12/configcdn/7.png" alt="未备案域名不能使用CDN加速"></p>
+<p>可以做一下对比：<br>未加速：<a href="http://conorpai.com" target="_blank" rel="noopener">http://conorpai.com</a><br>CDN加速：<a href="http://photos.baiguangnan.com" target="_blank" rel="noopener">http://photos.baiguangnan.com</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">个人网站搭建</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/06/12/configcdn/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/06/08/csharpdecompile2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">试水C#成果反编译(二)</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/06/12/configcdn/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+  
 
 
           </div>
@@ -216,9 +343,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
@@ -286,15 +413,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
