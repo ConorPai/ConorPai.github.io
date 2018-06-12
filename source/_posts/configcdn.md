@@ -10,7 +10,7 @@ tags: 个人网站搭建
 2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩吧。
 ![购买CDN](configcdn/0.png)
 
-后来用七牛云比较多，再加上网上的了解，知道CDN可以解决我的个人网站和博客图片加载速度慢的问题，就试了一下。官方配置文档在[这里](https://help.aliyun.com/document_detail/27112.html?spm=a2c4g.11186623.6.553.mMaNIz)
+后来用七牛云比较多，再加上网上的了解，知道CDN可以解决我的个人网站和博客图片加载速度慢的问题，就试了一下。官方配置文档在[这里](https://help.aliyun.com/document_detail/27112.html?spm=a2c4g.11186623.6.553.mMaNIz)。
 
 首先进入[CDN控制台](http://cdn.console.aliyun.com)，在域名管理页面中添加域名。
 ![域名管理](configcdn/1.png)
