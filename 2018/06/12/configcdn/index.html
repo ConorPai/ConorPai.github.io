@@ -25,7 +25,12 @@
 <meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/6.png">
 <meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/8.png">
 <meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/7.png">
-<meta property="og:updated_time" content="2018-06-12T09:21:05.570Z">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/9.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/10.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/11.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/12.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/configcdn/13.png">
+<meta property="og:updated_time" content="2018-06-13T06:51:00.811Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="阿里云CDN加速配置">
 <meta name="twitter:description" content="个人网站和博客搭建已经快一年了，最大的一块心病就是图片加载太慢了。。 想当初刚买到阿里云服务器兴冲冲的部署写好的个人网站，首次在浏览器上打开花了一分多钟才刷出图片来，心情真是down到谷底。当时以为是哪里没配置好，最后才发现买的阿里云服务器网络带宽是1M，下载图片太慢了。 2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩">
@@ -186,6 +191,9 @@
 <p>保存之后就可以感受CDN加速的效果了(可能有一些延迟)。<br><img src="/2018/06/12/configcdn/8.png" alt="CDN生效"></p>
 <p>因为之前申请了其它域名，但是只有baiguangnan.com做了备案，没有备案的域名不能使用CDN加速。。<br><img src="/2018/06/12/configcdn/7.png" alt="未备案域名不能使用CDN加速"></p>
 <p>可以做一下对比：<br>未加速：<a href="http://conorpai.com" target="_blank" rel="noopener">http://conorpai.com</a><br>CDN加速：<a href="http://photos.baiguangnan.com" target="_blank" rel="noopener">http://photos.baiguangnan.com</a></p>
+<h4 id="HTTPS网站的CDN加速"><a href="#HTTPS网站的CDN加速" class="headerlink" title="HTTPS网站的CDN加速"></a>HTTPS网站的CDN加速</h4><p>昨天帮哥们的网站做CDN加速，本来以为也很简单，但是由于他的网站做了HTTPS，需要做一些额外限制，找了一些教程终于搞定了，下面说一下方法。</p>
+<p>第一步还是添加域名，添加完成之后点击域名后面的配置功能：<br><img src="/2018/06/12/configcdn/9.png" alt="配置HTTPS"><br>找到HTTPS设置，修改配置：<br><img src="/2018/06/12/configcdn/10.png" alt="配置HTTPS"><br>开启HTTPS设置，选择证书来源，并填入证书名称、公钥和私钥，然后确定即可。<br><img src="/2018/06/12/configcdn/11.png" alt="配置HTTPS"><br>最后配置回源，防止出现循环重定向问题。<br><img src="/2018/06/12/configcdn/12.png" alt="配置HTTPS"></p>
+<p>至此配置完成，最后强推一波哥们的摄影博客<a href="https://photo.wandoer.com" target="_blank" rel="noopener">https://photo.wandoer.com</a>，大家多多关注。<br><img src="/2018/06/12/configcdn/13.png" alt="摄影博客"></p>
 
       
 
@@ -413,10 +421,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
@@ -426,6 +430,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">无人机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
