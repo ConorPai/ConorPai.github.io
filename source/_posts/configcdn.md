@@ -41,3 +41,18 @@ tags: 个人网站搭建
 可以做一下对比：
 未加速：[http://conorpai.com](http://conorpai.com)
 CDN加速：[http://photos.baiguangnan.com](http://photos.baiguangnan.com)
+
+#### HTTPS网站的CDN加速
+昨天帮哥们的网站做CDN加速，本来以为也很简单，但是由于他的网站做了HTTPS，需要做一些额外限制，找了一些教程终于搞定了，下面说一下方法。
+
+第一步还是添加域名，添加完成之后点击域名后面的配置功能：
+![配置HTTPS](configcdn/9.png)
+找到HTTPS设置，修改配置：
+![配置HTTPS](configcdn/10.png)
+开启HTTPS设置，选择证书来源，并填入证书名称、公钥和私钥，然后确定即可。
+![配置HTTPS](configcdn/11.png)
+最后配置回源，防止出现循环重定向问题。
+![配置HTTPS](configcdn/12.png)
+
+至此配置完成，最后强推一波哥们的摄影博客[https://photo.wandoer.com](https://photo.wandoer.com)，大家多多关注。
+![摄影博客](configcdn/13.png)
