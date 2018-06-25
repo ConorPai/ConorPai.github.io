@@ -1,7 +1,7 @@
 ---
 title: 使用QGIS向PostGIS中导入Shapefile数据
 date: 2018-02-01 10:05:29
-tags: PostGIS
+tags: GIS,PostGIS
 ---
 
 1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层

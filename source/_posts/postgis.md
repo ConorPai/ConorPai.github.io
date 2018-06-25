@@ -1,7 +1,7 @@
 ---
 title: Ubuntu下安装PostgreSQL和PostGIS
 date: 2018-01-31 11:24:45
-tags: PostGIS
+tags: GIS,PostGIS
 ---
 
 ### 1.安装PostgreSQL
