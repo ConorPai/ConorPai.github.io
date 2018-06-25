@@ -178,7 +178,7 @@
 <p>如果出现安装失败的情况，有的是因为一些资源下载失败，尝试科学上网、不断重试直到安装成功。<br><img src="/2018/06/25/nodemapniktest/7.jpg" alt="安装node-mapnik"><br><img src="/2018/06/25/nodemapniktest/8.jpg" alt="安装node-mapnik"></p>
 <p>安装成功后，我们验证一下安装是否成功，我们使用<a href="https://github.com/mapnik/node-mapnik" target="_blank" rel="noopener">node-mapnik github</a>上的示例代码进行测试：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mapnik = <span class="built_in">require</span>(<span class="string">'mapnik'</span>);</div><div class="line"><span class="keyword">new</span> mapnik.Image.open(<span class="string">'input.jpg'</span>).save(<span class="string">'output.png'</span>);</div></pre></td></tr></table></figure></p>
 <p>使用vim创建test.js测试脚本，并写入上述代码，并保存：<br><img src="/2018/06/25/nodemapniktest/9.jpg" alt="安装node-mapnik"><br>拷入input.jpg(可以使用xshell的rz，我用的是Windows10的Ubuntu子系统，直接把input.jpg拷贝到<code>C:\Users\PaiConor\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\node-mapnik</code>目录下就可以了)，启动测试脚本，如果生成了output.png，则mapnik模块安装成功。<br><img src="/2018/06/25/nodemapniktest/10.jpg" alt="安装node-mapnik"></p>
-<h4 id="3-配置Mapnik配置XML"><a href="#3-配置Mapnik配置XML" class="headerlink" title="3.配置Mapnik配置XML"></a>3.配置Mapnik配置XML</h4><h4 id="4-发布地图服务"><a href="#4-发布地图服务" class="headerlink" title="4.发布地图服务"></a>4.发布地图服务</h4><h4 id="5-使用Openlayers访问地图服务"><a href="#5-使用Openlayers访问地图服务" class="headerlink" title="5.使用Openlayers访问地图服务"></a>5.使用Openlayers访问地图服务</h4>
+<h4 id="3-配置Mapnik配图样式XML"><a href="#3-配置Mapnik配图样式XML" class="headerlink" title="3.配置Mapnik配图样式XML"></a>3.配置Mapnik配图样式XML</h4><h4 id="4-发布地图服务"><a href="#4-发布地图服务" class="headerlink" title="4.发布地图服务"></a>4.发布地图服务</h4><h4 id="5-使用Openlayers访问地图服务"><a href="#5-使用Openlayers访问地图服务" class="headerlink" title="5.使用Openlayers访问地图服务"></a>5.使用Openlayers访问地图服务</h4>
       
 
       
@@ -191,7 +191,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">GIS, Mapnik</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
         		</li>
       		
 		</ul>
@@ -1094,10 +1098,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">GIS, Mapnik</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
@@ -1107,6 +1107,14 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
               </li>
             
             <div class="clearfix"></div>
