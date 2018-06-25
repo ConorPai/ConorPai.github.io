@@ -1,7 +1,9 @@
 ---
 title: 使用Mapnik发布简单的地图服务
 date: 2018-06-25 11:11:04
-tags: GIS,Mapnik
+tags: 
+	- GIS
+	- Mapnik
 ---
 
 [Mapnik](http://mapnik.org)是一个开放源代码的地图学工具集，提供基于客户端与服务器端的地图渲染使用，以`C++`撰写。Mapnik的原始开发者，Artem Pavlenko将目标明确设置为通过使用子像素反锯齿功能来创建美丽的地图。Mapnik现在也有Cairo渲染后端。Mapnik使用`Boost C++ Libraries`来处理如存储器管理、访问文件系统、正规表达式与解析XML等的一般软件工作。地图的外观可以使用XML文件来定义，也可以通过`C++`、`Python`与`Node.js`等编程语言来建构。
@@ -76,7 +78,7 @@ new mapnik.Image.open('input.jpg').save('output.png');
 拷入input.jpg(可以使用xshell的rz，我用的是Windows10的Ubuntu子系统，直接把input.jpg拷贝到`C:\Users\PaiConor\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\node-mapnik`目录下就可以了)，启动测试脚本，如果生成了output.png，则mapnik模块安装成功。
 ![安装node-mapnik](nodemapniktest/10.jpg)
 
-#### 3.配置Mapnik配置XML
+#### 3.配置Mapnik配图样式XML
 
 #### 4.发布地图服务
 
