@@ -151,7 +151,7 @@ var strata = tilestrata();
 
 //layer名称不能为空
 strata.layer('map')
-  .route('tile.png')    //route方法中不能使用正则表达式
+  .route('tile.png')    					//route方法中不能使用正则表达式
   .use(disk.cache({dir: './tilecache'}))    //设置瓦片缓存在当前目录的tilecache之目录中
   .use(mapnik({
     pathname: '../data/test.xml'
@@ -216,3 +216,5 @@ node app.js
 
 
 以上介绍的只是做了简单的地图发布，离最终高并发地图服务还有一段距离，需要继续研究和探索。
+
+此篇博文参考[think8848的博客](http://www.cnblogs.com/think8848/p/6262696.html)，特此感谢！
