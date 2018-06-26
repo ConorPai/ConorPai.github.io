@@ -68,7 +68,7 @@ npm install mapnik
 ![安装node-mapnik](nodemapniktest/7.jpg)
 ![安装node-mapnik](nodemapniktest/8.jpg)
 
-安装成功后，我们验证一下安装是否成功，我们使用[node-mapnik github](https://github.com/mapnik/node-mapnik)上的示例代码进行测试：
+安装成功后，我们验证一下模块是否可用，我们使用[node-mapnik github](https://github.com/mapnik/node-mapnik)上的示例代码进行测试：
 ```javascript
 var mapnik = require('mapnik');
 new mapnik.Image.open('input.jpg').save('output.png');
@@ -79,7 +79,140 @@ new mapnik.Image.open('input.jpg').save('output.png');
 ![安装node-mapnik](nodemapniktest/10.jpg)
 
 #### 3.配置Mapnik配图样式XML
+根据Mapnik的XML配置格式，配了一个简单的地图：
+```xml
+<Map background-color="rgb(255,255,255)" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over">
+
+  <Style name="My Style">
+    <Rule>
+      <PolygonSymbolizer fill="#f2eff9" />
+      <LineSymbolizer stroke="rgb(255,0,0)" stroke-width="1" />
+    </Rule>
+  </Style>
+
+  <Layer name="world" srs="+proj=longlat +ellps=GRS80 +no_defs">
+    <StyleName>My Style</StyleName>
+    <Datasource>
+      <Parameter name="file">shapefile/aaa</Parameter>
+      <Parameter name="type">shape</Parameter>
+    </Datasource>
+  </Layer>
+
+</Map>
+```
+这里的shapefile数据是国家2000经纬度坐标系的，最开始地图也是这个空间参考，但是需要前端访问时对应到这个空间参考上，有些麻烦，所以直接修改地图空间参考为比较流行的Web墨卡托投影坐标系了，图层进行动态投影显示。
+
+配好之后可以使用下面的脚本生成图片，验证配图效果：
+```javascript
+var mapnik = require('mapnik');
+var fs = require('fs');
+
+// register fonts and datasource plugins
+mapnik.register_default_fonts();
+mapnik.register_default_input_plugins();
+
+var map = new mapnik.Map(4096, 4096);
+map.load('../data/style.xml', function(err,map) {
+    if (err) throw err;
+    map.zoomAll();
+    var im = new mapnik.Image(4096, 4096);
+    map.render(im, function(err,im) {
+      if (err) throw err;
+      im.encode('png', function(err,buffer) {
+          if (err) throw err;
+          fs.writeFile('map.png',buffer, function(err) {
+              if (err) throw err;
+              console.log('saved map image to map.png');
+          });
+      });
+    });
+});
+```
 
 #### 4.发布地图服务
+Mapnik搞定的是地图渲染，但是发布瓦片服务，还需要使用[TileStrata](https://github.com/naturalatlas/tilestrata)来进行。
 
-#### 5.使用Openlayers访问地图服务
+安装TileStrata及其插件：
+```bash
+npm install tilestrata
+
+npm install tilestrata-disk
+
+npm install tilestrata-mapnik
+```
+
+安装完成后创建瓦片服务脚本app.js，并输入以下内容：
+```javascript
+var tilestrata = require('tilestrata');
+var disk = require('tilestrata-disk');
+var mapnik = require('tilestrata-mapnik');
+
+var strata = tilestrata();
+
+//layer名称不能为空
+strata.layer('map')
+  .route('tile.png')    //route方法中不能使用正则表达式
+  .use(disk.cache({dir: './tilecache'}))    //设置瓦片缓存在当前目录的tilecache之目录中
+  .use(mapnik({
+    pathname: '../data/test.xml'
+  }));
+
+strata.listen(8099);
+```
+
+启动脚本：
+```bash
+node app.js
+```
+
+如果会计算某一级别行列号可以通过`http://127.0.0.1:8099/map/{z}/{x}/{y}/tile.png`模式验证瓦片服务是否发布成功，也可以通过下面的方法，使用Openlayers加载瓦片服务进行验证。
+
+#### 5.使用[Openlayers](http://openlayers.org)访问瓦片服务
+到Openlayers官网上下载了新版本编译成果，创建前端目录，将ol.js拷贝到js子文件夹下，将ol.css拷贝到css子文件夹下，并创建index.html，内容如下：
+```html
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta content=always name=referrer>
+    <title>Mapnik地图服务示例</title>
+    <link href="./css/ol.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="./js/ol.js" charset="utf-8"></script>
+</head>
+<body>
+<div id="map" style="width: 100%"></div>
+<script>
+
+    var tileStrataMapLayer = new ol.layer.Tile({
+        opacity: 0.6,
+        source: new ol.source.XYZ({
+            url: 'http://127.0.0.1:8099/map/{z}/{x}/{y}/tile.png'
+        })
+    });
+
+    new ol.Map({
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+            tileStrataMapLayer,
+        ],
+
+        view: new ol.View({
+            center: [106.81, 31.55],
+            projection: 'EPSG:4326',
+            zoom: 14
+        }),
+
+        target: 'map'
+    });
+</script>
+</body>
+</html>
+```
+这里使用Openlayers加载了Mapnik瓦片服务，并叠加了一个OSM图层，用于对比叠加效果，最终效果如下：
+![Openlayers访问瓦片服务](nodemapniktest/11.png)
+
+
+以上介绍的只是做了简单的地图发布，离最终高并发地图服务还有一段距离，需要继续研究和探索。
