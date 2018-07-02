@@ -17,7 +17,7 @@ Mapnik插件需要使用`C++`语言开发，所以需要部署`C++`依赖环境�
 ##### 部署boost
 部署boost被坑了，mapnik最新版本(github下载的源码是3.1.0版本)无法使用boost最新版本(1.67.0)，可以使用boost 1.66.0版本。
 
-boost部署参考网上的教程即可：
+下载boost 1.66.0源码后，编译和部署参考网上的教程即可：
 ```bash
 cd boost_1_66_0
 
@@ -33,7 +33,7 @@ cd boost_1_66_0
 
 下载源码及其它依赖：
 ```bash
-git clone https://github.com/mapnik/mapnik.git
+git clone -b v3.0.20 https://github.com/mapnik/mapnik.git
 cd mapnik
 git submodule update --init
 ```
@@ -64,6 +64,9 @@ mapnik-config -v
 
 使用make命令编译，编译完成后会在目录下生成hello.input文件。
 ![编译成功](mapnikplugintest/1.png)
+
+在Ubuntu环境下编译报错`can not be used when making a shared object; recompile with -fPIC`，在makefile文件中加入`CXXFLAGS += -fPIC`即可
+![解决编译报错](mapnikplugintest/2.png)
 
 #### node-mapnik中使用自定义插件
 在node-mapnik中使用mapnik的register_datasource方法注册插件：
