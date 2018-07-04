@@ -218,3 +218,6 @@ node app.js
 以上介绍的只是做了简单的地图发布，离最终高并发地图服务还有一段距离，需要继续研究和探索。
 
 此篇博文参考[think8848的博客](http://www.cnblogs.com/think8848/p/6262696.html)，特此感谢！
+
+2018年7月4日更新：
+node-mapnik在6月30号发布了4.0版本，支持了最新的node.js版本(10.5.0)，以及Mapnik的pre-release master版本(3.1？)。
