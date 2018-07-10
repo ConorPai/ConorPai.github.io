@@ -142,6 +142,111 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-openstreetmapcarto" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/10/openstreetmapcarto/">使用node-mapnik和OpenStreetMap Carto发布在线瓦片地图服务</a>
+    </h1>
+  
+
+        
+        <a href="/2018/07/10/openstreetmapcarto/" class="archive-article-date">
+  	<time datetime="2018-07-10T06:13:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://github.com/gravitystorm/openstreetmap-carto" target="_blank" rel="noopener">OpenStreetMap Carto</a>是<a href="https://www.openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a>的开源配图样式，可以转换成Mapnik的XML配图文件，进而通过node-mapnik加载并发布在线瓦片地图服务。</p>
+<p>下面通过几个方面介绍如何实现地图发布：<br>1.代码准备<br>2.数据准备<br>3.字体准备<br>4.转换Mapnik XML<br>5.发布地图服务及前端查看<br>6.发布高清地图服务</p>
+<h4 id="1-代码准备"><a href="#1-代码准备" class="headerlink" title="1.代码准备"></a>1.代码准备</h4><p>从<a href="https://github.com/gravitystorm/openstreetmap-carto" target="_blank" rel="noopener">Github</a>上下载最新的OpenStreetCarto代码，解压。下文中所有<code>代码目录</code>都特指解压后的目录位置。</p>
+<p>接下来的准备工作可以参考官方提供的<a href="https://github.com/gravitystorm/openstreetmap-carto/blob/master/INSTALL.md" target="_blank" rel="noopener">安装文档</a>。</p>
+<h4 id="2-数据准备"><a href="#2-数据准备" class="headerlink" title="2.数据准备"></a>2.数据准备</h4><p>数据准备工作可以分为两种：一种是小比例尺下全球的大陆、国家等点、线、面、标注信息，shapefile格式；另一种是详细的基础数据，需要导入到postgresql数据库中使用。</p>
+<h5 id="2-1-shapefile数据准备"><a href="#2-1-shapefile数据准备" class="headerlink" title="2.1 shapefile数据准备"></a>2.1 shapefile数据准备</h5><p>执行代码目录下<code>scripts/get-shapefile.py</code>脚本可以下载shapefile数据，但是下载可能比较慢，这里提供了百度网盘分享(链接：<a href="https://pan.baidu.com/s/1mvKCdjHPsU-hZZ1xTFhu1w" target="_blank" rel="noopener">https://pan.baidu.com/s/1mvKCdjHPsU-hZZ1xTFhu1w</a> 密码：l2vf)，如果离数据日期(2018年7月10日)不是太远，可以使用，差的太久还是用脚本下载吧。</p>
+<p>下载完成之后解压到代码目录下data文件夹中。<br><img src="/2018/07/10/openstreetmapcarto/1.png" alt="shapefile准备完成"></p>
+<h5 id="2-2-postgresql数据准备"><a href="#2-2-postgresql数据准备" class="headerlink" title="2.2 postgresql数据准备"></a>2.2 postgresql数据准备</h5><p>postgresql数据处理流程是先下载osm格式数据，准备数据库，再通过osm2pgsql工具将其导入到postgresql中。</p>
+<h6 id="下载OSM数据"><a href="#下载OSM数据" class="headerlink" title="下载OSM数据"></a>下载OSM数据</h6><p>首选到<a href="https://download.geofabrik.de/asia/china.html" target="_blank" rel="noopener">这里</a>下载OSM数据(china-latest.osm.pbf)到代码目录。<br>本例中使用的是中国大陆地区的数据，如果有兴趣可以下载其它区域数据。</p>
+<h6 id="准备数据库"><a href="#准备数据库" class="headerlink" title="准备数据库"></a>准备数据库</h6><p>postgresql数据库安装完成(安装过程参考：<a href="http://www.baiguangnan.com/2018/01/31/postgis/" target="_blank" rel="noopener">这里</a>)之后，使用如下命令创建名为gis的数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres createdb gis</div></pre></td></tr></table></figure></p>
+<p>为gis数据库安装postgis和hstore扩展：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres psql -d gis -c <span class="string">'CREATE EXTENSION postgis; CREATE EXTENSION hstore;'</span></div></pre></td></tr></table></figure></p>
+<h6 id="安装osm2pgsql工具"><a href="#安装osm2pgsql工具" class="headerlink" title="安装osm2pgsql工具"></a>安装osm2pgsql工具</h6><p>Ubuntu下使用如下命令安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install osm2pgsql</div></pre></td></tr></table></figure></p>
+<h6 id="导入postgresql"><a href="#导入postgresql" class="headerlink" title="导入postgresql"></a>导入postgresql</h6><p>在代码目录下使用如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres osm2pgsql -G --hstore --style openstreetmap-carto.style --tag-transform-script openstreetmap-carto.lua -d gis china-latest.osm.pbf</div></pre></td></tr></table></figure></p>
+<p>在我的机器上会报错，提示<code>Node cache size is too small to fit all nodes. Please increase cache size</code>，需要在命令中加入<code>--cache 1600</code>，即可正常导入，完整命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres osm2pgsql -G --hstore --style openstreetmap-carto.style --tag-transform-script openstreetmap-carto.lua -d gis china-latest.osm.pbf --cache 1600</div></pre></td></tr></table></figure></p>
+<p>导入完成：<br><img src="/2018/07/10/openstreetmapcarto/2.png" alt="postgresql准备完成"></p>
+<h6 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h6><p>创建索引不是必须的，但是可以加快渲染速度，在代码目录下执行如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres psql -d gis -f indexes.sql</div></pre></td></tr></table></figure></p>
+<h4 id="3-字体准备"><a href="#3-字体准备" class="headerlink" title="3.字体准备"></a>3.字体准备</h4><p>根据<a href="https://github.com/gravitystorm/openstreetmap-carto/blob/master/INSTALL.md" target="_blank" rel="noopener">安装文档</a>，执行如下命令安装字体：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install fonts-noto-cjk fonts-noto-hinted fonts-noto-unhinted fonts-hanazono ttf-unifont</div></pre></td></tr></table></figure></p>
+<h4 id="4-转换Mapnik-XML"><a href="#4-转换Mapnik-XML" class="headerlink" title="4.转换Mapnik XML"></a>4.转换Mapnik XML</h4><p>OpenStreetMap Carto是使用TileMill工具配置的，其项目文件是project.mml，我们需要将这个工程转成Mapnik的XML配置文件。</p>
+<p>这里使用的转换工具是node模块carto，使用如下命令全局安装carto模块：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo npm install -g carto</div></pre></td></tr></table></figure></p>
+<p>转换之前需要将project.mml中postgresql连接参数修改为本机数据库参数：<br><img src="/2018/07/10/openstreetmapcarto/3.png" alt="修改数据库连接参数"></p>
+<p>然后就可以在代码目录下使用如下命令将project.mml转为mapnik.xml：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">carto project.mml &gt; mapnik.xml</div></pre></td></tr></table></figure></p>
+<p>转换完成之后，可以使用node-mapnik提供的<a href="https://github.com/mapnik/node-mapnik" target="_blank" rel="noopener">例子</a>测试xml配置文件是否正常，如果正常则会生成如下图片：<br><img src="/2018/07/10/openstreetmapcarto/map.png" alt="修改数据库连接参数"></p>
+<h4 id="5-发布地图服务及前端查看"><a href="#5-发布地图服务及前端查看" class="headerlink" title="5.发布地图服务及前端查看"></a>5.发布地图服务及前端查看</h4><p>可以参考<a href="http://www.baiguangnan.com/2018/06/25/nodemapniktest/" target="_blank" rel="noopener">这里</a>，发布瓦片服务及前端查看。<br><img src="/2018/07/10/openstreetmapcarto/4.png" alt="发布服务"></p>
+<h4 id="6-发布高清地图服务"><a href="#6-发布高清地图服务" class="headerlink" title="6.发布高清地图服务"></a>6.发布高清地图服务</h4><p>待续</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">OpenStreetMap</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/07/10/openstreetmapcarto/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-mapnikplugintest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -929,87 +1034,6 @@
 
 
   
-    <article id="post-opencv-catface" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/10/opencv-catface/">使用OpenCV和TensorFlow实现猫主子识别(-)——提取猫脸图片</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/10/opencv-catface/" class="archive-article-date">
-  	<time datetime="2018-05-10T01:09:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近某端公司部门技术分享想做一个老板检测软件，即一旦老板出现则马上报警-_-!!!。<br>我也大概想了一下实现思路，而且搜到了OpenCV自带了猫脸检测的分类器，突发奇想干脆给我家五只猫主子做一个动态识别器吧。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">实现分为几个步骤：</div><div class="line">1.随机截取五只猫主子的猫脸图片，并进行保存</div><div class="line">2.对猫脸图片进行分类标注</div><div class="line">3.使用TensorFlow对分类标注结果进行训练</div><div class="line">4.对监测时截取的猫脸图片进行识别，看是哪位猫主子飘过</div></pre></td></tr></table></figure>
-<p>今天实现第一步：随机截取五只猫主子的猫脸图片，并进行保存。</p>
-<p>猫脸检测分类器在<a href="https://github.com/opencv/opencv/tree/master/data/haarcascades" target="_blank" rel="noopener">GitHub</a>上可以下载到，其中的<code>haarcascade_frontalcatface.xml</code>和<code>haarcascade_frontalcatface_extended.xml</code>即为猫脸检测的分类器(还有一些其它的分类器，比如人脸检测、笑脸检测、眼睛检测等，有兴趣的可以都试一下)。</p>
-<p>OpenCV使用的检测方法是<code>detectMultiScale()</code>，此方法的作用是，在输入图像中检测不同尺寸的对象，返回包含对象的矩形框。它接收的参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">1.image——输入图像</div><div class="line">2.scaleFactor——表示每轮检测图像齿轮减少的比例</div><div class="line">3.minNeighbors——指明对象要至少被检测到几次才能判定对象确实存在</div><div class="line">4.minSize——检测对象的最小尺寸</div><div class="line">5.maxSize——检测对象的最大尺寸</div></pre></td></tr></table></figure>
-<p>完整实现代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#coding=utf-8</span></div><div class="line"><span class="comment">#作用：从摄像头中提取识别出来的猫脸图片，保存并准备进行下一阶段训练使用</span></div><div class="line"></div><div class="line"><span class="comment">#引用相关库</span></div><div class="line"><span class="keyword">import</span> cv2</div><div class="line"><span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"><span class="comment">#使用OpenCV打开摄像头</span></div><div class="line">cap = cv2.VideoCapture(<span class="number">0</span>)</div><div class="line"><span class="comment">#分类器初始化</span></div><div class="line">cascade_path = <span class="string">'haarcascade_frontalcatface_extended.xml'</span></div><div class="line">cascade = cv2.CascadeClassifier(cascade_path)</div><div class="line"><span class="comment">#循环读取摄像头中的每一帧画面</span></div><div class="line"><span class="keyword">while</span> cap.isOpened():</div><div class="line">    <span class="comment">#读取一帧画面</span></div><div class="line">    _, frame = cap.read()</div><div class="line">    <span class="comment">#灰度处理</span></div><div class="line">    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)</div><div class="line">    <span class="comment">#猫脸检测</span></div><div class="line">    facerect = cascade.detectMultiScale(frame_gray, scaleFactor=<span class="number">1.1</span>, minNeighbors=<span class="number">5</span>, minSize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">    <span class="comment">#如果检测到结果</span></div><div class="line">    <span class="keyword">if</span> len(facerect) &gt; <span class="number">0</span>:</div><div class="line">        <span class="comment">#输出日志</span></div><div class="line">        print(<span class="string">'face detected'</span>)</div><div class="line">        <span class="comment">#获取当前时间，用来保存该帧画面及猫脸图片</span></div><div class="line">        t = datetime.datetime.now()</div><div class="line">        <span class="comment">#循环遍历检测到的猫脸区域</span></div><div class="line">        <span class="keyword">for</span> (i, (x, y, w, h)) <span class="keyword">in</span> enumerate(facerect):</div><div class="line">            <span class="comment">#在猫脸区域画出方框</span></div><div class="line">            cv2.rectangle(frame, (x, y), (x + w, y + h), (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>), thickness=<span class="number">2</span>)</div><div class="line">            <span class="comment">#使用ROI获取猫脸区域图像</span></div><div class="line">            roiImg = frame[y:y + h, x:x + w]</div><div class="line">            <span class="comment">#将猫脸区域图像保存成文件</span></div><div class="line">            cv2.imwrite(<span class="string">'save/'</span> + str(t) + <span class="string">'-'</span> + str(i) + <span class="string">'.jpg'</span>, roiImg)</div><div class="line">        <span class="comment">#将标识出猫脸区域的当前帧保存，方便以后标注</span></div><div class="line">        cv2.imwrite(<span class="string">'save/'</span> + str(t) + <span class="string">'.jpg'</span>, frame)</div><div class="line">    <span class="comment">#未检测到结果</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment">#输出日志</span></div><div class="line">        print(<span class="string">'face not detected'</span>)</div><div class="line">    <span class="comment">#显示标识出猫脸区域的当前帧画面</span></div><div class="line">    cv2.imshow(<span class="string">"capture"</span>, frame)</div><div class="line">    <span class="comment">#检测ESC按钮，按下则退出</span></div><div class="line">    k = cv2.waitKey(<span class="number">100</span>)</div><div class="line">    <span class="keyword">if</span> k == <span class="number">27</span>:</div><div class="line">        <span class="keyword">break</span></div><div class="line"><span class="comment">#释放资源</span></div><div class="line">cap.release()</div><div class="line">cv2.destroyAllWindows()</div></pre></td></tr></table></figure></p>
-<p>实现效果：<br><img src="/2018/05/10/opencv-catface/result.png" alt="实现效果"><br>这位萌萌的小主叫地黄。。刚满2个月，至于名字的来源：<br><img src="/2018/05/10/opencv-catface/name1.png" alt="名字1"><br><img src="/2018/05/10/opencv-catface/name2.png" alt="名字2"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/10/opencv-catface/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1107,15 +1131,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1136,6 +1160,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">

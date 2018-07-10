@@ -6,12 +6,12 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>ConorPai的博客</title>
+  <title>Archives: 2018/7 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/page/3/index.html">
+<meta property="og:url" content="http://yoursite.com/archives/2018/07/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
 <meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
 <meta name="twitter:card" content="summary">
@@ -142,281 +142,66 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-getsysteminfo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
+  
     
-      <header class="article-header">
-        
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2018/07/10/openstreetmapcarto/" class="archive-article-date">
+  	<time datetime="2018-07-10T06:13:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-10</time>
+</a>
+        </div>
+    	 
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/getsysteminfo/">使用C#获取系统软硬件信息</a>
+      <a class="archive-article-title" href="/2018/07/10/openstreetmapcarto/">使用node-mapnik和OpenStreetMap Carto发布在线瓦片地图服务</a>
     </h1>
   
 
-        
-        <a href="/2017/12/01/getsysteminfo/" class="archive-article-date">
-  	<time datetime="2017-12-01T09:01:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近需要使用C#获取操作系统软硬件信息，在网上找到如下解决方案：</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> 操作系统信息</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">string</span> OSInfo</div><div class="line">&#123;</div><div class="line">    <span class="keyword">get</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> Environment.OSVersion.ToString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> BIOS序列号</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">string</span> BIOSNumber</div><div class="line">&#123;</div><div class="line">    <span class="keyword">get</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">try</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">var</span> query = <span class="keyword">new</span> ManagementObjectSearcher(<span class="string">"SELECT * FROM Win32_BIOS WHERE (SerialNumber IS NOT NULL)"</span>).Get();</div><div class="line"></div><div class="line">            <span class="keyword">string</span> result = <span class="keyword">string</span>.Empty;</div><div class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> obj <span class="keyword">in</span> query)</div><div class="line">            &#123;</div><div class="line">                result = obj[<span class="string">"SerialNumber"</span>].ToString();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> 处理器序列号</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">string</span> CPUNumber</div><div class="line">&#123;</div><div class="line">    <span class="keyword">get</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">try</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">var</span> query = <span class="keyword">new</span> ManagementObjectSearcher(<span class="string">"SELECT * FROM Win32_Processor WHERE (ProcessorId IS NOT NULL)"</span>).Get();</div><div class="line"></div><div class="line">            <span class="keyword">string</span> result = <span class="keyword">string</span>.Empty;</div><div class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> obj <span class="keyword">in</span> query)</div><div class="line">            &#123;</div><div class="line">                result = obj[<span class="string">"Processorid"</span>].ToString();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> 内存信息</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">string</span> MemoryNumber</div><div class="line">&#123;</div><div class="line">    <span class="keyword">get</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">try</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">var</span> query = <span class="keyword">new</span> ManagementObjectSearcher(<span class="string">"SELECT * FROM Win32_PhysicalMemory"</span>).Get();</div><div class="line"></div><div class="line">            <span class="keyword">string</span> result = <span class="keyword">string</span>.Empty;</div><div class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> obj <span class="keyword">in</span> query)</div><div class="line">            &#123;</div><div class="line">                result = obj[<span class="string">"PartNumber"</span>].ToString();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> 主板序列号</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">string</span> BaseBoardNumber</div><div class="line">&#123;</div><div class="line">    <span class="keyword">get</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">try</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">var</span> query = <span class="keyword">new</span> ManagementObjectSearcher(<span class="string">"SELECT * FROM Win32_BaseBoard WHERE (SerialNumber IS NOT NULL)"</span>).Get();</div><div class="line"></div><div class="line">            <span class="keyword">string</span> result = <span class="keyword">string</span>.Empty;</div><div class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> obj <span class="keyword">in</span> query)</div><div class="line">            &#123;</div><div class="line">                result = obj[<span class="string">"SerialNumber"</span>].ToString();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> 硬盘序列号</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">string</span> HardDiskNumber</div><div class="line">&#123;</div><div class="line">    <span class="keyword">get</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">try</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">var</span> query = <span class="keyword">new</span> ManagementObjectSearcher(<span class="string">"SELECT * FROM Win32_DiskDrive WHERE (SerialNumber IS NOT NULL) AND (MediaType LIKE 'Fixed hard disk%')"</span>).Get();</div><div class="line"></div><div class="line">            <span class="keyword">string</span> result = <span class="keyword">string</span>.Empty;</div><div class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> obj <span class="keyword">in</span> query)</div><div class="line">            &#123;</div><div class="line">                result = obj[<span class="string">"SerialNumber"</span>].ToString();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> 网卡信息</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">string</span> NetWorkInfo</div><div class="line">&#123;</div><div class="line">    <span class="keyword">get</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">try</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">var</span> query = <span class="keyword">new</span> ManagementObjectSearcher(<span class="string">"SELECT * FROM Win32_NetworkAdapter WHERE (MACAddress IS NOT NULL) AND (NOT (PNPDeviceID LIKE 'ROOT%'))"</span>).Get();</div><div class="line"></div><div class="line">            <span class="keyword">string</span> result = <span class="keyword">string</span>.Empty;</div><div class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> obj <span class="keyword">in</span> query)</div><div class="line">            &#123;</div><div class="line">                result = obj[<span class="string">"MACAddress"</span>].ToString();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">""</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>还可以获取其它信息，由于工作中没用到就不在这里列出了，具体可以参考源博：<a href="http://www.cnblogs.com/chen110xi/p/6189499.html" target="_blank" rel="noopener">http://www.cnblogs.com/chen110xi/p/6189499.html</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
         		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/01/getsysteminfo/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-controlflash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/14/controlflash/">解决WinForm自定义控件刷新时闪烁问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/11/14/controlflash/" class="archive-article-date">
-  	<time datetime="2017-11-14T05:39:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近遇到由于窗口内其它控件变动导致自定义地图控件闪烁的问题，体验特别不好，所以需要想办法解决这个问题。</p>
-<p>自定义地图控件的逻辑是在控件触发OnPaint事件时，将地图内容绘制到控件Graphic上，曾经尝试在OnPaint中做处理，但是没有效果，后来才意识到闪烁的根本原因是控件做了清除操作，变白了再做绘制就会让人感觉到是在闪烁。</p>
-<p>在网上找到了这篇文章，<a href="http://www.cnblogs.com/firstdown/p/6420534.html" target="_blank" rel="noopener">winform控件大小改变是防止背景重绘导致的闪烁</a>，在自定义地图控件中重写OnPaintBackground方法后验证此问题得到解决</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> OnPaintBackground 事件</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="e"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPaintBackground</span>(<span class="params">PaintEventArgs e</span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="comment">// 重载基类的背景擦除函数，</span></div><div class="line">    <span class="comment">// 解决窗口刷新，放大，图像闪烁</span></div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>接下来需要考虑不做清除操作会带来什么问题，比如在图层设置成半透明时，如果不做清屏效果会不会叠加，不做清屏会不会有些不是本次刷新需要显示的内容还残留在地图上等，但是经过验证这些问题都不存在，因为地图的绘制机制会做一个背景填充的操作，效果目前一切正常。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
+      		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
         		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/11/14/controlflash/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-confighexo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/31/confighexo/">使用Hexo搭建个人博客的详细教程</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/31/confighexo/" class="archive-article-date">
-  	<time datetime="2017-10-31T14:18:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-31</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-基础环境配置"><a href="#1-基础环境配置" class="headerlink" title="1.基础环境配置"></a>1.基础环境配置</h2><h6 id="1-1-申请GitHub帐号"><a href="#1-1-申请GitHub帐号" class="headerlink" title="1.1 申请GitHub帐号"></a><strong>1.1 申请GitHub帐号</strong></h6><p>到GitHub<a href="https://github.com/" target="_blank" rel="noopener">官网</a>注册个人帐号。</p>
-<h6 id="1-2-配置node-js"><a href="#1-2-配置node-js" class="headerlink" title="1.2 配置node.js"></a><strong>1.2 配置node.js</strong></h6><p>1)到Node.js<a href="https://nodejs.org/" target="_blank" rel="noopener">官网</a>下载相应平台的最新版本安装，或者使用系统软件包管理器(<code>Homebrew</code>、<code>apt-get</code>等)进行安装(MacOS上的小坑：使用brew和安装包同时安装Node.js会冲突，目前我的电脑上无法全局安装模块，还没来得及找解决方案)。</p>
-<p>2)配置淘宝数据源，加快npm模块安装速度。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</div></pre></td></tr></table></figure></p>
-<h6 id="1-3-配置git"><a href="#1-3-配置git" class="headerlink" title="1.3 配置git"></a><strong>1.3 配置git</strong></h6><p>1)安装git。<br>2)全局配置。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git config --global user.email baiguangnan@163.com</div><div class="line">$ git config --global user.name ConorPai</div></pre></td></tr></table></figure></p>
-<h6 id="1-4-安装Hexo"><a href="#1-4-安装Hexo" class="headerlink" title="1.4 安装Hexo"></a><strong>1.4 安装Hexo</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo</div></pre></td></tr></table></figure>
-<h2 id="2-配置Hexo目录"><a href="#2-配置Hexo目录" class="headerlink" title="2.配置Hexo目录"></a>2.配置Hexo目录</h2><h6 id="2-1-命令行进入博客文件存放目录"><a href="#2-1-命令行进入博客文件存放目录" class="headerlink" title="2.1 命令行进入博客文件存放目录"></a><strong>2.1 命令行进入博客文件存放目录</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkdir myblog</div><div class="line">$ <span class="built_in">cd</span> myblog</div></pre></td></tr></table></figure>
-<h6 id="2-2-初始化"><a href="#2-2-初始化" class="headerlink" title="2.2 初始化"></a><strong>2.2 初始化</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo init</div></pre></td></tr></table></figure>
-<h6 id="2-3-安装依赖模块"><a href="#2-3-安装依赖模块" class="headerlink" title="2.3 安装依赖模块"></a><strong>2.3 安装依赖模块</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install</div></pre></td></tr></table></figure>
-<h6 id="2-4-创建新的文章"><a href="#2-4-创建新的文章" class="headerlink" title="2.4 创建新的文章"></a><strong>2.4 创建新的文章</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"MyNewPost"</span></div></pre></td></tr></table></figure>
-<h6 id="2-5-生成博客页面"><a href="#2-5-生成博客页面" class="headerlink" title="2.5 生成博客页面"></a><strong>2.5 生成博客页面</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo clean 		<span class="comment">#清理之前的缓存</span></div><div class="line">$ hexo g		<span class="comment">#生成博客页面</span></div><div class="line">$ hexo s		<span class="comment">#发布本地服务，访问http://localhost:4000/即可查看</span></div></pre></td></tr></table></figure>
-<h6 id="2-6-修改博客主题"><a href="#2-6-修改博客主题" class="headerlink" title="2.6 修改博客主题"></a><strong>2.6 修改博客主题</strong></h6><p>目前本博客使用的是<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">yilia</a>主题，配置方式如下：<br>1）下载主题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/litten/hexo-theme-yilia.git themes/yilia</div></pre></td></tr></table></figure></p>
-<p>2）配置主题<br>修改<code>themes/yilia/_config.yml</code>中的各项内容，具体配置可以参考<a href="https://github.com/litten/BlogBackup/blob/master/_config.yml" target="_blank" rel="noopener">yilia作者博客主题配置</a>及<a href="https://github.com/ConorPai/ConorPai.github.io/blob/backup/themes/yilia/_config.yml" target="_blank" rel="noopener">本博主题配置</a>。<br>3）应用主题<br>修改<code>_config.yml</code>中的<code>theme: landscape</code>改为<code>theme: yilia</code>。<br>4）清理并重新生成<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo clean</div><div class="line">$ hexo g</div></pre></td></tr></table></figure></p>
-<p>5）智能菜单错误处理<br>刚配置好的yilia主题智能菜单中的所有文章会有问题，但只要按照提示进行两步处理，再重新生成即可</p>
-<h2 id="3-编写博客"><a href="#3-编写博客" class="headerlink" title="3.编写博客"></a>3.编写博客</h2><h6 id="3-1-插入图片"><a href="#3-1-插入图片" class="headerlink" title="3.1 插入图片"></a><strong>3.1 插入图片</strong></h6><p>这里推荐使用<a href="https://github.com/CodeFalling/hexo-asset-image" target="_blank" rel="noopener">hexo-asset-image</a>模块来管理博客图片<br>1)安装hexo-asset-image模块<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-asset-image --save</div></pre></td></tr></table></figure></p>
-<p>2)设置<code>_config.yml</code>中<code>post_asset_folder: true</code><br>3)图片存储位置<br>新建一个与博客文件同名的文件夹，将该博客使用的图片都放到这个文件夹内<br><img src="/2017/10/31/confighexo/imageassets.png" alt="图片组织"><br>4)在博客内使用图片<br><code>![获取IP](confighexo/getip.png)</code></p>
-<h6 id="3-2-插入音乐"><a href="#3-2-插入音乐" class="headerlink" title="3.2 插入音乐"></a><strong>3.2 插入音乐</strong></h6><p>浏览器打开网易云音乐，搜索想要的歌曲，点击歌曲名字进入播放器页面，点击“生成外链播放器”。复制到这边就可以了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;iframe frameborder=&quot;no&quot; border=&quot;0&quot; marginwidth=&quot;0&quot; marginheight=&quot;0&quot; width=280 height=86 src=&quot;https://music.163.com/outchain/player?type=2&amp;id=437292675&amp;auto=0&amp;height=66&quot;&gt;&lt;/iframe&gt;</div></pre></td></tr></table></figure></p>
-<p><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="280" height="86" src="https://music.163.com/outchain/player?type=2&id=437292675&auto=0&height=66"></iframe></p>
-<h6 id="3-3-插入视频"><a href="#3-3-插入视频" class="headerlink" title="3.3 插入视频"></a><strong>3.3 插入视频</strong></h6><p>使用iframe标签<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;iframe   </div><div class="line">    height=498 width=510 </div><div class="line">    autoPlay=false </div><div class="line">    src=&quot;https://player.youku.com/embed/XNjcyMDU4Njg0&quot;   </div><div class="line">    frameborder=0 allowfullscreen&gt;  </div><div class="line">&lt;/iframe&gt;</div></pre></td></tr></table></figure></p>
-<p><iframe height="498" width="510" autoplay="false" src="https://player.youku.com/embed/XNjcyMDU4Njg0" frameborder="0" allowfullscreen><br></iframe></p>
-<h6 id="3-4-支持评论"><a href="#3-4-支持评论" class="headerlink" title="3.4 支持评论"></a><strong>3.4 支持评论</strong></h6><p>yilia主题支持多说、网易云跟贴、畅言、Disqus、Gitment五种评论配置，但是只有畅言和Gitment能用，本博最终选择Gitment做为评论系统，接下来介绍配置流程：<br>1）到<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">Github</a>上创建OAuth Apps<br><img src="/2017/10/31/confighexo/gitment.png" alt="创建OAuth Apps"><br>2）创建之后记录下ClientID和Client Secret<br><img src="/2017/10/31/confighexo/clientinfo.png" alt="记录Client信息"><br>3）修改yilia主题的_config.yml文件<br><img src="/2017/10/31/confighexo/yiliagitment.png" alt="配置主题"></p>
-<h6 id="3-5-支持目录"><a href="#3-5-支持目录" class="headerlink" title="3.5 支持目录"></a><strong>3.5 支持目录</strong></h6><p>yilia支持显示文章目录，首先配置yilia主题的_config.yml<br><img src="/2017/10/31/confighexo/tocconfig.png" alt="配置主题"><br>然后在文章的设置中标识显示目录<br><img src="/2017/10/31/confighexo/showtoc.png" alt="配置文章"><br>最终效果<br><img src="/2017/10/31/confighexo/toc.png" alt="最终效果"></p>
-<h2 id="4-发布到Github-Pages"><a href="#4-发布到Github-Pages" class="headerlink" title="4.发布到Github Pages"></a>4.发布到Github Pages</h2><h6 id="4-1-生成本机密钥"><a href="#4-1-生成本机密钥" class="headerlink" title="4.1 生成本机密钥"></a><strong>4.1 生成本机密钥</strong></h6><p>1)生成密钥，密码设置为空。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C baiguangnan@163.com</div></pre></td></tr></table></figure></p>
-<p>2)在用户目录下找到.ssh/id_rsa.pub文件，用打开文本的方式打开，拷贝其中的内容到GitHub个人设置-&gt;SSH and GPG keys-&gt;New SSH key中。<br><img src="/2017/10/31/confighexo/ssh.png" alt="设置SSH"><br>3)验证是否成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh -T git@github.com <span class="comment">#注意：邮箱地址不用改</span></div></pre></td></tr></table></figure></p>
-<h6 id="4-2-申请Github-Pages"><a href="#4-2-申请Github-Pages" class="headerlink" title="4.2 申请Github Pages"></a><strong>4.2 申请Github Pages</strong></h6><p>新建一个<code>你的用户名.github.io</code>的仓库，比如说我的github用户名是ConorPai，则新建的仓库名称为<code>ConorPai.github.io</code>。</p>
-<h6 id="4-3-将页面上传至Github"><a href="#4-3-将页面上传至Github" class="headerlink" title="4.3 将页面上传至Github"></a><strong>4.3 将页面上传至Github</strong></h6><p>1)hexo配置<br>修改<code>_config.yml</code>中有关deploy的部分：<br><img src="/2017/10/31/confighexo/deploy.png" alt="部署"><br>注意：冒号后边有空格，不加空格上传会出错。<br>2)安装上传模块<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
-<p>3)上传页面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo d</div></pre></td></tr></table></figure></p>
-<p>3)上传之后就可以通过<code>http://你的用户名.github.io</code>进行访问了。</p>
-<h2 id="5-绑定域名"><a href="#5-绑定域名" class="headerlink" title="5.绑定域名"></a>5.绑定域名</h2><p>如果拥有自己的域名，可以与Github Pages进行绑定</p>
-<h6 id="5-1-获取Github-Pages的IP地址"><a href="#5-1-获取Github-Pages的IP地址" class="headerlink" title="5.1 获取Github Pages的IP地址"></a><strong>5.1 获取Github Pages的IP地址</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ping conorpai.github.io</div></pre></td></tr></table></figure>
-<p><img src="/2017/10/31/confighexo/getip.png" alt="获取IP"></p>
-<h6 id="5-2-到阿里云控制台配置域名解析"><a href="#5-2-到阿里云控制台配置域名解析" class="headerlink" title="5.2 到阿里云控制台配置域名解析"></a><strong>5.2 到阿里云控制台配置域名解析</strong></h6><p><img src="/2017/10/31/confighexo/nowww.png" alt="域名解析"><br><img src="/2017/10/31/confighexo/www.png" alt="域名解析"></p>
-<h6 id="5-3-配置CNAME文件"><a href="#5-3-配置CNAME文件" class="headerlink" title="5.3 配置CNAME文件"></a><strong>5.3 配置CNAME文件</strong></h6><p>在source目录下新建一个名为CNAME的文件，里面写入域名www.baiguangnan.com，保存并进行上传。经过以上操作后访问域名即可跳转到博客页面。</p>
-<h2 id="6-博客内容多端同步"><a href="#6-博客内容多端同步" class="headerlink" title="6.博客内容多端同步"></a>6.博客内容多端同步</h2><p>如果需要在多个设备上写博客，就需要将博客源文件进行同步处理，这里推荐使用<a href="https://github.com/coneycode/hexo-git-backup" target="_blank" rel="noopener">hexo-git-backup</a>模块，可以将博客源文件上传至Github Pages的分支下。</p>
-<h6 id="6-1-安装hexo-git-backup模块"><a href="#6-1-安装hexo-git-backup模块" class="headerlink" title="6.1 安装hexo-git-backup模块"></a><strong>6.1 安装hexo-git-backup模块</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-git-backup --save</div></pre></td></tr></table></figure>
-<h6 id="6-2-配置备份位置"><a href="#6-2-配置备份位置" class="headerlink" title="6.2 配置备份位置"></a><strong>6.2 配置备份位置</strong></h6><p>在<code>_config.yml</code>中增加如下配置：<br><img src="/2017/10/31/confighexo/backup.png" alt="备份配置"><br>其中git位置后的backup为分支名称。</p>
-<h6 id="6-3-备份"><a href="#6-3-备份" class="headerlink" title="6.3 备份"></a><strong>6.3 备份</strong></h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo b</div></pre></td></tr></table></figure>
-<h6 id="6-4-续写博客"><a href="#6-4-续写博客" class="headerlink" title="6.4 续写博客"></a><strong>6.4 续写博客</strong></h6><p>使用该方案目前无法实现从github上更新，所以如果本地的源文件是旧的，需要全部删除从Github的分支上重新下载源文件，使用<code>npm install</code>安装依赖模块之后即可正常编写博客。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
+      		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">个人网站搭建</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">OpenStreetMap</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/31/confighexo/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
+        </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+    </div></section>
   
+
+    
 
 
           </div>
@@ -438,9 +223,9 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
+		isHome: false,
 		isPost: false,
-		isArchive: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
