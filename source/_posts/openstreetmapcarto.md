@@ -103,3 +103,5 @@ carto project.mml > mapnik.xml
 
 #### 6.发布高清地图服务
 待续
+
+此篇博文参考[think8848的博客](https://www.cnblogs.com/think8848/p/6241836.html)，特此感谢！
