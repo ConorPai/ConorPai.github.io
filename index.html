@@ -185,7 +185,8 @@
 <p>然后就可以在代码目录下使用如下命令将project.mml转为mapnik.xml：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">carto project.mml &gt; mapnik.xml</div></pre></td></tr></table></figure></p>
 <p>转换完成之后，可以使用node-mapnik提供的<a href="https://github.com/mapnik/node-mapnik" target="_blank" rel="noopener">例子</a>测试xml配置文件是否正常，如果正常则会生成如下图片：<br><img src="/2018/07/10/openstreetmapcarto/map.png" alt="修改数据库连接参数"></p>
 <h4 id="5-发布地图服务及前端查看"><a href="#5-发布地图服务及前端查看" class="headerlink" title="5.发布地图服务及前端查看"></a>5.发布地图服务及前端查看</h4><p>可以参考<a href="http://www.baiguangnan.com/2018/06/25/nodemapniktest/" target="_blank" rel="noopener">这里</a>，发布瓦片服务及前端查看。<br><img src="/2018/07/10/openstreetmapcarto/4.png" alt="发布服务"></p>
-<h4 id="6-发布高清地图服务"><a href="#6-发布高清地图服务" class="headerlink" title="6.发布高清地图服务"></a>6.发布高清地图服务</h4><p>待续</p>
+<h4 id="6-发布高清地图服务"><a href="#6-发布高清地图服务" class="headerlink" title="6.发布高清地图服务"></a>6.发布高清地图服务</h4><p>正常发布的瓦片地图，在高清屏上看起来比较模糊，需要发布高清地图才能适应这类屏幕，首先看一下效果：<br>OpenStreetMap官方地图在Macbook Pro上的显示效果：<br><img src="/2018/07/10/openstreetmapcarto/5.png" alt="OpenStreetMap官网"><br>自己发布的普通地图服务在Macbook Pro上的显示效果：<br><img src="/2018/07/10/openstreetmapcarto/6.png" alt="OpenStreetMap官网"><br>自己发布的高清地图服务在Macbook Pro上的显示效果：<br><img src="/2018/07/10/openstreetmapcarto/7.png" alt="OpenStreetMap官网"></p>
+<p>配置过程：待续。</p>
 <p>此篇博文参考<a href="https://www.cnblogs.com/think8848/p/6241836.html" target="_blank" rel="noopener">think8848的博客</a>，特此感谢！</p>
 
       
@@ -1132,15 +1133,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
