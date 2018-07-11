@@ -110,7 +110,100 @@ OpenStreetMap官方地图在Macbook Pro上的显示效果：
 自己发布的高清地图服务在Macbook Pro上的显示效果：
 ![OpenStreetMap官网](openstreetmapcarto/7.png)
 
-配置过程：待续。
+高清版的配置过程包括两方面：1）[TileStrata](https://github.com/naturalatlas/tilestrata)支持512*512大小瓦片；2）OpenLayers支持显示512*512大小瓦片；
+
+##### TileStrata配置
+TileStrata已经给出例子：
+```javascript
+var tilestrata = require('tilestrata');
+var disk = require('tilestrata-disk');
+var sharp = require('tilestrata-sharp');
+var mapnik = require('tilestrata-mapnik');
+var dependency = require('tilestrata-dependency');
+var strata = tilestrata();
+
+// define layers
+strata.layer('basemap')
+    .route('tile@2x.png')
+        .use(disk.cache({dir: '/var/lib/tiles/basemap'}))
+        .use(mapnik({
+            pathname: '/path/to/map.xml',
+            tileSize: 512,
+            scale: 2
+        }))
+    .route('tile.png')
+        .use(disk.cache({dir: '/var/lib/tiles/basemap'}))
+        .use(dependency('basemap', 'tile@2x.png'))
+        .use(sharp(function(image, sharp) {
+            return image.resize(256);
+        }));
+
+// start accepting requests
+strata.listen(8080);
+```
+
+但是这里生成普通瓦片是通过512压缩而成，效果并不是很好，所以我这里512和256都是通过Mapnik进行绘制，高清版命名为tile@2x.png，普通版命名为tile.png。
+```javascript
+var tilestrata = require('tilestrata');
+var disk = require('tilestrata-disk');
+var mapnik = require('tilestrata-mapnik');
+
+var strata = tilestrata();
+
+strata.layer('map')
+  .route('tile@2x.png')
+    .use(disk.cache({dir: './tilecache'}))
+    .use(mapnik({
+      pathname: '/home/paiconor/mapnik/openstreetmap-carto-master/mapnik.xml',
+      tileSize: 512,
+      scale: 2
+    }))
+  .route('tile.png')
+    .use(disk.cache({dir: './tilecache'}))
+    .use(mapnik({
+      pathname: '/home/paiconor/mapnik/openstreetmap-carto-master/mapnik.xml'
+    }));
+strata.listen(8099);
+```
+
+##### Openlayers配置
+在Openlayers请求tile@2x.png，并设置tilePixelRatio为2，示例如下：
+```html
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+<head>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta content=always name=referrer>
+    <title>Mapnik地图服务示例</title>
+    <link href="./css/ol.css" rel="stylesheet" type="text/css" />
+    <link href="./css/index.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="./js/ol.js" charset="utf-8"></script>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+    var tileStrataMapLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: 'http://192.168.1.140:8099/map/{z}/{x}/{y}/tile@2x.png',
+            tilePixelRatio: 2
+        })
+    });
+    new ol.Map({
+        layers: [
+            tileStrataMapLayer
+        ],
+        view: new ol.View({
+            center: [0, 0],
+            projection: 'EPSG:3857',
+            zoom: 2
+        }),
+        target: 'map'
+    });
+</script>
+</body>
+</html>
+```
 
 
 
