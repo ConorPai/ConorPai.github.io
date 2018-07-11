@@ -110,7 +110,7 @@ OpenStreetMap官方地图在Macbook Pro上的显示效果：
 自己发布的高清地图服务在Macbook Pro上的显示效果：
 ![OpenStreetMap官网](openstreetmapcarto/7.png)
 
-高清版的配置过程包括两方面：1）[TileStrata](https://github.com/naturalatlas/tilestrata)支持512*512大小瓦片；2）OpenLayers支持显示512*512大小瓦片；
+高清版的配置过程包括两方面：1）[TileStrata](https://github.com/naturalatlas/tilestrata)支持`512*512`大小瓦片；2）OpenLayers支持显示`512*512`大小瓦片；
 
 ##### TileStrata配置
 TileStrata已经给出例子：
