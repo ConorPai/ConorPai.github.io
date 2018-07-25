@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>node-mapnik集群负载均衡配置 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="使用集群部署和负载均衡可以提高大量并发访问地图效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。 本篇文章是在上一篇的基础上进行扩展，如果有不清楚的可以了解一下。 1.使用node.js的cluster模块创建单机集群因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但node.js的c">
+  <meta name="description" content="使用集群部署和负载均衡可以提高大量用户并发访问下瓦片服务绘制效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。 本篇文章是在上一篇的基础上进行扩展，如果有不清楚的可以了解一下。 1.使用node.js的cluster模块创建单机集群因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但no">
 <meta name="keywords" content="GIS,Mapnik">
 <meta property="og:type" content="article">
 <meta property="og:title" content="node-mapnik集群负载均衡配置">
 <meta property="og:url" content="http://yoursite.com/2018/07/25/nodemapnikcluster/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="使用集群部署和负载均衡可以提高大量并发访问地图效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。 本篇文章是在上一篇的基础上进行扩展，如果有不清楚的可以了解一下。 1.使用node.js的cluster模块创建单机集群因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但node.js的c">
+<meta property="og:description" content="使用集群部署和负载均衡可以提高大量用户并发访问下瓦片服务绘制效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。 本篇文章是在上一篇的基础上进行扩展，如果有不清楚的可以了解一下。 1.使用node.js的cluster模块创建单机集群因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但no">
 <meta property="og:image" content="http://yoursite.com/2018/07/25/nodemapnikcluster/2.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/25/nodemapnikcluster/1.png">
-<meta property="og:updated_time" content="2018-07-25T08:38:34.472Z">
+<meta property="og:updated_time" content="2018-07-25T09:02:09.142Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="node-mapnik集群负载均衡配置">
-<meta name="twitter:description" content="使用集群部署和负载均衡可以提高大量并发访问地图效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。 本篇文章是在上一篇的基础上进行扩展，如果有不清楚的可以了解一下。 1.使用node.js的cluster模块创建单机集群因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但node.js的c">
+<meta name="twitter:description" content="使用集群部署和负载均衡可以提高大量用户并发访问下瓦片服务绘制效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。 本篇文章是在上一篇的基础上进行扩展，如果有不清楚的可以了解一下。 1.使用node.js的cluster模块创建单机集群因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但no">
 <meta name="twitter:image" content="http://yoursite.com/2018/07/25/nodemapnikcluster/2.png">
   
   
@@ -165,7 +165,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>使用集群部署和负载均衡可以提高大量并发访问地图效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。</p>
+        <p>使用集群部署和负载均衡可以提高大量用户并发访问下瓦片服务绘制效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。</p>
 <p>本篇文章是在<a href="http://www.baiguangnan.com/2018/06/25/nodemapniktest/" target="_blank" rel="noopener">上一篇</a>的基础上进行扩展，如果有不清楚的可以了解一下。</p>
 <h5 id="1-使用node-js的cluster模块创建单机集群"><a href="#1-使用node-js的cluster模块创建单机集群" class="headerlink" title="1.使用node.js的cluster模块创建单机集群"></a>1.使用node.js的cluster模块创建单机集群</h5><p>因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但node.js的cluster模块可以启动多个node.js程序，并实现负载均衡(这里没有用到cluster的负载均衡)。</p>
 <p>首先，将瓦片服务代码中端口部分，由写死改成通过传入参数获取。即修改app.js中最后一行：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strata.listen(<span class="number">8099</span>);</div></pre></td></tr></table></figure></p>
@@ -177,7 +177,7 @@
 <p>这里负载均衡服务器host可以是其它服务器，这里写的是本机IP。这里的端口号是tilestrata-balancer的私有端口号，用于瓦片服务集群和负载均衡服务器通信使用。</p>
 <p>修改完成之后，使用命令启动tilestrata-balancer负载均衡：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tilestrata-balancer --hostname=127.0.0.1 --port=8099 --private-port=8098 --check-interval=5000 --unhealthy-count=1</div></pre></td></tr></table></figure></p>
 <p>这里的port参数是对外端口号，用于外部访问瓦片服务；private-port是私有端口号，用于瓦片服务集群和负载均衡服务器通信使用。</p>
-<p>然后使用命令<code>node cluster.js</code>启动node.js单机集群，然后就可以看到负载均衡命令行显示有瓦片服务注册进来。<br><img src="/2018/07/25/nodemapnikcluster/2.png" alt="集群和负载均衡"></p>
+<p>然后使用命令<code>node cluster.js</code>启动node.js单机集群，就可以看到负载均衡命令行显示有瓦片服务注册进来。<br><img src="/2018/07/25/nodemapnikcluster/2.png" alt="集群和负载均衡"></p>
 <p>至此，单机集群负载均衡就做好了，前端访问还是使用8099端口。而且只要在app.js中指定好负载均衡服务器的IP，就可以把瓦片服务部署到多个服务器上，进一步加快访问效率。</p>
 <p>最后上图总结：<br><img src="/2018/07/25/nodemapnikcluster/1.png" alt="集群和负载均衡"></p>
 <p>此篇博文参考<a href="http://www.cnblogs.com/think8848/p/6357727.html" target="_blank" rel="noopener">think8848的博客</a>，特此感谢！</p>
