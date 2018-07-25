@@ -6,7 +6,7 @@ tags:
 	- Mapnik
 ---
 
-使用集群部署和负载均衡可以提高大量并发访问地图效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。
+使用集群部署和负载均衡可以提高大量用户并发访问下瓦片服务绘制效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。
 
 本篇文章是在[上一篇](http://www.baiguangnan.com/2018/06/25/nodemapniktest/)的基础上进行扩展，如果有不清楚的可以了解一下。
 
@@ -65,7 +65,7 @@ tilestrata-balancer --hostname=127.0.0.1 --port=8099 --private-port=8098 --check
 
 这里的port参数是对外端口号，用于外部访问瓦片服务；private-port是私有端口号，用于瓦片服务集群和负载均衡服务器通信使用。
 
-然后使用命令`node cluster.js`启动node.js单机集群，然后就可以看到负载均衡命令行显示有瓦片服务注册进来。
+然后使用命令`node cluster.js`启动node.js单机集群，就可以看到负载均衡命令行显示有瓦片服务注册进来。
 ![集群和负载均衡](nodemapnikcluster/2.png)
 
 至此，单机集群负载均衡就做好了，前端访问还是使用8099端口。而且只要在app.js中指定好负载均衡服务器的IP，就可以把瓦片服务部署到多个服务器上，进一步加快访问效率。
