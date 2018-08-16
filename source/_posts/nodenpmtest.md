@@ -25,14 +25,16 @@ function calculateMetatile(options) {
     //当前级别分辨率
     var resolution = MAX_RES / total;
 
-	//...
+    //...
     
     //当前级别、行列号所代表的矩形范围
     var minx = (x * 256) * resolution - ORIGIN_SHIFT;
     var miny = -((y + metaHeight) * 256) * resolution + ORIGIN_SHIFT;
     var maxx = ((x + metaWidth) * 256) * resolution - ORIGIN_SHIFT;
     var maxy = -((y * 256) * resolution - ORIGIN_SHIFT);
-
+    
+    //...
+}
 ```
 
 这个代码代表里面的分级方案是写死的，如果修改的话，只需要把`MAX_RES(首级分辨率)`、`ORIGIN_SHIFT(原点)`按参数计算即可。
@@ -68,7 +70,7 @@ var strata = tilestrata();
 strata.listen(8099);
 
 //创建瓦片服务
-exports.createTileServer = async function (uuid, xml, cache) {
+exports.createTileServer = function (uuid, xml, cache) {
     var mn = mapnik({
         pathname: xml,
         OriX: -180,
