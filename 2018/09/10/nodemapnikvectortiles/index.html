@@ -21,7 +21,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/09/10/nodemapnikvectortiles/4.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/10/nodemapnikvectortiles/5.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/10/nodemapnikvectortiles/6.png">
-<meta property="og:updated_time" content="2018-09-10T03:10:41.814Z">
+<meta property="og:updated_time" content="2018-09-10T03:30:27.818Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于TileStrata发布矢量瓦片服务">
 <meta name="twitter:description" content="随着对TileStrata的深入了解，也想尝试一下矢量瓦片的相关插件，但网上相关的资料好像不多，接下来就把我的试用过程记录下来，分享给大家。 首先了解一下该插件提供的官方示例：12345678910111213141516171819var vtile = require(&apos;tilestrata-vtile&apos;);var vtileraster = require(&apos;tilestrata-vtile">
@@ -177,7 +177,7 @@
 <p>用这种方式出现了个问题，就是提示跨域，原因是WebStorm启动的前端服务端口是63342，而矢量瓦片端口是7988。<br><img src="/2018/09/10/nodemapnikvectortiles/1.png" alt="跨域问题"></p>
 <p>因为对前端不熟悉，所以选择在服务端解决这个问题。之前看资料时发现TileStrata支持做为Express的中间件(目前不支持Koa)，所以这次尝试一下。</p>
 <p>安装express模块和express-static模块，将代码修改为如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> express();</div><div class="line"></div><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> vtile = <span class="built_in">require</span>(<span class="string">'tilestrata-vtile'</span>);</div><div class="line"><span class="keyword">var</span> server = tilestrata();</div><div class="line"><span class="keyword">var</span> common = &#123;</div><div class="line">    xml: <span class="string">'/Users/paiconor/Desktop/server/dir/VectorTiles/8dd716c9-369c-4edd-9f20-a7aea283f5d0/thumbnail/mapnik.xml'</span>,</div><div class="line">    tileSize: <span class="number">256</span>,</div><div class="line">    metatile: <span class="number">1</span>,</div><div class="line">    bufferSize: <span class="number">128</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'t.pbf'</span>).use(vtile(common));</div><div class="line"></div><div class="line"><span class="comment">//添加为Express中间件</span></div><div class="line">app.use(tilestrata.middleware(&#123;</div><div class="line">    server: server,</div><div class="line">    prefix: <span class="string">'/maps'</span></div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">//添加静态目录中间件</span></div><div class="line">app.use(<span class="built_in">require</span>(<span class="string">'express-static'</span>)(__dirname + <span class="string">'/public'</span>));</div><div class="line"></div><div class="line"><span class="comment">//启动服务器</span></div><div class="line">app.listen(<span class="number">7988</span>);</div></pre></td></tr></table></figure></p>
-<p>将之前的前端文件拷贝到public目录下，就可以在浏览器中访问了：<br><img src="/2018/09/10/nodemapnikvectortiles/2.png" alt="显示成功"></p>
+<p>将之前的前端文件拷贝到public目录下，就可以在浏览器中访问了(这里注意一下，因为将TileStrata做为Express路由，加入了maps地址，所以矢量瓦片加载地址由之前的<code>http://localhost:7988/mylayer/{z}/{x}/{y}/t.pbf</code>变为<code>http://localhost:7988/maps/mylayer/{z}/{x}/{y}/t.pbf</code>)：<br><img src="/2018/09/10/nodemapnikvectortiles/2.png" alt="显示成功"></p>
 <p>配置OSM底图：<br><img src="/2018/09/10/nodemapnikvectortiles/3.png" alt="显示成功"></p>
 <p>在前端修改渲染：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> map = <span class="keyword">new</span> ol.Map(&#123;</div><div class="line">    target: <span class="string">'map'</span>,</div><div class="line">    view: <span class="keyword">new</span> ol.View(&#123;</div><div class="line">        center: [<span class="number">0</span>, <span class="number">0</span>],</div><div class="line">        zoom: <span class="number">2</span></div><div class="line">    &#125;),</div><div class="line">    layers: [</div><div class="line">        <span class="keyword">new</span> ol.layer.Tile(&#123;</div><div class="line">            title: <span class="string">"OSM"</span>,</div><div class="line">            source: <span class="keyword">new</span> ol.source.OSM(&#123;</div><div class="line">                attributions: []</div><div class="line">            &#125;)</div><div class="line">        &#125;),</div><div class="line">        <span class="keyword">new</span> ol.layer.VectorTile(&#123;</div><div class="line">        source: <span class="keyword">new</span> ol.source.VectorTile(&#123;</div><div class="line">            format: <span class="keyword">new</span> ol.format.MVT(),</div><div class="line">            url: <span class="string">'http://localhost:7988/maps/mylayer/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;/t.pbf'</span></div><div class="line">        &#125;),</div><div class="line">        style: <span class="function"><span class="keyword">function</span>(<span class="params">feature, resolution</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ol.style.Style(&#123;</div><div class="line">                stroke: <span class="keyword">new</span> ol.style.Stroke(&#123;</div><div class="line">                    color: <span class="string">'rgba(255, 0, 0)'</span>,</div><div class="line">                    width: <span class="number">1</span></div><div class="line">                &#125;)</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">    &#125;)]</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
 <p><img src="/2018/09/10/nodemapnikvectortiles/4.png" alt="显示成功"></p>
@@ -452,19 +452,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">TileStrata</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Vector Tiles</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">
