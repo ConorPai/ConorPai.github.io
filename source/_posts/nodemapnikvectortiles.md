@@ -124,7 +124,7 @@ app.use(require('express-static')(__dirname + '/public'));
 app.listen(7988);
 ```
 
-将之前的前端文件拷贝到public目录下，就可以在浏览器中访问了：
+将之前的前端文件拷贝到public目录下，就可以在浏览器中访问了(这里注意一下，因为将TileStrata做为Express路由，加入了maps地址，所以矢量瓦片加载地址由之前的`http://localhost:7988/mylayer/{z}/{x}/{y}/t.pbf`变为`http://localhost:7988/maps/mylayer/{z}/{x}/{y}/t.pbf`)：
 ![显示成功](nodemapnikvectortiles/2.png)
 
 配置OSM底图：
