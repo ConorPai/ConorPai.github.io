@@ -204,7 +204,8 @@ app.listen(7988);
                 url: 'http://localhost:7988/maps/mylayer/{z}/{x}/{y}/t.pbf'
             }),
             style: function(feature, resolution) {
-                if (feature.j['name'] == "") {
+                var properties = feature.getProperties();
+                if (properties['name'] == "") {
                     return new ol.style.Style({
                         stroke: new ol.style.Stroke({
                             color: 'rgba(255, 0, 0)',
