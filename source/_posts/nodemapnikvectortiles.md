@@ -225,3 +225,43 @@ app.listen(7988);
     });
 ```
 ![分类渲染](nodemapnikvectortiles/6.png)
+
+
+### 2018年9月13日更新---------------------------
+
+上边提到的跨域问题，除了使用Express之外，还有另外一种解决方案：
+首先，安装tilestrata-headers组件
+```bash
+npm install tilestrata-headers
+```
+
+在代码中加入模块引用：
+```javascript
+var headers = require('tilestrata-headers');
+```
+
+完整代码如下：
+```javascript
+var tilestrata = require('tilestrata');
+var vtile = require('tilestrata-vtile');
+var headers = require('tilestrata-headers');
+
+var server = tilestrata();
+var common = {
+    xml: '/Users/paiconor/Desktop/server/dir/VectorTiles/8dd716c9-369c-4edd-9f20-a7aea283f5d0/thumbnail/mapnik.xml',
+    tileSize: 256,
+    metatile: 1,
+    bufferSize: 128
+};
+
+server.layer('mylayer')
+    .route('t.pbf')
+    .use(headers({
+        'Access-Control-Allow-Origin': '*'
+    }))
+    .use(vtile(common));
+
+server.listen(7988)
+```
+这样WebStorm发布出来的网页就不会提示跨域问题了。
+![解决跨域问题](nodemapnikvectortiles/7.png)
