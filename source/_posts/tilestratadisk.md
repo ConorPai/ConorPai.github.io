@@ -36,6 +36,8 @@ server.layer('mylayer').route('tile.png')
 }));
 ```
 
+也就是说这两个参数的区别，都是超时，需要更新，只不过maxage需要等待重新缓存结果返回并使用，refreshage不需要等待，直接返回上一个缓存，返回之后又更新了旧缓存。
+
 tilestrata-disk也提供了通过回调的方式，动态修改缓存位置、以及超时时间等，例如：
 ```javascript
 // cache: cache with maxage function (advanced)
@@ -67,6 +69,8 @@ server.layer('mylayer').route('tile.png')
 这里介绍一个工具：[TileMantle](https://github.com/naturalatlas/tilemantle)，该工具可以用来提前生成缓存，以及将缓存设置为失效。
 
 [TileStrata官方文档](https://github.com/naturalatlas/tilestrata#rebuilding-the-tile-cache)中提到了这种模式的使用方法，不过还没有尝试。
+
+
 
 
 关于瓦片缓存更新问题，有可能是这三种方案配合使用，达到最终目的。
