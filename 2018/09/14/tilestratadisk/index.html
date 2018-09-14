@@ -6,17 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: Mapnik | ConorPai的博客</title>
+  <title>TileStrata缓存深入研究 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/tags/Mapnik/index.html">
+  <meta name="description" content="使用缓存技术可以加快重复浏览效率，随之而来的是数据更新如何更新缓存的问题，针对这个问题，我们做了研究和思考，可能比较粗浅，权当记录。 方案一：不缓存这样可以解决缓存更新的问题，但是也无法体验缓存带来的效率提升。 方案二：缓存超时失效tilestrata-disk提供的更新解决方案，是两个参数：1.maxage参数maxage参数的意思是，瓦片存在最长时间是多少，单位是秒，超过这个时间之后，如果有请">
+<meta name="keywords" content="GIS,Mapnik,TileStrata,DataCache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TileStrata缓存深入研究">
+<meta property="og:url" content="http://yoursite.com/2018/09/14/tilestratadisk/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="使用缓存技术可以加快重复浏览效率，随之而来的是数据更新如何更新缓存的问题，针对这个问题，我们做了研究和思考，可能比较粗浅，权当记录。 方案一：不缓存这样可以解决缓存更新的问题，但是也无法体验缓存带来的效率提升。 方案二：缓存超时失效tilestrata-disk提供的更新解决方案，是两个参数：1.maxage参数maxage参数的意思是，瓦片存在最长时间是多少，单位是秒，超过这个时间之后，如果有请">
+<meta property="og:updated_time" content="2018-09-14T08:29:49.416Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="TileStrata缓存深入研究">
+<meta name="twitter:description" content="使用缓存技术可以加快重复浏览效率，随之而来的是数据更新如何更新缓存的问题，针对这个问题，我们做了研究和思考，可能比较粗浅，权当记录。 方案一：不缓存这样可以解决缓存更新的问题，但是也无法体验缓存带来的效率提升。 方案二：缓存超时失效tilestrata-disk提供的更新解决方案，是两个参数：1.maxage参数maxage参数的意思是，瓦片存在最长时间是多少，单位是秒，超过这个时间之后，如果有请">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,36 +142,43 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-tilestratadisk" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/09/14/tilestratadisk/" class="archive-article-date">
-  	<time datetime="2018-09-14T08:06:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-14</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/14/tilestratadisk/">TileStrata缓存深入研究</a>
+    <h1 class="article-title" itemprop="name">
+      TileStrata缓存深入研究
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/09/14/tilestratadisk/" class="archive-article-date">
+  	<time datetime="2018-09-14T08:06:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用缓存技术可以加快重复浏览效率，随之而来的是数据更新如何更新缓存的问题，针对这个问题，我们做了研究和思考，可能比较粗浅，权当记录。</p>
+<h4 id="方案一：不缓存"><a href="#方案一：不缓存" class="headerlink" title="方案一：不缓存"></a>方案一：不缓存</h4><p>这样可以解决缓存更新的问题，但是也无法体验缓存带来的效率提升。</p>
+<h4 id="方案二：缓存超时失效"><a href="#方案二：缓存超时失效" class="headerlink" title="方案二：缓存超时失效"></a>方案二：缓存超时失效</h4><p>tilestrata-disk提供的更新解决方案，是两个参数：<br>1.maxage参数<br>maxage参数的意思是，瓦片存在最长时间是多少，单位是秒，超过这个时间之后，如果有请求进来，则会就删除该缓存，并重新缓存。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// cache: cache with maxage</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;<span class="attr">maxage</span>: <span class="number">3600</span>, <span class="attr">dir</span>: <span class="string">'./tiles/mylayer'</span>&#125;));</div></pre></td></tr></table></figure></p>
+<p>2.refreshage参数<br>这个参数研究了好半天，才了解其意思。如果瓦片存在时间超过了refreshage的时长，如果有请求进来，则会返回之前的瓦片，返回之后删除之前的瓦片，并重新缓存，这样之后的请求拿到的都是新瓦片。官方原话：<code>you have tile that&#39;s old enough it should be regenerated, but it&#39;s not old enough to warrant making the user wait for a new tile to be rendered.</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">.use(disk.cache(&#123;</div><div class="line">    dir: <span class="string">'./tiles/mylayer'</span>,</div><div class="line">    refreshage: <span class="number">3600</span>, <span class="comment">// 1 hour</span></div><div class="line">    maxage: <span class="number">3600</span>*<span class="number">24</span>*<span class="number">7</span> <span class="comment">// 1 week</span></div><div class="line">&#125;));</div></pre></td></tr></table></figure>
+<p>tilestrata-disk也提供了通过回调的方式，动态修改缓存位置、以及超时时间等，例如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// cache: cache with maxage function (advanced)</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;</div><div class="line">        dir: <span class="string">'./tiles/mylayer'</span>,</div><div class="line">        maxage: <span class="function"><span class="keyword">function</span>(<span class="params">server, req</span>) </span>&#123;</div><div class="line">            <span class="keyword">if</span> (req.z &gt; <span class="number">15</span>) <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// don't cache</span></div><div class="line">            <span class="keyword">if</span> (req.z &gt; <span class="number">13</span>) <span class="keyword">return</span> <span class="number">3600</span>;</div><div class="line">            <span class="keyword">return</span> <span class="number">3600</span>*<span class="number">24</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line"></div><div class="line"><span class="comment">// cache: custom directory layout</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;<span class="attr">path</span>: <span class="string">'./tiles/&#123;layer&#125;/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;-&#123;filename&#125;'</span>&#125;));</div><div class="line"></div><div class="line"><span class="comment">// cache: custom directory layout (via callback)</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;<span class="attr">path</span>: <span class="function"><span class="keyword">function</span>(<span class="params">tile</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">'./tiles/'</span> + tile.layer + <span class="string">'/'</span> + tile.z + <span class="string">'/'</span> <span class="comment">/* ... */</span></div><div class="line">    &#125;&#125;));</div></pre></td></tr></table></figure></p>
+<h4 id="方案三：强制缓存失效"><a href="#方案三：强制缓存失效" class="headerlink" title="方案三：强制缓存失效"></a>方案三：强制缓存失效</h4><p>这里介绍一个工具：<a href="https://github.com/naturalatlas/tilemantle" target="_blank" rel="noopener">TileMantle</a>，该工具可以用来提前生成缓存，以及将缓存设置为失效。</p>
+<p><a href="https://github.com/naturalatlas/tilestrata#rebuilding-the-tile-cache" target="_blank" rel="noopener">TileStrata官方文档</a>中提到了这种模式的使用方法，不过还没有尝试。</p>
+<p>关于瓦片缓存更新问题，有可能是这三种方案配合使用，达到最终目的。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -193,241 +202,122 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/09/14/tilestratadisk/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/09/10/nodemapnikvectortiles/" class="archive-article-date">
-  	<time datetime="2018-09-10T02:32:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-10</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/09/10/nodemapnikvectortiles/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">基于TileStrata发布矢量瓦片服务</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/10/nodemapnikvectortiles/">基于TileStrata发布矢量瓦片服务</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Vector Tiles</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/07/25/nodemapnikcluster/" class="archive-article-date">
-  	<time datetime="2018-07-25T07:09:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/07/25/nodemapnikcluster/">node-mapnik集群负载均衡配置</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/07/10/openstreetmapcarto/" class="archive-article-date">
-  	<time datetime="2018-07-10T06:13:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/07/10/openstreetmapcarto/">使用node-mapnik和OpenStreetMap Carto发布在线瓦片地图服务</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">OpenStreetMap</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/06/29/mapnikplugintest/" class="archive-article-date">
-  	<time datetime="2018-06-29T02:32:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-29</time>
-</a>
-        </div>
-    	 
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/09/14/tilestratadisk/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/06/29/mapnikplugintest/">简单试用自定义Mapnik数据源插件</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/06/25/nodemapniktest/" class="archive-article-date">
-  	<time datetime="2018-06-25T03:11:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/06/25/nodemapniktest/">使用Mapnik发布简单的地图服务</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -450,9 +340,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
