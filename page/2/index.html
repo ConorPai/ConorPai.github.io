@@ -142,6 +142,95 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-configcdn" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/12/configcdn/">阿里云CDN加速配置</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/12/configcdn/" class="archive-article-date">
+  	<time datetime="2018-06-12T06:10:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://photos.baiguangnan.com" target="_blank" rel="noopener">个人网站</a>和<a href="http://baiguangnan.com" target="_blank" rel="noopener">博客</a>搭建已经快一年了，最大的一块心病就是图片加载太慢了。。</p>
+<p>想当初刚买到阿里云服务器兴冲冲的部署写好的个人网站，首次在浏览器上打开花了一分多钟才刷出图片来，心情真是down到谷底。当时以为是哪里没配置好，最后才发现买的阿里云服务器网络带宽是1M，下载图片太慢了。</p>
+<p>2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩吧。<br><img src="/2018/06/12/configcdn/0.png" alt="购买CDN"></p>
+<p>后来用七牛云比较多，再加上网上的了解，知道CDN可以解决我的个人网站和博客图片加载速度慢的问题，就试了一下。官方配置文档在<a href="https://help.aliyun.com/document_detail/27112.html?spm=a2c4g.11186623.6.553.mMaNIz" target="_blank" rel="noopener">这里</a>。</p>
+<p>首先进入<a href="http://cdn.console.aliyun.com" target="_blank" rel="noopener">CDN控制台</a>，在域名管理页面中添加域名。<br><img src="/2018/06/12/configcdn/1.png" alt="域名管理"><br><img src="/2018/06/12/configcdn/2.png" alt="添加域名"><br>因为博客使用的是Github Pages：<a href="http://conorpai.github.io" target="_blank" rel="noopener">http://conorpai.github.io</a>，所以IP需要添加Github Pages的IP，使用ping命令获取其IP。<br><img src="/2018/06/12/configcdn/3.png" alt="获取IP"></p>
+<p>添加域名完成之后，会分配CNAME，拷贝待用。<br><img src="/2018/06/12/configcdn/1.png" alt="添加域名完成"></p>
+<p>进入域名管理控制台：<br><img src="/2018/06/12/configcdn/4.png" alt="域名管理"></p>
+<p>修改baiguangnan.com的解析，将@.baiguangnan.com的记录类型由之前的A换成CNAME，并在记录值中添加之前拷贝的CNAME。<br><img src="/2018/06/12/configcdn/5.png" alt="域名DNS解析"></p>
+<p>修改时可能会遇到一些冲突，我是把冲突的删掉了，暂时还不清楚后果是什么。。</p>
+<p>同理，修改photos.baiguangnan.com的DNS解析：<br><img src="/2018/06/12/configcdn/6.png" alt="域名DNS解析"></p>
+<p>保存之后就可以感受CDN加速的效果了(可能有一些延迟)。<br><img src="/2018/06/12/configcdn/8.png" alt="CDN生效"></p>
+<p>因为之前申请了其它域名，但是只有baiguangnan.com做了备案，没有备案的域名不能使用CDN加速。。<br><img src="/2018/06/12/configcdn/7.png" alt="未备案域名不能使用CDN加速"></p>
+<p>可以做一下对比：<br>未加速：<a href="http://conorpai.com" target="_blank" rel="noopener">http://conorpai.com</a><br>CDN加速：<a href="http://photos.baiguangnan.com" target="_blank" rel="noopener">http://photos.baiguangnan.com</a></p>
+<h4 id="HTTPS网站的CDN加速"><a href="#HTTPS网站的CDN加速" class="headerlink" title="HTTPS网站的CDN加速"></a>HTTPS网站的CDN加速</h4><p>昨天帮哥们的网站做CDN加速，本来以为也很简单，但是由于他的网站做了HTTPS，需要做一些额外限制，找了一些教程终于搞定了，下面说一下方法。</p>
+<p>第一步还是添加域名，添加完成之后点击域名后面的配置功能：<br><img src="/2018/06/12/configcdn/9.png" alt="配置HTTPS"><br>找到HTTPS设置，修改配置：<br><img src="/2018/06/12/configcdn/10.png" alt="配置HTTPS"><br>开启HTTPS设置，选择证书来源，并填入证书名称、公钥和私钥，然后确定即可。<br><img src="/2018/06/12/configcdn/11.png" alt="配置HTTPS"><br>最后配置回源，防止出现循环重定向问题。<br><img src="/2018/06/12/configcdn/12.png" alt="配置HTTPS"></p>
+<p>至此配置完成，最后强推一波哥们的摄影博客<a href="https://photo.wandoer.com" target="_blank" rel="noopener">https://photo.wandoer.com</a>，大家多多关注。<br><img src="/2018/06/12/configcdn/13.png" alt="摄影博客"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">个人网站搭建</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/12/configcdn/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-csharpdecompile2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -880,92 +969,6 @@
 
 
   
-    <article id="post-objectdetection2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/12/objectdetection2/">使用TensorFlow进行目标识别(二)——训练和识别</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/12/objectdetection2/" class="archive-article-date">
-  	<time datetime="2018-02-12T01:21:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>经过上一节数据准备之后，开始进行配置训练和目标识别</p>
-<p>1.配置object detection模型<br>下载<a href="https://github.com/tensorflow/models" target="_blank" rel="noopener">Models源码</a><br>根据<a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md" target="_blank" rel="noopener">object detection安装指引</a>进行配置安装</p>
-<p>2.下载并配置COCO数据集预训练模型<br>下载<a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md" target="_blank" rel="noopener">官方文档</a>中提到的<a href="http://storage.googleapis.com/download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_11_06_2017.tar.gz" target="_blank" rel="noopener">COCO-pretrained Faster R-CNN with Resnet-101 model</a>模型，解压之后，将model.ckpt开头的三个文件拷贝到训练目录下。<br>拷贝models/research/object_detection/samples/configs/faster_rcnn_resnet101_coco.config文件到训练目录下。<br>修改faster_rcnn_resnet101_coco.config文件：<br>1）将num_classes改为1，本例中只有一个分类<br>2）将所有PATH_TO_BE_CONFIGURED改为本机路径，共5处<br><img src="/2018/02/12/objectdetection2/1.png" alt=""></p>
-<p>3.训练<br>执行脚本进行训练<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">python object_detection/train.py \</div><div class="line">--logtostderr \</div><div class="line">--pipeline_config_path=/home/paiconor/object-detection/training/faster_rcnn_resnet101_coco.config \</div><div class="line">--train_dir=/home/paiconor/object-detection/training/trainingresult</div></pre></td></tr></table></figure></p>
-<p>实践证明不能用MOHI做训练。。16G内存不够霍霍的。。<br><img src="/2018/02/12/objectdetection2/2.png" alt=""></p>
-<p>训练过程中可以使用TensorBoard进行监控，指令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tensorboard --logdir=/home/paiconor/object-detection/training/trainingresult</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/02/12/objectdetection2/3.png" alt=""></p>
-<p>通过TotalLoss查看训练情况，从整体上看TotalLoss曲线是收敛的，训练效果令人满意。<br><img src="/2018/02/12/objectdetection2/4.png" alt=""></p>
-<p>4.Freeze Model模型导出<br>查看模型实际的效果前，我们需要把训练的过程文件导出成.pb模型文件。<br>运行脚本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">python object_detection/export_inference_graph.py \</div><div class="line">--input_type=image_tensor \</div><div class="line">--pipeline_config_path=/home/paiconor/object-detection/training/faster_rcnn_resnet101_coco.config \</div><div class="line">--trained_checkpoint_prefix=/home/paiconor/object-detection/training/<span class="built_in">export</span>/model.ckpt-2107 \</div><div class="line">--output_directory=/home/paiconor/object-detection/training/output_inference_graph.pb</div></pre></td></tr></table></figure></p>
-<p>导出完成后，在output_directory下，会生成frozen_inference_graph.pb、model.ckpt.data-00000-of-00001、model.ckpt.meta、model.ckpt.data文件。<br><img src="/2018/02/12/objectdetection2/5.png" alt=""></p>
-<p>5.使用训练成果进行目标检测<br>编写目标检测脚本<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> cv2</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">from</span> object_detection.utils <span class="keyword">import</span> label_map_util</div><div class="line"><span class="keyword">from</span> object_detection.utils <span class="keyword">import</span> visualization_utils <span class="keyword">as</span> vis_util</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TOD</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.PATH_TO_CKPT = <span class="string">r'/home/paiconor/object-detection/training/output_inference_graph.pb/frozen_inference_graph.pb'</span></div><div class="line">        self.PATH_TO_LABELS = <span class="string">r'/home/paiconor/object-detection/training/hand.pbtxt'</span></div><div class="line">        self.NUM_CLASSES = <span class="number">1</span></div><div class="line">        self.detection_graph = self._load_model()</div><div class="line">        self.category_index = self._load_label_map()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_load_model</span><span class="params">(self)</span>:</span></div><div class="line">        detection_graph = tf.Graph()</div><div class="line">        <span class="keyword">with</span> detection_graph.as_default():</div><div class="line">            od_graph_def = tf.GraphDef()</div><div class="line">            <span class="keyword">with</span> tf.gfile.GFile(self.PATH_TO_CKPT, <span class="string">'rb'</span>) <span class="keyword">as</span> fid:</div><div class="line">                serialized_graph = fid.read()</div><div class="line">                od_graph_def.ParseFromString(serialized_graph)</div><div class="line">                tf.import_graph_def(od_graph_def, name=<span class="string">''</span>)</div><div class="line">        <span class="keyword">return</span> detection_graph</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_load_label_map</span><span class="params">(self)</span>:</span></div><div class="line">        label_map = label_map_util.load_labelmap(self.PATH_TO_LABELS)</div><div class="line">        categories = label_map_util.convert_label_map_to_categories(label_map,</div><div class="line">                                                                    max_num_classes=self.NUM_CLASSES,</div><div class="line">                                                                    use_display_name=<span class="keyword">True</span>)</div><div class="line">        category_index = label_map_util.create_category_index(categories)</div><div class="line">        <span class="keyword">return</span> category_index</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detect</span><span class="params">(self, image)</span>:</span></div><div class="line">        <span class="keyword">with</span> self.detection_graph.as_default():</div><div class="line">            <span class="keyword">with</span> tf.Session(graph=self.detection_graph) <span class="keyword">as</span> sess:</div><div class="line">                <span class="comment"># Expand dimensions since the model expects images to have shape: [1, None, None, 3] </span></div><div class="line">                image_np_expanded = np.expand_dims(image, axis=<span class="number">0</span>)</div><div class="line">                image_tensor = self.detection_graph.get_tensor_by_name(<span class="string">'image_tensor:0'</span>)</div><div class="line">                boxes = self.detection_graph.get_tensor_by_name(<span class="string">'detection_boxes:0'</span>)</div><div class="line">                scores = self.detection_graph.get_tensor_by_name(<span class="string">'detection_scores:0'</span>)</div><div class="line">                classes = self.detection_graph.get_tensor_by_name(<span class="string">'detection_classes:0'</span>)</div><div class="line">                num_detections = self.detection_graph.get_tensor_by_name(<span class="string">'num_detections:0'</span>)</div><div class="line">                <span class="comment"># Actual detection. </span></div><div class="line">                (boxes, scores, classes, num_detections) = sess.run(</div><div class="line">                    [boxes, scores, classes, num_detections],</div><div class="line">                    feed_dict=&#123;image_tensor: image_np_expanded&#125;)</div><div class="line">                <span class="comment"># Visualization of the results of a detection. </span></div><div class="line">                vis_util.visualize_boxes_and_labels_on_image_array(</div><div class="line">                    image,</div><div class="line">                    np.squeeze(boxes),</div><div class="line">                    np.squeeze(classes).astype(np.int32),</div><div class="line">                    np.squeeze(scores),</div><div class="line">                    self.category_index,</div><div class="line">                    use_normalized_coordinates=<span class="keyword">True</span>,</div><div class="line">                    line_thickness=<span class="number">8</span>)</div><div class="line"></div><div class="line">        cv2.namedWindow(<span class="string">"detection"</span>, cv2.WINDOW_NORMAL)</div><div class="line">        cv2.imshow(<span class="string">"detection"</span>, image)</div><div class="line">        cv2.waitKey(<span class="number">0</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    image = cv2.imread(<span class="string">'image.jpeg'</span>)</div><div class="line">    detecotr = TOD()</div><div class="line">    detecotr.detect(image)</div></pre></td></tr></table></figure></p>
-<p>识别效果：<br><img src="/2018/02/12/objectdetection2/6.png" alt=""></p>
-<p>目前对于纯色背景识别效果不错，但是如果背景比较复杂则会出现识别错误的情况，还需要继续优化。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/12/objectdetection2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1128,6 +1131,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">直播</a>
               </li>
              
               <li class="article-tag-list-item">
