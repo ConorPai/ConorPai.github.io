@@ -13,7 +13,7 @@ tags:
 
 ##### 1.1 解决YUM提示503问题
 
-在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：
+在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩充DNS：
 ```bash
 vi /etc/resolv.conf
 ```
@@ -47,6 +47,12 @@ yum install wget
 yum install unzip
 yum install bzip2
 ```
+
+安装后期需要的`C++`编译器g++：
+```bash
+yum install gcc-c++
+```
+
 
 #### 2 PostgreSQL及PostGIS部署
 
@@ -91,7 +97,7 @@ vi /var/lib/pgsql/10/data/pg_hba.conf
 
 在最后一行添加：
 ```bash
-host		all			all			0.0.0.0/0			md5
+host	all		all		0.0.0.0/0	md5
 ```
 保存并退出。
 
@@ -148,15 +154,10 @@ yum -y install nodejs
 
 创建部署目录之后，安装node-mapnik：
 ```bash
-node-mapnik@3.7.2
+npm install mapnik@3.7.2
 ```
 
 这个过程有些漫长，提示成功后，安装其它的瓦片服务组件。
-
-安装tilestrata时编译报错，提示找到不g++，安装：
-```bash
-yum install gcc-c++
-```
 
 安装之后把代码上传并启动服务，然而报错：
 ![启动报错](usenodemapnikwithpostgisoncentos/1.png)
