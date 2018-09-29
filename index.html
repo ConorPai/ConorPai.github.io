@@ -208,8 +208,8 @@
 <p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/6.png" alt="查找stdc++库"></p>
 <p>将其拷贝到<code>/usr/lib64</code>目录下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp ./stage1-x86_64-pc-linux-gnu/libstdc++-v3/src/.libs/libstdc++.so.6.0.25 /usr/lib64</div></pre></td></tr></table></figure></p>
 <p>重建<code>/usr/lib64/libstdc++.so.6</code>软连接：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rm -f /usr/lib64/libstdc++.so.6</div><div class="line">ln -s /usr/lib64/libstdc++.so.6.0.25 /usr/lib64/libstdc++.so.6</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/7.png" alt="重建软连接"><br>再次查看发现要求的GLIBCXX_3.4.20已经包含了，启动瓦片服务器也没有报错。</p>
-<p>前端加载验证一切正常，至此部署全部完成。<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/8.png" alt="验证部署"></p>
+<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/7.png" alt="重建软连接"><br>再次查看发现要求的GLIBCXX_3.4.20已经包含了，用ldd再测postgis.input库的依赖：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/9.png" alt="重建软连接"><br>没有提示问题。</p>
+<p>启动瓦片服务后，使用前端加载验证，一切正常，至此部署全部完成。<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/8.png" alt="验证部署"></p>
 
       
 
@@ -1275,11 +1275,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
