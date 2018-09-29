@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：1vi /etc/resolv.">
+  <meta name="description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩充DNS：1vi /etc/resolv.">
 <meta name="keywords" content="Mapnik,PostGIS,CentOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务">
 <meta property="og:url" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：1vi /etc/resolv.">
+<meta property="og:description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩充DNS：1vi /etc/resolv.">
 <meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/1.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/2.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/3.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/4.png">
-<meta property="og:updated_time" content="2018-09-29T03:43:55.513Z">
+<meta property="og:updated_time" content="2018-09-29T03:53:07.229Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务">
-<meta name="twitter:description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：1vi /etc/resolv.">
+<meta name="twitter:description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩充DNS：1vi /etc/resolv.">
 <meta name="twitter:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/1.png">
   
   
@@ -168,13 +168,14 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。</p>
-<h4 id="1-基础环境配置"><a href="#1-基础环境配置" class="headerlink" title="1 基础环境配置"></a>1 基础环境配置</h4><h5 id="1-1-解决YUM提示503问题"><a href="#1-1-解决YUM提示503问题" class="headerlink" title="1.1 解决YUM提示503问题"></a>1.1 解决YUM提示503问题</h5><p>在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/resolv.conf</div></pre></td></tr></table></figure></p>
+<h4 id="1-基础环境配置"><a href="#1-基础环境配置" class="headerlink" title="1 基础环境配置"></a>1 基础环境配置</h4><h5 id="1-1-解决YUM提示503问题"><a href="#1-1-解决YUM提示503问题" class="headerlink" title="1.1 解决YUM提示503问题"></a>1.1 解决YUM提示503问题</h5><p>在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩充DNS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/resolv.conf</div></pre></td></tr></table></figure></p>
 <p>加入：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">nameserver 8.8.8.8</div><div class="line">nameserver 8.8.4.4</div><div class="line">nameserver 144.144.144.144</div></pre></td></tr></table></figure></p>
 <p>保存后重启虚拟机，就可以正常使用yum了，赶紧使用<code>yum update</code>更新一下。</p>
 <h5 id="1-2-基础软件安装"><a href="#1-2-基础软件安装" class="headerlink" title="1.2 基础软件安装"></a>1.2 基础软件安装</h5><p>接下来会使用ifconfig命令查看本机IP，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install net-tools</div></pre></td></tr></table></figure></p>
 <p>查到IP之后就可以用xshell进行连接了，使用xshell进行文件传输需要rz/sz命令，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install lrzsz</div></pre></td></tr></table></figure></p>
 <p>后期需要使用wget下载文件，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install wget</div></pre></td></tr></table></figure></p>
 <p>安装后期需要的解压程序：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum install unzip</div><div class="line">yum install bzip2</div></pre></td></tr></table></figure></p>
+<p>安装后期需要的<code>C++</code>编译器g++：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install gcc-c++</div></pre></td></tr></table></figure></p>
 <h4 id="2-PostgreSQL及PostGIS部署"><a href="#2-PostgreSQL及PostGIS部署" class="headerlink" title="2 PostgreSQL及PostGIS部署"></a>2 PostgreSQL及PostGIS部署</h4><h5 id="2-1-PostgreSQL安装及配置"><a href="#2-1-PostgreSQL安装及配置" class="headerlink" title="2.1 PostgreSQL安装及配置"></a>2.1 PostgreSQL安装及配置</h5><p>首先添加PostgreSQL数据库安装来源：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat10-10-2.noarch.rpm</div></pre></td></tr></table></figure></p>
 <p>然后就可以安装PostgreSQL服务端和客户端了：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install postgresql10-server postgresql10</div></pre></td></tr></table></figure></p>
 <p>初始化数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/pgsql-10/bin/postgresql-10-setup initdb</div></pre></td></tr></table></figure></p>
@@ -183,7 +184,7 @@
 <p>修改配置文件，允许局域网访问：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /var/lib/pgsql/10/data/postgresql.conf</div></pre></td></tr></table></figure></p>
 <p>将 #listen_addresses = ‘localhost’ 的注释去掉并改为 listen_addresses = ‘*’，修改max_connections按需求更改，默认最大支持100个连接。修改之后保存并退出。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /var/lib/pgsql/10/data/pg_hba.conf</div></pre></td></tr></table></figure>
-<p>在最后一行添加：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">host		all			all			0.0.0.0/0			md5</div></pre></td></tr></table></figure></p>
+<p>在最后一行添加：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">host	all		all		0.0.0.0/0	md5</div></pre></td></tr></table></figure></p>
 <p>保存并退出。</p>
 <p>重启数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart postgresql-10</div></pre></td></tr></table></figure></p>
 <p>防火墙需要打开5432端口：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --add-port=5432/tcp</div><div class="line">firewall-cmd —reload</div></pre></td></tr></table></figure></p>
@@ -195,9 +196,8 @@
 <h4 id="3-安装node-mapnik及瓦片服务组件"><a href="#3-安装node-mapnik及瓦片服务组件" class="headerlink" title="3 安装node-mapnik及瓦片服务组件"></a>3 安装node-mapnik及瓦片服务组件</h4><h5 id="3-1-安装Node-js"><a href="#3-1-安装Node-js" class="headerlink" title="3.1 安装Node.js"></a>3.1 安装Node.js</h5><p>由于node-mapnik的3.7.2版本只能用LTS的Node.js安装，所以这里添加8.x版本Node.js来源。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -</div></pre></td></tr></table></figure></p>
 <p>安装Node.js：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install nodejs</div></pre></td></tr></table></figure></p>
 <p>安装之后Node.js版本是8.12.0，npm版本是6.4.1。</p>
-<h5 id="3-2-安装node-mapnik及瓦片服务组件"><a href="#3-2-安装node-mapnik及瓦片服务组件" class="headerlink" title="3.2 安装node-mapnik及瓦片服务组件"></a>3.2 安装node-mapnik及瓦片服务组件</h5><p>创建部署目录之后，安装node-mapnik：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-mapnik@3.7.2</div></pre></td></tr></table></figure></p>
+<h5 id="3-2-安装node-mapnik及瓦片服务组件"><a href="#3-2-安装node-mapnik及瓦片服务组件" class="headerlink" title="3.2 安装node-mapnik及瓦片服务组件"></a>3.2 安装node-mapnik及瓦片服务组件</h5><p>创建部署目录之后，安装node-mapnik：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install mapnik@3.7.2</div></pre></td></tr></table></figure></p>
 <p>这个过程有些漫长，提示成功后，安装其它的瓦片服务组件。</p>
-<p>安装tilestrata时编译报错，提示找到不g++，安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install gcc-c++</div></pre></td></tr></table></figure></p>
 <p>安装之后把代码上传并启动服务，然而报错：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/1.png" alt="启动报错"><br>提示动态库无法加载，应该是缺少依赖，使用ldd命令查看依赖：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/2.png" alt="查看依赖"><br>发现libstdc++.so.6的GLIBCXX_3.4.20不存在，使用如下命令进行确认：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strings /usr/lib64/libstdc++.so.6 | grep GLIBCXX</div></pre></td></tr></table></figure></p>
 <p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/3.png" alt="确认问题"><br>确实没有GLIBCXX_3.4.20，接下来确认gcc版本：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/4.png" alt="确认gcc版本"><br>确实是gcc版本太旧了，而且还没有找到使用yum升级的方法(或者不用升级gcc，只升级std库版本就可以)，我在这里通过编译最新版本gcc来解决。</p>
 <h5 id="3-3-升级gcc"><a href="#3-3-升级gcc" class="headerlink" title="3.3 升级gcc"></a>3.3 升级gcc</h5><p>查找最新版本gcc，当前是8.2.0，创建一个独立的gcc编译目录，进入后，使用wget进行下载：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.gz</div></pre></td></tr></table></figure></p>
@@ -497,11 +497,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
