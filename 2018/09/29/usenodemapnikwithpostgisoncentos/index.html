@@ -19,7 +19,11 @@
 <meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/2.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/3.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/4.png">
-<meta property="og:updated_time" content="2018-09-29T03:53:07.229Z">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/5.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/6.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/7.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/8.png">
+<meta property="og:updated_time" content="2018-09-29T07:20:28.930Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务">
 <meta name="twitter:description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩充DNS：1vi /etc/resolv.">
@@ -199,13 +203,22 @@
 <h5 id="3-2-安装node-mapnik及瓦片服务组件"><a href="#3-2-安装node-mapnik及瓦片服务组件" class="headerlink" title="3.2 安装node-mapnik及瓦片服务组件"></a>3.2 安装node-mapnik及瓦片服务组件</h5><p>创建部署目录之后，安装node-mapnik：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install mapnik@3.7.2</div></pre></td></tr></table></figure></p>
 <p>这个过程有些漫长，提示成功后，安装其它的瓦片服务组件。</p>
 <p>安装之后把代码上传并启动服务，然而报错：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/1.png" alt="启动报错"><br>提示动态库无法加载，应该是缺少依赖，使用ldd命令查看依赖：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/2.png" alt="查看依赖"><br>发现libstdc++.so.6的GLIBCXX_3.4.20不存在，使用如下命令进行确认：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strings /usr/lib64/libstdc++.so.6 | grep GLIBCXX</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/3.png" alt="确认问题"><br>确实没有GLIBCXX_3.4.20，接下来确认gcc版本：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/4.png" alt="确认gcc版本"><br>确实是gcc版本太旧了，而且还没有找到使用yum升级的方法(或者不用升级gcc，只升级std库版本就可以)，我在这里通过编译最新版本gcc来解决。</p>
+<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/3.png" alt="确认问题"><br>确实没有GLIBCXX_3.4.20，接下来确认gcc版本：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/4.png" alt="确认gcc版本"><br>确实是gcc版本太旧了，而且还没有找到使用yum升级的方法(或者不用升级gcc，只升级stdc++库版本就可以)，我在这里通过编译最新版本gcc来解决。</p>
 <h5 id="3-3-升级gcc"><a href="#3-3-升级gcc" class="headerlink" title="3.3 升级gcc"></a>3.3 升级gcc</h5><p>查找最新版本gcc，当前是8.2.0，创建一个独立的gcc编译目录，进入后，使用wget进行下载：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.gz</div></pre></td></tr></table></figure></p>
 <p>下载之后解压缩，然后进入gcc-8.2.0目录下，使用如下脚本下载、配置、安装依赖库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./contrib/download_prerequisites</div></pre></td></tr></table></figure></p>
 <p>创建一个编译成果目录，并进入：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir gcc-build-8.2.0</div><div class="line"><span class="built_in">cd</span> gcc-build-8.2.0</div></pre></td></tr></table></figure></p>
 <p>使用如下命令进行配置：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">../configure -<span class="built_in">enable</span>-checking=release -<span class="built_in">enable</span>-languages=c,c++ -<span class="built_in">disable</span>-multilib</div></pre></td></tr></table></figure></p>
 <p>完成后使用如下命令进行编译：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make -j4</div></pre></td></tr></table></figure></p>
 <p>-j4选项是make对多核处理器的优化，如果不成功请使用make，注意此过程非常耗时。</p>
+<p>编译完成之后使用<code>make install</code>进行部署。</p>
+<p>查看gcc版本：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/5.png" alt="确认gcc版本"></p>
+<p>但此时查看stdc++库发现还是旧的，需要进一步处理。</p>
+<p>查找编译成果目录下的stdc++库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find . -name <span class="string">"libstdc++.so*"</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/6.png" alt="查找stdc++库"></p>
+<p>将其拷贝到<code>/usr/lib64</code>目录下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp ./stage1-x86_64-pc-linux-gnu/libstdc++-v3/src/.libs/libstdc++.so.6.0.25 /usr/lib64</div></pre></td></tr></table></figure></p>
+<p>重建<code>/usr/lib64/libstdc++.so.6</code>软连接：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rm -f /usr/lib64/libstdc++.so.6</div><div class="line">ln -s /usr/lib64/libstdc++.so.6.0.25 /usr/lib64/libstdc++.so.6</div></pre></td></tr></table></figure></p>
+<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/7.png" alt="重建软连接"><br>再次查看发现要求的GLIBCXX_3.4.20已经包含了，启动瓦片服务器也没有报错。</p>
+<p>前端加载验证一切正常，至此部署全部完成。<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/8.png" alt="验证部署"></p>
 
       
 
@@ -489,11 +502,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
