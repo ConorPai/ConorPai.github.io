@@ -170,7 +170,7 @@ strings /usr/lib64/libstdc++.so.6 | grep GLIBCXX
 ![确认问题](usenodemapnikwithpostgisoncentos/3.png)
 确实没有GLIBCXX_3.4.20，接下来确认gcc版本：
 ![确认gcc版本](usenodemapnikwithpostgisoncentos/4.png)
-确实是gcc版本太旧了，而且还没有找到使用yum升级的方法(或者不用升级gcc，只升级std库版本就可以)，我在这里通过编译最新版本gcc来解决。
+确实是gcc版本太旧了，而且还没有找到使用yum升级的方法(或者不用升级gcc，只升级stdc++库版本就可以)，我在这里通过编译最新版本gcc来解决。
 
 ##### 3.3 升级gcc
 
@@ -201,5 +201,31 @@ make -j4
 ```
 -j4选项是make对多核处理器的优化，如果不成功请使用make，注意此过程非常耗时。
 
+编译完成之后使用`make install`进行部署。
 
+查看gcc版本：
+![确认gcc版本](usenodemapnikwithpostgisoncentos/5.png)
 
+但此时查看stdc++库发现还是旧的，需要进一步处理。
+
+查找编译成果目录下的stdc++库：
+```bash
+find . -name "libstdc++.so*"
+```
+![查找stdc++库](usenodemapnikwithpostgisoncentos/6.png)
+
+将其拷贝到`/usr/lib64`目录下：
+```bash
+cp ./stage1-x86_64-pc-linux-gnu/libstdc++-v3/src/.libs/libstdc++.so.6.0.25 /usr/lib64
+```
+
+重建`/usr/lib64/libstdc++.so.6`软连接：
+```bash
+rm -f /usr/lib64/libstdc++.so.6
+ln -s /usr/lib64/libstdc++.so.6.0.25 /usr/lib64/libstdc++.so.6
+```
+![重建软连接](usenodemapnikwithpostgisoncentos/7.png)
+再次查看发现要求的GLIBCXX_3.4.20已经包含了，启动瓦片服务器也没有报错。
+
+前端加载验证一切正常，至此部署全部完成。
+![验证部署](usenodemapnikwithpostgisoncentos/8.png)
