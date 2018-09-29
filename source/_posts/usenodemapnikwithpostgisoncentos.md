@@ -225,7 +225,9 @@ rm -f /usr/lib64/libstdc++.so.6
 ln -s /usr/lib64/libstdc++.so.6.0.25 /usr/lib64/libstdc++.so.6
 ```
 ![重建软连接](usenodemapnikwithpostgisoncentos/7.png)
-再次查看发现要求的GLIBCXX_3.4.20已经包含了，启动瓦片服务器也没有报错。
+再次查看发现要求的GLIBCXX_3.4.20已经包含了，用ldd再测postgis.input库的依赖：
+![重建软连接](usenodemapnikwithpostgisoncentos/9.png)
+没有提示问题。
 
-前端加载验证一切正常，至此部署全部完成。
+启动瓦片服务后，使用前端加载验证，一切正常，至此部署全部完成。
 ![验证部署](usenodemapnikwithpostgisoncentos/8.png)
