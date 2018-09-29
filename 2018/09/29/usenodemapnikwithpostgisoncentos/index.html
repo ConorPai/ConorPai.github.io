@@ -6,17 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: NPM | ConorPai的博客</title>
+  <title>在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/tags/NPM/index.html">
+  <meta name="description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：1vi /etc/resolv.">
+<meta name="keywords" content="Mapnik,PostGIS,CentOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务">
+<meta property="og:url" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：1vi /etc/resolv.">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/4.png">
+<meta property="og:updated_time" content="2018-09-29T03:43:55.513Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务">
+<meta name="twitter:description" content="最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。 1 基础环境配置1.1 解决YUM提示503问题在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：1vi /etc/resolv.">
+<meta name="twitter:image" content="http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,64 +147,208 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-usenodemapnikwithpostgisoncentos" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/08/16/nodenpmtest/" class="archive-article-date">
-  	<time datetime="2018-08-16T05:36:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-16</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/08/16/nodenpmtest/">试水NPM模块发布流程</a>
+    <h1 class="article-title" itemprop="name">
+      在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/09/29/usenodemapnikwithpostgisoncentos/" class="archive-article-date">
+  	<time datetime="2018-09-29T02:53:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。</p>
+<h4 id="1-基础环境配置"><a href="#1-基础环境配置" class="headerlink" title="1 基础环境配置"></a>1 基础环境配置</h4><h5 id="1-1-解决YUM提示503问题"><a href="#1-1-解决YUM提示503问题" class="headerlink" title="1.1 解决YUM提示503问题"></a>1.1 解决YUM提示503问题</h5><p>在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩成DNS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/resolv.conf</div></pre></td></tr></table></figure></p>
+<p>加入：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">nameserver 8.8.8.8</div><div class="line">nameserver 8.8.4.4</div><div class="line">nameserver 144.144.144.144</div></pre></td></tr></table></figure></p>
+<p>保存后重启虚拟机，就可以正常使用yum了，赶紧使用<code>yum update</code>更新一下。</p>
+<h5 id="1-2-基础软件安装"><a href="#1-2-基础软件安装" class="headerlink" title="1.2 基础软件安装"></a>1.2 基础软件安装</h5><p>接下来会使用ifconfig命令查看本机IP，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install net-tools</div></pre></td></tr></table></figure></p>
+<p>查到IP之后就可以用xshell进行连接了，使用xshell进行文件传输需要rz/sz命令，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install lrzsz</div></pre></td></tr></table></figure></p>
+<p>后期需要使用wget下载文件，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install wget</div></pre></td></tr></table></figure></p>
+<p>安装后期需要的解压程序：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum install unzip</div><div class="line">yum install bzip2</div></pre></td></tr></table></figure></p>
+<h4 id="2-PostgreSQL及PostGIS部署"><a href="#2-PostgreSQL及PostGIS部署" class="headerlink" title="2 PostgreSQL及PostGIS部署"></a>2 PostgreSQL及PostGIS部署</h4><h5 id="2-1-PostgreSQL安装及配置"><a href="#2-1-PostgreSQL安装及配置" class="headerlink" title="2.1 PostgreSQL安装及配置"></a>2.1 PostgreSQL安装及配置</h5><p>首先添加PostgreSQL数据库安装来源：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat10-10-2.noarch.rpm</div></pre></td></tr></table></figure></p>
+<p>然后就可以安装PostgreSQL服务端和客户端了：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install postgresql10-server postgresql10</div></pre></td></tr></table></figure></p>
+<p>初始化数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/pgsql-10/bin/postgresql-10-setup initdb</div></pre></td></tr></table></figure></p>
+<p>启动数据库服务，并修改为随系统一起启动：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">systemctl start postgresql-10</div><div class="line">systemctl <span class="built_in">enable</span> postgresql-10</div></pre></td></tr></table></figure></p>
+<p>修改默认用户(postgres)密码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres psql -c <span class="string">"alter user postgres with password '1234';"</span></div></pre></td></tr></table></figure></p>
+<p>修改配置文件，允许局域网访问：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /var/lib/pgsql/10/data/postgresql.conf</div></pre></td></tr></table></figure></p>
+<p>将 #listen_addresses = ‘localhost’ 的注释去掉并改为 listen_addresses = ‘*’，修改max_connections按需求更改，默认最大支持100个连接。修改之后保存并退出。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /var/lib/pgsql/10/data/pg_hba.conf</div></pre></td></tr></table></figure>
+<p>在最后一行添加：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">host		all			all			0.0.0.0/0			md5</div></pre></td></tr></table></figure></p>
+<p>保存并退出。</p>
+<p>重启数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart postgresql-10</div></pre></td></tr></table></figure></p>
+<p>防火墙需要打开5432端口：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --add-port=5432/tcp</div><div class="line">firewall-cmd —reload</div></pre></td></tr></table></figure></p>
+<h5 id="2-2-PostGIS插件安装及配置"><a href="#2-2-PostGIS插件安装及配置" class="headerlink" title="2.2 PostGIS插件安装及配置"></a>2.2 PostGIS插件安装及配置</h5><p>首先安装PostGIS的一个依赖：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install epel-release</div></pre></td></tr></table></figure></p>
+<p>然后安装PostGIS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install postgis24_10</div></pre></td></tr></table></figure></p>
+<p>然后可以验证安装是否成功，先创建一个数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres createdb gis</div></pre></td></tr></table></figure></p>
+<p>为该数据库安装PostGIS插件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres psql -d gis -c <span class="string">'CREATE EXTENSION postgis;'</span></div></pre></td></tr></table></figure></p>
+<p>如果没报错，则可往该数据库导入数据了。</p>
+<h4 id="3-安装node-mapnik及瓦片服务组件"><a href="#3-安装node-mapnik及瓦片服务组件" class="headerlink" title="3 安装node-mapnik及瓦片服务组件"></a>3 安装node-mapnik及瓦片服务组件</h4><h5 id="3-1-安装Node-js"><a href="#3-1-安装Node-js" class="headerlink" title="3.1 安装Node.js"></a>3.1 安装Node.js</h5><p>由于node-mapnik的3.7.2版本只能用LTS的Node.js安装，所以这里添加8.x版本Node.js来源。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -</div></pre></td></tr></table></figure></p>
+<p>安装Node.js：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install nodejs</div></pre></td></tr></table></figure></p>
+<p>安装之后Node.js版本是8.12.0，npm版本是6.4.1。</p>
+<h5 id="3-2-安装node-mapnik及瓦片服务组件"><a href="#3-2-安装node-mapnik及瓦片服务组件" class="headerlink" title="3.2 安装node-mapnik及瓦片服务组件"></a>3.2 安装node-mapnik及瓦片服务组件</h5><p>创建部署目录之后，安装node-mapnik：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-mapnik@3.7.2</div></pre></td></tr></table></figure></p>
+<p>这个过程有些漫长，提示成功后，安装其它的瓦片服务组件。</p>
+<p>安装tilestrata时编译报错，提示找到不g++，安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install gcc-c++</div></pre></td></tr></table></figure></p>
+<p>安装之后把代码上传并启动服务，然而报错：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/1.png" alt="启动报错"><br>提示动态库无法加载，应该是缺少依赖，使用ldd命令查看依赖：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/2.png" alt="查看依赖"><br>发现libstdc++.so.6的GLIBCXX_3.4.20不存在，使用如下命令进行确认：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strings /usr/lib64/libstdc++.so.6 | grep GLIBCXX</div></pre></td></tr></table></figure></p>
+<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/3.png" alt="确认问题"><br>确实没有GLIBCXX_3.4.20，接下来确认gcc版本：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/4.png" alt="确认gcc版本"><br>确实是gcc版本太旧了，而且还没有找到使用yum升级的方法(或者不用升级gcc，只升级std库版本就可以)，我在这里通过编译最新版本gcc来解决。</p>
+<h5 id="3-3-升级gcc"><a href="#3-3-升级gcc" class="headerlink" title="3.3 升级gcc"></a>3.3 升级gcc</h5><p>查找最新版本gcc，当前是8.2.0，创建一个独立的gcc编译目录，进入后，使用wget进行下载：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.gz</div></pre></td></tr></table></figure></p>
+<p>下载之后解压缩，然后进入gcc-8.2.0目录下，使用如下脚本下载、配置、安装依赖库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./contrib/download_prerequisites</div></pre></td></tr></table></figure></p>
+<p>创建一个编译成果目录，并进入：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir gcc-build-8.2.0</div><div class="line"><span class="built_in">cd</span> gcc-build-8.2.0</div></pre></td></tr></table></figure></p>
+<p>使用如下命令进行配置：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">../configure -<span class="built_in">enable</span>-checking=release -<span class="built_in">enable</span>-languages=c,c++ -<span class="built_in">disable</span>-multilib</div></pre></td></tr></table></figure></p>
+<p>完成后使用如下命令进行编译：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make -j4</div></pre></td></tr></table></figure></p>
+<p>-j4选项是make对多核处理器的优化，如果不成功请使用make，注意此过程非常耗时。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/09/17/testrtmplive/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">试水直播技术</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/09/29/usenodemapnikwithpostgisoncentos/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+  
 
 
           </div>
@@ -220,9 +371,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
