@@ -142,6 +142,103 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-postgistilespeed" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/30/postgistilespeed/">记一次500万数据量出图效率优化的心路历程</a>
+    </h1>
+  
+
+        
+        <a href="/2018/09/30/postgistilespeed/" class="archive-article-date">
+  	<time datetime="2018-09-30T02:04:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。</p>
+<h5 id="服务器环境"><a href="#服务器环境" class="headerlink" title="服务器环境"></a>服务器环境</h5><p>协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。</p>
+<h5 id="数据入库"><a href="#数据入库" class="headerlink" title="数据入库"></a>数据入库</h5><p>因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=dlwy"</span> PG:<span class="string">"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=dlwy"</span> <span class="string">"t_hunan_09"</span> -progress</div></pre></td></tr></table></figure></p>
+<p>这样就把生产数据库中的<code>t_hunan_09</code>导入到测试数据库中。</p>
+<h5 id="启动瓦片服务"><a href="#启动瓦片服务" class="headerlink" title="启动瓦片服务"></a>启动瓦片服务</h5><p>配置好mapnik的配图XML，使用tilestrata-balancer做负载均衡，启动了48个node进程进行测试，然而现实是残酷的，每张瓦片的请求时间是10秒左右。</p>
+<p>然后就去参考OpenStreetMap的PostGIS数据库和配图方案，并没有什么特别的，gist空间索引也重建了，还是没有效果。</p>
+<h5 id="试用数据库连接池"><a href="#试用数据库连接池" class="headerlink" title="试用数据库连接池"></a>试用数据库连接池</h5><p>测试使用pgbouncer数据库连接池，也没有效果。</p>
+<h5 id="单进程竟然比多进程快？"><a href="#单进程竟然比多进程快？" class="headerlink" title="单进程竟然比多进程快？"></a>单进程竟然比多进程快？</h5><p>后来关闭了tilestrata-balancer负载均衡和48个node进程，只启动一个进程进行出图，然后神奇的事情来了，请求时间非常快，只有几百毫秒。这又是为何？</p>
+<p>基于这种情况用了一段时间发现了规律，每次重启服务后，第一次请求瓦片，需要10秒时间，后面再用就很快了。但是用过一段时间之后，又会有一次10秒的卡顿，时间不规律。</p>
+<p>这样的话之前的现象是可以解释的了，由于做了负载均衡，所以一屏的瓦片都相当于启动服务后初次请求，所以都很慢，把48个进程都用完需要一段时间，所以就造成了一直卡顿的问题。</p>
+<p>但是初次启动服务为10几秒是在做什么呢？</p>
+<h5 id="初期卡顿到底在做什么"><a href="#初期卡顿到底在做什么" class="headerlink" title="初期卡顿到底在做什么"></a>初期卡顿到底在做什么</h5><p>我对比了有瓦片缓存和无瓦片缓存的情况，有瓦片缓存很快，无瓦片缓存有卡顿，说明这个卡顿是在瓦片绘制环节，瓦片绘制环节主要是数据库查询了。</p>
+<p>后来在网上找了一些PostgreSQL数据库优化的贴子，其中有一个说PostgreSQL有一个机制，可以记录查询时间比较长的SQL，我就试着做了一下。</p>
+<p>首先找到postgresql.conf文件，将<code>log_min_duration_statement</code>注释去掉，并设置为1000毫秒，重启数据库之后，启动瓦片服务，再到postgresql.conf同级的log文件夹下查看日志。<br><img src="/2018/09/30/postgistilespeed/1.png" alt="慢SQL"></p>
+<p>发现有将近10秒的时间在做数据的范围统计，忽然想起来在配置mapnik的XML时，没有设置数据范围，导致这里实时计算500万数据的范围，造成卡顿。。</p>
+<p>重新配置mapnik的XML后，验证效果：<br><img src="/2018/09/30/postgistilespeed/2.png" alt="mapnik配图"></p>
+<p>果然不卡了，效果杠杠的。</p>
+<h5 id="是否需要数据库连接池"><a href="#是否需要数据库连接池" class="headerlink" title="是否需要数据库连接池"></a>是否需要数据库连接池</h5><p>之前使用了pgbouncer数据库连接池，但是实际使用效果不是特别理想，启动多个node进程后总会出现事务互斥的问题，导致有些瓦片加载特别慢，后来不用数据库连接池，直连数据库就正常了，可能对数据库连接池用的不到位吧。</p>
+<h5 id="开启负载均衡，丝般流畅"><a href="#开启负载均衡，丝般流畅" class="headerlink" title="开启负载均衡，丝般流畅"></a>开启负载均衡，丝般流畅</h5><p>重新开启tilestrata-balancer负载均衡和48个node进程，地图加载流畅，去掉了缓存机制在14级别也能轻松应对。</p>
+<p>最后上图镇楼：<br><img src="/2018/09/30/postgistilespeed/3.jpg" alt="最终效果"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/09/30/postgistilespeed/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-usenodemapnikwithpostgisoncentos" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1034,102 +1131,6 @@
 
 
   
-    <article id="post-mapnikplugintest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/29/mapnikplugintest/">简单试用自定义Mapnik数据源插件</a>
-    </h1>
-  
-
-        
-        <a href="/2018/06/29/mapnikplugintest/" class="archive-article-date">
-  	<time datetime="2018-06-29T02:32:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>如果想使用Mapnik接入我们的数据源出图，以及自定义一些数据展示，避免不了要做数据源插件开发，所以今天简单试了一下Mapnik插件开发，并在node-mapnik中加载使用的流程。</p>
-<h4 id="部署C-依赖环境"><a href="#部署C-依赖环境" class="headerlink" title="部署C++依赖环境"></a>部署C++依赖环境</h4><p>Mapnik插件需要使用<code>C++</code>语言开发，所以需要部署<code>C++</code>依赖环境。在MacOS上部署很方便，只需要使用<code>brew install mapnik</code>即可，在Ubuntu上稍微复杂，需要使用源码编译，具体参考Mapnik的<a href="https://github.com/mapnik/mapnik/blob/master/INSTALL.md" target="_blank" rel="noopener">部署文档</a>。</p>
-<p>因为我的机器上基础环境都有，所以只需要部署boost和mapnik即可。</p>
-<h5 id="部署boost"><a href="#部署boost" class="headerlink" title="部署boost"></a>部署boost</h5><p>部署boost被坑了，mapnik最新版本(github下载的源码是3.1.0版本)无法使用boost最新版本(1.67.0)，可以使用boost 1.66.0版本。</p>
-<p>下载boost 1.66.0源码后，编译和部署参考网上的教程即可：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> boost_1_66_0</div><div class="line"></div><div class="line">./bootstrap.sh --with-icu --with-libraries=all</div><div class="line"></div><div class="line">./b2 threading=multi</div><div class="line"></div><div class="line">./b2 install</div></pre></td></tr></table></figure></p>
-<h5 id="部署mapnik"><a href="#部署mapnik" class="headerlink" title="部署mapnik"></a>部署mapnik</h5><p>根据Mapnik的部署文档下载Mapnik的源码，并编译安装。后来验证使用这种方法编译的Mapnik版本是3.1.0，3.1.0相对于3.0.*有一些变化，会导致后边的Demo跑不过(没错，又被坑了!!!)，所以这里安装的是3.0.20版本。</p>
-<p>下载源码及其它依赖：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> -b v3.0.20 https://github.com/mapnik/mapnik.git</div><div class="line"><span class="built_in">cd</span> mapnik</div><div class="line">git submodule update --init</div></pre></td></tr></table></figure></p>
-<p>验证依赖环境，如果有未通过项则需要处理后才能正确编译：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure</div></pre></td></tr></table></figure></p>
-<p>可以根据本机配置选择并行编译还是普通编译(make)：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JOBS=4 make</div></pre></td></tr></table></figure></p>
-<p>将编译结果进行部署：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make install</div></pre></td></tr></table></figure></p>
-<p>验证部署是否成功：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mapnik-config -v</div></pre></td></tr></table></figure></p>
-<p>如果显示Mapnik版本，证明Mapnik部署已完成。</p>
-<h4 id="插件开发和编译"><a href="#插件开发和编译" class="headerlink" title="插件开发和编译"></a>插件开发和编译</h4><p>这里使用Mapnik提供的<a href="https://github.com/mapnik/hello-world-input-plugin" target="_blank" rel="noopener">数据源插件开发Demo</a>来做验证。</p>
-<p>使用make命令编译，编译完成后会在目录下生成hello.input文件。<br><img src="/2018/06/29/mapnikplugintest/1.png" alt="编译成功"></p>
-<p>在Ubuntu环境下编译报错<code>can not be used when making a shared object; recompile with -fPIC</code>，在makefile文件中加入<code>CXXFLAGS += -fPIC</code>即可<br><img src="/2018/06/29/mapnikplugintest/2.png" alt="解决编译报错"></p>
-<h4 id="node-mapnik中使用自定义插件"><a href="#node-mapnik中使用自定义插件" class="headerlink" title="node-mapnik中使用自定义插件"></a>node-mapnik中使用自定义插件</h4><p>在node-mapnik中使用mapnik的register_datasource方法注册插件：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mapnik.register_datasource(<span class="string">'/Users/paiconor/Desktop/mapnik/hello-world-input-plugin-master/hello.input'</span>);</div></pre></td></tr></table></figure></p>
-<p>针对该数据源配置一个XML：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">Map</span> <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"</span> <span class="attr">background-color</span>=<span class="string">"white"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Style</span> <span class="attr">name</span>=<span class="string">"style"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="xml">        <span class="tag">&lt;<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="xml">            <span class="tag">&lt;<span class="name">PointSymbolizer</span> /&gt;</span></span></div><div class="line"><span class="xml">            <span class="tag">&lt;<span class="name">TextSymbolizer</span> <span class="attr">face-name</span>=<span class="string">"DejaVu Sans Book"</span> <span class="attr">size</span>=<span class="string">"10"</span> <span class="attr">dx</span>=<span class="string">"5"</span> <span class="attr">dy</span>=<span class="string">"5"</span>&gt;</span>[key]<span class="tag">&lt;/<span class="name">TextSymbolizer</span>&gt;</span></span></div><div class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Layer</span> <span class="attr">name</span>=<span class="string">"test"</span> <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">StyleName</span>&gt;</span>style<span class="tag">&lt;/<span class="name">StyleName</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">Datasource</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">Parameter</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">Parameter</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">Datasource</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">Layer</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Map</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>写测试代码加载该XML并输出图片：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mapnik = <span class="built_in">require</span>(<span class="string">'mapnik'</span>);</div><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">// register fonts and datasource plugins</span></div><div class="line">mapnik.register_default_fonts();</div><div class="line">mapnik.register_default_input_plugins();</div><div class="line">mapnik.register_datasource(<span class="string">'/Users/paiconor/Desktop/mapnik/hello-world-input-plugin-master/hello.input'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> map = <span class="keyword">new</span> mapnik.Map(<span class="number">256</span>, <span class="number">256</span>);</div><div class="line">map.load(<span class="string">'testplugin.xml'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err,map</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">    map.zoomAll();</div><div class="line">    <span class="keyword">var</span> im = <span class="keyword">new</span> mapnik.Image(<span class="number">256</span>, <span class="number">256</span>);</div><div class="line">    map.render(im, <span class="function"><span class="keyword">function</span>(<span class="params">err,im</span>) </span>&#123;</div><div class="line">      <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">      im.encode(<span class="string">'png'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err,buffer</span>) </span>&#123;</div><div class="line">          <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">          fs.writeFile(<span class="string">'map.png'</span>,buffer, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">              <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">              <span class="built_in">console</span>.log(<span class="string">'saved map image to map.png'</span>);</div><div class="line">          &#125;);</div><div class="line">      &#125;);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>运行后生成map.png，证明自定义数据源插件测试成功。<br><img src="/2018/06/29/mapnikplugintest/map.png" alt="测试成功"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/06/29/mapnikplugintest/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1227,11 +1228,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1275,11 +1276,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">

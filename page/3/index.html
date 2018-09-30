@@ -142,6 +142,86 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-sqlitertree" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/09/sqlitertree/">SQLite的RTree机制深入理解</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/09/sqlitertree/" class="archive-article-date">
+  	<time datetime="2018-05-09T09:06:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>SpatiaLite是在SQLite基础上扩展的一种空间数据库，其中空间索引部分的实现使用的是SQLite的RTree机制。我们用RTree已经有一段时间了，但是今天还是遇到了一个问题，解决了之后对RTree有了更深层次的认识。</p>
+<p>问题的现象是一份Shapefile格式的经纬度数据转换成SpatiaLite之后，数据显示不正常，在比例尺不断放大过程中，有些地方时而被填充，时而是空隙，我们分析有可能是空间索引出现了问题，导致显示时在空间索引中没有查询到，于是我们用一个功能重新计算了一遍空间索引，计算之后显示正常。</p>
+<p>通过调试我们发现数据转换使用的空间索引维护SQL和重新计算空间索引的SQL是一致的，但两者的执行结果却是不同的，而且SQL中的数值与执行之后在数据库中查询出来的数值也不一样。</p>
+<p>经过查找资料我们知道了SQLite的RTree，非ID字段使用的是Float类型存储的(也有整型的)，这样对于经纬度坐标在小数点后第5位出现精度损失，差别也是很大的。</p>
+<p>进一步查找资料发现，SQLite对于RTree的维护，会做下界坐标向下舍入，上界坐标向上舍入的处理，即扩大了几何的空间索引框，这样虽然会在空间查询中多查出来一些几何，但也不会有什么影响。经过对比发现数据转换中没有做坐标舍入处理，而且使用的SQLite版本是3.7.9，版本比较老。在3.8之后的SQLite库都做了舍入处理，就不会有这样的问题了。</p>
+<p>所以解决方案有两种，一种是手动外扩空间索引框范围；另一种是更新SQLite版本。</p>
+<p>SQLite的RTree详细理解，可以参考<a href="https://sqlite.org/rtree.html" target="_blank" rel="noopener">官方文档</a>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">SpatiaLite</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/09/sqlitertree/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-csharpclr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -878,84 +958,6 @@
 
 
   
-    <article id="post-controlflash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/14/controlflash/">解决WinForm自定义控件刷新时闪烁问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/11/14/controlflash/" class="archive-article-date">
-  	<time datetime="2017-11-14T05:39:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近遇到由于窗口内其它控件变动导致自定义地图控件闪烁的问题，体验特别不好，所以需要想办法解决这个问题。</p>
-<p>自定义地图控件的逻辑是在控件触发OnPaint事件时，将地图内容绘制到控件Graphic上，曾经尝试在OnPaint中做处理，但是没有效果，后来才意识到闪烁的根本原因是控件做了清除操作，变白了再做绘制就会让人感觉到是在闪烁。</p>
-<p>在网上找到了这篇文章，<a href="http://www.cnblogs.com/firstdown/p/6420534.html" target="_blank" rel="noopener">winform控件大小改变是防止背景重绘导致的闪烁</a>，在自定义地图控件中重写OnPaintBackground方法后验证此问题得到解决</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> OnPaintBackground 事件</span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></div><div class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="e"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPaintBackground</span>(<span class="params">PaintEventArgs e</span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="comment">// 重载基类的背景擦除函数，</span></div><div class="line">    <span class="comment">// 解决窗口刷新，放大，图像闪烁</span></div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>接下来需要考虑不做清除操作会带来什么问题，比如在图层设置成半透明时，如果不做清屏效果会不会叠加，不做清屏会不会有些不是本次刷新需要显示的内容还残留在地图上等，但是经过验证这些问题都不存在，因为地图的绘制机制会做一个背景填充的操作，效果目前一切正常。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/11/14/controlflash/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1053,11 +1055,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1101,11 +1103,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
