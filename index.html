@@ -174,7 +174,7 @@
 <p>还有一些其它的命令，感兴趣可以到官网上了解：<br><img src="/2018/10/08/runatbackground/2.png" alt="其它命令"></p>
 <h4 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h4><p>我在网上查到有说用nohup命令的，但是尝试没有成功，后来选择了screen，详细介绍看<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-screen/" target="_blank" rel="noopener">这里</a>。</p>
 <p>首先，安装screen：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install -y screen</div></pre></td></tr></table></figure></p>
-<p>安装完成之后，输入screen后回车，就可以进入到一个新的窗口中，在这个窗口里，输入tilestrata-balancer命令，启动负载均衡服务，然后使用快捷键<code>Ctrl + A + D</code>就可以退出当前屏幕。</p>
+<p>安装完成之后，输入screen后回车，就可以进入到一个新的屏幕中，在这个屏幕里，输入tilestrata-balancer命令，启动负载均衡服务，然后使用快捷键<code>Ctrl + A + D</code>就可以退出当前屏幕。</p>
 <p>此时关闭xshell之后，瓦片服务仍可以正常访问。</p>
 <p>如果需要重新回到之前的屏幕中，使用<code>screen -ls</code>命令可以查看当前有哪些屏幕：<br><img src="/2018/10/08/runatbackground/3.png" alt="查看屏幕"></p>
 <p>使用<code>screen -r [id]</code>就可以回到该屏幕中，上边的例子中列出来的屏幕ID是135240。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">screen -r 135240</div></pre></td></tr></table></figure></p>
@@ -1212,11 +1212,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1244,15 +1244,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">NPM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
