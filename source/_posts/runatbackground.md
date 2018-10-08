@@ -44,7 +44,7 @@ pm2 start httpserver.js
 yum install -y screen
 ```
 
-安装完成之后，输入screen后回车，就可以进入到一个新的窗口中，在这个窗口里，输入tilestrata-balancer命令，启动负载均衡服务，然后使用快捷键`Ctrl + A + D`就可以退出当前屏幕。
+安装完成之后，输入screen后回车，就可以进入到一个新的屏幕中，在这个屏幕里，输入tilestrata-balancer命令，启动负载均衡服务，然后使用快捷键`Ctrl + A + D`就可以退出当前屏幕。
 
 此时关闭xshell之后，瓦片服务仍可以正常访问。
 
