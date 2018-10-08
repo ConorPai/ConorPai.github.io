@@ -51,7 +51,7 @@ yum install -y screen
 如果需要重新回到之前的屏幕中，使用`screen -ls`命令可以查看当前有哪些屏幕：
 ![查看屏幕](runatbackground/3.png)
 
-使用`screen -r [id]`就可以回到该屏幕中，上边的例子中列出来的屏幕ID是135240。
+使用`screen -r <id>`就可以回到该屏幕中，上边的例子中列出来的屏幕ID是135240。
 ```bash
 screen -r 135240
 ```
