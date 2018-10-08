@@ -6,17 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017/10 | ConorPai的博客</title>
+  <title>试水进程转后台运行 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/archives/2017/10/index.html">
+  <meta name="description" content="最近使用xshell连CentOS服务器，启动瓦片服务之后，xshell不能关闭，否则服务就会被关闭，所以想尝试解决这个问题。 接下来介绍的方法可能不是很正规，如果有更好的方法麻烦告知，感谢！ 启动瓦片服务需要三个命令：1.tilestrata-balancer负载均衡命令2.瓦片服务集群3.Demo网页服务 NODE.JS进程这里的瓦片服务集群和Demo网页服务，都是node.js命令，在网上查">
+<meta name="keywords" content="CentOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="试水进程转后台运行">
+<meta property="og:url" content="http://yoursite.com/2018/10/08/runatbackground/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="最近使用xshell连CentOS服务器，启动瓦片服务之后，xshell不能关闭，否则服务就会被关闭，所以想尝试解决这个问题。 接下来介绍的方法可能不是很正规，如果有更好的方法麻烦告知，感谢！ 启动瓦片服务需要三个命令：1.tilestrata-balancer负载均衡命令2.瓦片服务集群3.Demo网页服务 NODE.JS进程这里的瓦片服务集群和Demo网页服务，都是node.js命令，在网上查">
+<meta property="og:image" content="http://yoursite.com/2018/10/08/runatbackground/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/10/08/runatbackground/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/10/08/runatbackground/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/10/08/runatbackground/4.png">
+<meta property="og:updated_time" content="2018-10-08T06:44:53.737Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="试水进程转后台运行">
+<meta name="twitter:description" content="最近使用xshell连CentOS服务器，启动瓦片服务之后，xshell不能关闭，否则服务就会被关闭，所以想尝试解决这个问题。 接下来介绍的方法可能不是很正规，如果有更好的方法麻烦告知，感谢！ 启动瓦片服务需要三个命令：1.tilestrata-balancer负载均衡命令2.瓦片服务集群3.Demo网页服务 NODE.JS进程这里的瓦片服务集群和Demo网页服务，都是node.js命令，在网上查">
+<meta name="twitter:image" content="http://yoursite.com/2018/10/08/runatbackground/1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,60 +147,178 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-runatbackground" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/31/confighexo/" class="archive-article-date">
-  	<time datetime="2017-10-31T14:18:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-31</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/31/confighexo/">使用Hexo搭建个人博客的详细教程</a>
+    <h1 class="article-title" itemprop="name">
+      试水进程转后台运行
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/10/08/runatbackground/" class="archive-article-date">
+  	<time datetime="2018-10-08T06:17:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近使用xshell连CentOS服务器，启动瓦片服务之后，xshell不能关闭，否则服务就会被关闭，所以想尝试解决这个问题。</p>
+<p>接下来介绍的方法可能不是很正规，如果有更好的方法麻烦告知，感谢！</p>
+<p>启动瓦片服务需要三个命令：<br>1.tilestrata-balancer负载均衡命令<br>2.瓦片服务集群<br>3.Demo网页服务</p>
+<h4 id="NODE-JS进程"><a href="#NODE-JS进程" class="headerlink" title="NODE.JS进程"></a>NODE.JS进程</h4><p>这里的瓦片服务集群和Demo网页服务，都是node.js命令，在网上查到这类可以使用<a href="https://github.com/Unitech/pm2" target="_blank" rel="noopener">pm2</a>来进行管理。</p>
+<p>首先全局安装pm2：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g pm2</div></pre></td></tr></table></figure>
+<p>然后可以使用<code>pm2 start</code>启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pm2 start cluster.js</div><div class="line">pm2 start httpserver.js</div></pre></td></tr></table></figure>
+<p>可以使用<code>pm2 list</code>进行查看：<br><img src="/2018/10/08/runatbackground/1.png" alt="查看进程"></p>
+<p>还有一些其它的命令，感兴趣可以到官网上了解：<br><img src="/2018/10/08/runatbackground/2.png" alt="其它命令"></p>
+<h4 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h4><p>我在网上查到有说用nohup命令的，但是尝试没有成功，后来选择了screen，详细介绍看<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-screen/" target="_blank" rel="noopener">这里</a>。</p>
+<p>首先，安装screen：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install -y screen</div></pre></td></tr></table></figure></p>
+<p>安装完成之后，输入screen后回车，就可以进入到一个新的窗口中，在这个窗口里，输入tilestrata-balancer命令，启动负载均衡服务，然后使用快捷键<code>Ctrl + A + D</code>就可以退出当前屏幕。</p>
+<p>此时关闭xshell之后，瓦片服务仍可以正常访问。</p>
+<p>如果需要重新回到之前的屏幕中，使用<code>screen -ls</code>命令可以查看当前有哪些屏幕：<br><img src="/2018/10/08/runatbackground/3.png" alt="查看屏幕"></p>
+<p>使用<code>screen -r [id]</code>就可以回到该屏幕中，上边的例子中列出来的屏幕ID是135240。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">screen -r 135240</div></pre></td></tr></table></figure></p>
+<p>关闭屏幕只需要在屏幕命令行中输入<code>exit</code>即可。<br><img src="/2018/10/08/runatbackground/4.png" alt="关闭屏幕"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">个人网站搭建</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/10/08/runatbackground/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/09/30/postgistilespeed/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">记一次500万数据量出图效率优化的心路历程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/10/08/runatbackground/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+  
 
 
           </div>
@@ -216,8 +341,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
