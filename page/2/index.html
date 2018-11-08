@@ -142,6 +142,99 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-nodemapnikcluster" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/25/nodemapnikcluster/">node-mapnik集群负载均衡配置</a>
+    </h1>
+  
+
+        
+        <a href="/2018/07/25/nodemapnikcluster/" class="archive-article-date">
+  	<time datetime="2018-07-25T07:09:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用集群部署和负载均衡可以提高大量用户并发访问下瓦片服务绘制效率，接下来将要介绍使用node.js的cluster模块和tilestrata的tilestrata-balancer模块做集群部署和负载均衡。</p>
+<p>本篇文章是在<a href="http://www.baiguangnan.com/2018/06/25/nodemapniktest/" target="_blank" rel="noopener">上一篇</a>的基础上进行扩展，如果有不清楚的可以了解一下。</p>
+<h5 id="1-使用node-js的cluster模块创建单机集群"><a href="#1-使用node-js的cluster模块创建单机集群" class="headerlink" title="1.使用node.js的cluster模块创建单机集群"></a>1.使用node.js的cluster模块创建单机集群</h5><p>因为node.js是单线程模式，所以无法有效的利用多核CPU优势，但node.js的cluster模块可以启动多个node.js程序，并实现负载均衡(这里没有用到cluster的负载均衡)。</p>
+<p>首先，将瓦片服务代码中端口部分，由写死改成通过传入参数获取。即修改app.js中最后一行：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strata.listen(<span class="number">8099</span>);</div></pre></td></tr></table></figure></p>
+<p>改为：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> port = process.env[<span class="string">'port'</span>];</div><div class="line">strata.listen(port);</div></pre></td></tr></table></figure></p>
+<p>然后创建单机集群处理代码cluster.js，具体代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> cluster = <span class="built_in">require</span>(<span class="string">'cluster'</span>);</div><div class="line"><span class="keyword">var</span> cpus = <span class="built_in">require</span>(<span class="string">'os'</span>).cpus();</div><div class="line"></div><div class="line">cluster.setupMaster(&#123;</div><div class="line">  exec: <span class="string">'./app.js'</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; cpus.length; i++)&#123;</div><div class="line">  <span class="keyword">var</span> port = <span class="number">8090</span> + i;</div><div class="line">  cluster.fork(&#123;<span class="attr">port</span> : port&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用命令<code>node cluster.js</code>即可启动集群模式，在本机实验可以创建4个node.js进程。</p>
+<h5 id="2-使用tilestrata-balancer模块做瓦片服务访问负载均衡处理"><a href="#2-使用tilestrata-balancer模块做瓦片服务访问负载均衡处理" class="headerlink" title="2.使用tilestrata-balancer模块做瓦片服务访问负载均衡处理"></a>2.使用tilestrata-balancer模块做瓦片服务访问负载均衡处理</h5><p>首先，安装tilestrata-balancer模块：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo npm install -g tilestrata-balancer</div></pre></td></tr></table></figure></p>
+<p>然后修改app.js代码，修改strata的初始化方式：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> strata = tilestrata(&#123;</div><div class="line">  balancer: &#123;</div><div class="line">    host: <span class="string">'127.0.0.1:8098'</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>这里负载均衡服务器host可以是其它服务器，这里写的是本机IP。这里的端口号是tilestrata-balancer的私有端口号，用于瓦片服务集群和负载均衡服务器通信使用。</p>
+<p>修改完成之后，使用命令启动tilestrata-balancer负载均衡：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tilestrata-balancer --hostname=127.0.0.1 --port=8099 --private-port=8098 --check-interval=5000 --unhealthy-count=1</div></pre></td></tr></table></figure></p>
+<p>这里的port参数是对外端口号，用于外部访问瓦片服务；private-port是私有端口号，用于瓦片服务集群和负载均衡服务器通信使用。</p>
+<p>然后使用命令<code>node cluster.js</code>启动node.js单机集群，就可以看到负载均衡命令行显示有瓦片服务注册进来。<br><img src="/2018/07/25/nodemapnikcluster/2.png" alt="集群和负载均衡"></p>
+<p>至此，单机集群负载均衡就做好了，前端访问还是使用8099端口。而且只要在app.js中指定好负载均衡服务器的IP，就可以把瓦片服务部署到多个服务器上，进一步加快访问效率。</p>
+<p>最后上图总结：<br><img src="/2018/07/25/nodemapnikcluster/1.png" alt="集群和负载均衡"></p>
+<p>此篇博文参考<a href="http://www.cnblogs.com/think8848/p/6357727.html" target="_blank" rel="noopener">think8848的博客</a>，特此感谢！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/07/25/nodemapnikcluster/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-openstreetmapcarto" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -959,86 +1052,6 @@
 
 
   
-    <article id="post-pip3main" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/28/pip3main/">解决pip3的cannot import name main问题</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/28/pip3main/" class="archive-article-date">
-  	<time datetime="2018-05-28T03:56:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天试用了win10的linux子系统，当配置python3环境时，升级pip3遇到了’cannot import name main’问题</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"/usr/bin/pip3"</span>, line 9, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">    from pip import main</div><div class="line">ImportError: cannot import name main</div></pre></td></tr></table></figure>
-<p>解决方法是修改文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /usr/bin/pip3</div></pre></td></tr></table></figure></p>
-<p>原内容是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pip <span class="keyword">import</span> main</div><div class="line">sys.exit(main())</div></pre></td></tr></table></figure></p>
-<p>修改为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pip <span class="keyword">import</span> __main__</div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sys.exit(__main__._main())</div></pre></td></tr></table></figure></p>
-<p>保存后就可用了。</p>
-<p>以上参考：<a href="https://qiujunya.com/pip3mainproblem.html" target="_blank" rel="noopener">https://qiujunya.com/pip3mainproblem.html</a>。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/28/pip3main/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1196,6 +1209,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
@@ -1204,7 +1221,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
               </li>
              
               <li class="article-tag-list-item">
