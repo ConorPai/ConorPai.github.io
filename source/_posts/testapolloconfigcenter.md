@@ -22,7 +22,7 @@ tags: 微服务
 ![正确启动](testapolloconfigcenter/3.png)
 
 #### 进入Apollo配置中心进行配置
-使用http://localhost:8070进入配置中心，使用`apollo/admin`进行登陆。
+使用`http://localhost:8070`进入配置中心，使用`apollo/admin`进行登陆。
 ![配置中心](testapolloconfigcenter/4.png)
 配置中心内置了一个样例项目。
 ![样例项目](testapolloconfigcenter/5.png)
