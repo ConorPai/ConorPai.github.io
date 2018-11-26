@@ -142,6 +142,102 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-nodenpmtest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/16/nodenpmtest/">试水NPM模块发布流程</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/16/nodenpmtest/" class="archive-article-date">
+  	<time datetime="2018-08-16T05:36:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在用Node.js写后台服务，并使用了tilestrata发布地图服务，但是发现一个问题，瓦片分级方案只支持墨卡托投影分级方案。如果想使用经纬度分级方案，没有直接的方法，只能按墨卡托分级方案切，在前端openlayers再做动态投影，但是这样做有效率问题，所以想尝试解决一下。</p>
+<h4 id="1-修改tilelive-mapnik源码，解决分级方案写死问题"><a href="#1-修改tilelive-mapnik源码，解决分级方案写死问题" class="headerlink" title="1.修改tilelive-mapnik源码，解决分级方案写死问题"></a>1.修改tilelive-mapnik源码，解决分级方案写死问题</h4><p>查看并调试node_modules中的模块代码，发现在<code>tilelive-mapnik/lib/render.js</code>最前面有这样几行代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> EARTH_RADIUS = <span class="number">6378137</span>;</div><div class="line"><span class="keyword">var</span> EARTH_DIAMETER = EARTH_RADIUS * <span class="number">2</span>;</div><div class="line"><span class="keyword">var</span> EARTH_CIRCUMFERENCE = EARTH_DIAMETER * <span class="built_in">Math</span>.PI;</div><div class="line"><span class="keyword">var</span> MAX_RES = EARTH_CIRCUMFERENCE / <span class="number">256</span>;</div><div class="line"><span class="keyword">var</span> ORIGIN_SHIFT = EARTH_CIRCUMFERENCE/<span class="number">2</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">calculateMetatile</span>(<span class="params">options</span>) </span>&#123;</div><div class="line">    </div><div class="line">    <span class="comment">//...</span></div><div class="line">    </div><div class="line">    <span class="comment">//当前级别分辨率</span></div><div class="line">    <span class="keyword">var</span> resolution = MAX_RES / total;</div><div class="line"></div><div class="line">    <span class="comment">//...</span></div><div class="line">    </div><div class="line">    <span class="comment">//当前级别、行列号所代表的矩形范围</span></div><div class="line">    <span class="keyword">var</span> minx = (x * <span class="number">256</span>) * resolution - ORIGIN_SHIFT;</div><div class="line">    <span class="keyword">var</span> miny = -((y + metaHeight) * <span class="number">256</span>) * resolution + ORIGIN_SHIFT;</div><div class="line">    <span class="keyword">var</span> maxx = ((x + metaWidth) * <span class="number">256</span>) * resolution - ORIGIN_SHIFT;</div><div class="line">    <span class="keyword">var</span> maxy = -((y * <span class="number">256</span>) * resolution - ORIGIN_SHIFT);</div><div class="line">    </div><div class="line">    <span class="comment">//...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个代码代表里面的分级方案是写死的，如果修改的话，只需要把<code>MAX_RES(首级分辨率)</code>、<code>ORIGIN_SHIFT(原点)</code>按参数计算即可。</p>
+<p>在Github上Fork了<a href="https://github.com/mapbox/tilelive-mapnik" target="_blank" rel="noopener">tilelive-mapnik</a>，由于<a href="https://github.com/naturalatlas/tilestrata-mapnik" target="_blank" rel="noopener">tilestrata-mapnik</a>引用了tilelive-mapnik，所以也fork了一份儿。</p>
+<p>改后的效果是，构造tilestrata-mapnik时，在options中加入FristDPI(首级分辨率)、OriX(源点X坐标)和OriY(源点Y坐标)，就可以传到tilelive-mapnik的render.js中使用，render.js修改代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (options.OriX != <span class="literal">undefined</span> &amp;&amp; options.OriY != <span class="literal">undefined</span> &amp;&amp; options.FirstDPI != <span class="literal">undefined</span>) &#123;</div><div class="line">    <span class="keyword">var</span> resolution = options.FirstDPI / total;</div><div class="line">    <span class="keyword">var</span> minx = (x * <span class="number">256</span>) * resolution + options.OriX;</div><div class="line">    <span class="keyword">var</span> miny = -((y + metaHeight) * <span class="number">256</span>) * resolution + options.OriY;</div><div class="line">    <span class="keyword">var</span> maxx = ((x + metaWidth) * <span class="number">256</span>) * resolution + options.OriX;</div><div class="line">    <span class="keyword">var</span> maxy = -((y * <span class="number">256</span>) * resolution - options.OriY);</div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">var</span> resolution = MAX_RES / total;</div><div class="line">    <span class="keyword">var</span> minx = (x * <span class="number">256</span>) * resolution - ORIGIN_SHIFT;</div><div class="line">    <span class="keyword">var</span> miny = -((y + metaHeight) * <span class="number">256</span>) * resolution + ORIGIN_SHIFT;</div><div class="line">    <span class="keyword">var</span> maxx = ((x + metaWidth) * <span class="number">256</span>) * resolution - ORIGIN_SHIFT;</div><div class="line">    <span class="keyword">var</span> maxy = -((y * <span class="number">256</span>) * resolution - ORIGIN_SHIFT);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>经纬度分级方案的FirstDPI是1.40625(全球经度360°，除以一张瓦片256像素，就得到一个像素代表的度数)，源点X为-180，源点Y为90，即左上角点。</p>
+<p>使用代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> disk = <span class="built_in">require</span>(<span class="string">'tilestrata-disk'</span>);</div><div class="line"><span class="keyword">var</span> mapnik = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata-mapnik'</span>);</div><div class="line"><span class="keyword">var</span> strata = tilestrata();</div><div class="line">strata.listen(<span class="number">8099</span>);</div><div class="line"></div><div class="line"><span class="comment">//创建瓦片服务</span></div><div class="line">exports.createTileServer = <span class="function"><span class="keyword">function</span> (<span class="params">uuid, xml, cache</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> mn = mapnik(&#123;</div><div class="line">        pathname: xml,</div><div class="line">        OriX: <span class="number">-180</span>,</div><div class="line">        OriY: <span class="number">90</span>,</div><div class="line">        FirstDPI: <span class="number">1.40625</span></div><div class="line">    &#125;);</div><div class="line">    mn.init(<span class="literal">undefined</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;);</div><div class="line">    <span class="keyword">var</span> layer = strata.layer(uuid)</div><div class="line">        .route(<span class="string">'tile.png'</span>)</div><div class="line">        .use(mn);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (cache != <span class="literal">undefined</span>) &#123;</div><div class="line">        layer.use(disk.cache(&#123;<span class="attr">dir</span>: cache&#125;));</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>接下来的工作就是将修改后的代码上传到NPM中。</p>
+<h4 id="2-将修改结果上传至NPM"><a href="#2-将修改结果上传至NPM" class="headerlink" title="2.将修改结果上传至NPM"></a>2.将修改结果上传至NPM</h4><p>首先到<a href="https://www.npmjs.com" target="_blank" rel="noopener">NPM官网</a>注册自己的帐号。</p>
+<p>然后修改tilelive-mapnik中package.json中的信息，包括name、version、一些github中的地址等。</p>
+<p>如果之前做过registry切换的，需要切回官方版本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm config <span class="built_in">set</span> registry http://registry.npmjs.org/</div></pre></td></tr></table></figure></p>
+<p>使用<code>npm adduser</code>和<code>npm login</code>在本机登陆帐号，可以使用<code>npm who am i</code>进行验证。</p>
+<p>命令行进入代码目录，然后就可以使用<code>npm publish</code>命令进行发布了。</p>
+<p>发布时遇到的问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">npm ERR! publish Failed PUT 402</div><div class="line">npm ERR! code E402</div><div class="line">npm ERR! You must sign up <span class="keyword">for</span> private packages : @wandiparis/troposphere</div></pre></td></tr></table></figure>
+<p>遇到这个问题的解决方案是<a href="https://github.com/semantic-release/semantic-release/issues/512" target="_blank" rel="noopener">这里</a>。</p>
+<p>发布成功之后就可以到NPM官网上查看了<br><img src="/2018/08/16/nodenpmtest/1.png" alt="查看NPM"></p>
+<p>修改tilestrata的package.json，修改对tilelive-mapnik的引用，改为引用@conorpai/tilelive-mapnik，并上传到NPM中。</p>
+<p>最后上一张按经纬度分级方案切图的效果图：<br><img src="/2018/08/16/nodenpmtest/2.png" alt="成果"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/16/nodenpmtest/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-nodemapnikcluster" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -973,85 +1069,6 @@
 
 
   
-    <article id="post-gdiplugpixeloffset" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/30/gdiplugpixeloffset/">使用GDI+绘制Image拼接处出现白边的问题</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/30/gdiplugpixeloffset/" class="archive-article-date">
-  	<time datetime="2018-05-30T08:17:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。<br><img src="/2018/05/30/gdiplugpixeloffset/webtiles.png" alt="白边"></p>
-<h5 id="查找原因"><a href="#查找原因" class="headerlink" title="查找原因"></a>查找原因</h5><p>最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。</p>
-<p>但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。</p>
-<p>所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个过程是GDI+绘制的，所以考虑需要通过设置选项来控制的。</p>
-<h5 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h5><p>在网上搜到了<a href="http://webserver2.tecgraf.puc-rio.br/~scuri/gdiplus/drawimage_scale_problem.html" target="_blank" rel="noopener">这篇资料</a>，测试可以解决。主要是以下几行代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ImageAttributes imAtt;</div><div class="line">imAtt.SetWrapMode(WrapModeTileFlipXY);</div><div class="line">graphics-&gt;SetInterpolationMode(InterpolationModeNearestNeighbor);</div><div class="line">graphics-&gt;SetPixelOffsetMode(PixelOffsetModeHalf);</div><div class="line">graphics-&gt;DrawImage(&amp;image, zoomRect, <span class="number">0</span>, <span class="number">0</span>, image.GetWidth(), image.GetHeight(), UnitPixel, &amp;imAtt);</div></pre></td></tr></table></figure></p>
-<p>改正后效果：<br><img src="/2018/05/30/gdiplugpixeloffset/normal.png" alt="正常"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/30/gdiplugpixeloffset/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1222,6 +1239,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Oracle</a>
               </li>
              
               <li class="article-tag-list-item">
