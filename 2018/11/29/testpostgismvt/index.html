@@ -6,34 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>使用QGIS向PostGIS中导入Shapefile数据 | ConorPai的博客</title>
+  <title>试用TileStrata-PostGISMVT插件 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层2.创建PostGIS连接3.测试连接是否正常4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据5.找到刚刚添加的PostGIS连接6.使用导入功能7.导入Shapefile数据8.导入成功9.刷新PostGIS连接，查看导入数据10.使用pgAdmin查看导入数据11.再次使用添加PostGIS图层功能12.">
-<meta name="keywords" content="GIS,PostGIS">
+  <meta name="description" content="之前试用过TileStrata-vtile插件，但是使用过程中发现其空间参考只支持Web墨卡托坐标系，而我们主要用的坐标系是经纬度，如果要修改需要改动node-mapnik的c++代码，比较麻烦。幸好TileStrata提供了另外一个矢量瓦片的插件：PostGISMVT插件。 大概了解了一下源码，其实现主要是通过PostGIS2.4版本以上提供的ST_AsMVT函数和ST_AsMVTGeom实现的">
+<meta name="keywords" content="GIS,TileStrata,Vector Tiles,PostGISMVT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用QGIS向PostGIS中导入Shapefile数据">
-<meta property="og:url" content="http://yoursite.com/2018/02/01/postgisshapefile/index.html">
+<meta property="og:title" content="试用TileStrata-PostGISMVT插件">
+<meta property="og:url" content="http://yoursite.com/2018/11/29/testpostgismvt/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层2.创建PostGIS连接3.测试连接是否正常4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据5.找到刚刚添加的PostGIS连接6.使用导入功能7.导入Shapefile数据8.导入成功9.刷新PostGIS连接，查看导入数据10.使用pgAdmin查看导入数据11.再次使用添加PostGIS图层功能12.">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/1.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/2.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/3.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/4.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/5.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/6.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/7.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/8.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/9.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/10.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/11.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/12.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/13.png">
-<meta property="og:image" content="http://yoursite.com/2018/02/01/postgisshapefile/14.png">
-<meta property="og:updated_time" content="2018-06-25T04:47:43.037Z">
+<meta property="og:description" content="之前试用过TileStrata-vtile插件，但是使用过程中发现其空间参考只支持Web墨卡托坐标系，而我们主要用的坐标系是经纬度，如果要修改需要改动node-mapnik的c++代码，比较麻烦。幸好TileStrata提供了另外一个矢量瓦片的插件：PostGISMVT插件。 大概了解了一下源码，其实现主要是通过PostGIS2.4版本以上提供的ST_AsMVT函数和ST_AsMVTGeom实现的">
+<meta property="og:updated_time" content="2018-11-29T15:18:41.519Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用QGIS向PostGIS中导入Shapefile数据">
-<meta name="twitter:description" content="1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层2.创建PostGIS连接3.测试连接是否正常4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据5.找到刚刚添加的PostGIS连接6.使用导入功能7.导入Shapefile数据8.导入成功9.刷新PostGIS连接，查看导入数据10.使用pgAdmin查看导入数据11.再次使用添加PostGIS图层功能12.">
-<meta name="twitter:image" content="http://yoursite.com/2018/02/01/postgisshapefile/1.png">
+<meta name="twitter:title" content="试用TileStrata-PostGISMVT插件">
+<meta name="twitter:description" content="之前试用过TileStrata-vtile插件，但是使用过程中发现其空间参考只支持Web墨卡托坐标系，而我们主要用的坐标系是经纬度，如果要修改需要改动node-mapnik的c++代码，比较麻烦。幸好TileStrata提供了另外一个矢量瓦片的插件：PostGISMVT插件。 大概了解了一下源码，其实现主要是通过PostGIS2.4版本以上提供的ST_AsMVT函数和ST_AsMVTGeom实现的">
   
   
     <link rel="icon" href="/favicon.png">
@@ -157,27 +142,32 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-postgisshapefile" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-testpostgismvt" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      使用QGIS向PostGIS中导入Shapefile数据
+      试用TileStrata-PostGISMVT插件
     </h1>
   
 
         
-        <a href="/2018/02/01/postgisshapefile/" class="archive-article-date">
-  	<time datetime="2018-02-01T02:05:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-01</time>
+        <a href="/2018/11/29/testpostgismvt/" class="archive-article-date">
+  	<time datetime="2018-11-29T15:03:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层<br><img src="/2018/02/01/postgisshapefile/1.png" alt="1"><br>2.创建PostGIS连接<br><img src="/2018/02/01/postgisshapefile/2.png" alt="1"><br>3.测试连接是否正常<br><img src="/2018/02/01/postgisshapefile/3.png" alt="1"><br>4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据<br><img src="/2018/02/01/postgisshapefile/4.png" alt="1"><br>5.找到刚刚添加的PostGIS连接<br><img src="/2018/02/01/postgisshapefile/5.png" alt="1"><br>6.使用导入功能<br><img src="/2018/02/01/postgisshapefile/6.png" alt="1"><br>7.导入Shapefile数据<br><img src="/2018/02/01/postgisshapefile/7.png" alt="1"><br>8.导入成功<br><img src="/2018/02/01/postgisshapefile/8.png" alt="1"><br>9.刷新PostGIS连接，查看导入数据<br><img src="/2018/02/01/postgisshapefile/9.png" alt="1"><br>10.使用pgAdmin查看导入数据<br><img src="/2018/02/01/postgisshapefile/10.png" alt="1"><br>11.再次使用添加PostGIS图层功能<br><img src="/2018/02/01/postgisshapefile/11.png" alt="1"><br>12.添加完成<br><img src="/2018/02/01/postgisshapefile/12.png" alt="1"><br>13.采编数据<br><img src="/2018/02/01/postgisshapefile/13.png" alt="1"><br>14.录入属性<br><img src="/2018/02/01/postgisshapefile/14.png" alt="1"></p>
+        <p>之前试用过TileStrata-vtile插件，但是使用过程中发现其空间参考只支持Web墨卡托坐标系，而我们主要用的坐标系是经纬度，如果要修改需要改动node-mapnik的c++代码，比较麻烦。幸好TileStrata提供了另外一个矢量瓦片的插件：<a href="https://github.com/Stezii/tilestrata-postgismvt" target="_blank" rel="noopener">PostGISMVT插件</a>。</p>
+<p>大概了解了一下源码，其实现主要是通过PostGIS2.4版本以上提供的ST_AsMVT函数和ST_AsMVTGeom实现的，而我竟然发现我们装的PostGIS在函数列表里找不到ST_AsMVT函数。。</p>
+<p>在网上找了一些资料发现原来ST_AsMVT函数需要依赖ProtoBuf库，所以安装了下面几个库：</p>
+<p>ubuntu：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install libprotobuf-c1 libprotobuf-c-dev libprotobuf-dev protobuf-compiler protobuf-c-compiler</div></pre></td></tr></table></figure></p>
+<p>安装完成之后ST_AsMVT调用不再报错，然而还是在函数列表里找不到。</p>
+<p>待续。。。</p>
 
       
 
@@ -195,7 +185,15 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Vector Tiles</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
         		</li>
       		
 		</ul>
@@ -251,7 +249,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/02/01/postgisshapefile/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/11/29/testpostgismvt/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -265,18 +263,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/02/11/objectdetection1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          使用TensorFlow进行目标识别(一)——数据处理及训练前准备
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/01/31/postgis/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Ubuntu下安装PostgreSQL和PostGIS</div>
+    <a href="/2018/11/26/testnodeoracledb/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">试用Node.js连接Oracle数据库</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -315,7 +304,7 @@
 <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
-  id: "http://yoursite.com/2018/02/01/postgisshapefile/",
+  id: "http://yoursite.com/2018/11/29/testpostgismvt/",
   owner: 'ConorPai',
   repo: 'ConorPai.github.io',
   oauth: {

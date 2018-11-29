@@ -142,6 +142,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-testpostgismvt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/29/testpostgismvt/">试用TileStrata-PostGISMVT插件</a>
+    </h1>
+  
+
+        
+        <a href="/2018/11/29/testpostgismvt/" class="archive-article-date">
+  	<time datetime="2018-11-29T15:03:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前试用过TileStrata-vtile插件，但是使用过程中发现其空间参考只支持Web墨卡托坐标系，而我们主要用的坐标系是经纬度，如果要修改需要改动node-mapnik的c++代码，比较麻烦。幸好TileStrata提供了另外一个矢量瓦片的插件：<a href="https://github.com/Stezii/tilestrata-postgismvt" target="_blank" rel="noopener">PostGISMVT插件</a>。</p>
+<p>大概了解了一下源码，其实现主要是通过PostGIS2.4版本以上提供的ST_AsMVT函数和ST_AsMVTGeom实现的，而我竟然发现我们装的PostGIS在函数列表里找不到ST_AsMVT函数。。</p>
+<p>在网上找了一些资料发现原来ST_AsMVT函数需要依赖ProtoBuf库，所以安装了下面几个库：</p>
+<p>ubuntu：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install libprotobuf-c1 libprotobuf-c-dev libprotobuf-dev protobuf-compiler protobuf-c-compiler</div></pre></td></tr></table></figure></p>
+<p>安装完成之后ST_AsMVT调用不再报错，然而还是在函数列表里找不到。</p>
+<p>待续。。。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Vector Tiles</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/11/29/testpostgismvt/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-testnodeoracledb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1005,95 +1096,6 @@
 
 
   
-    <article id="post-photoscanalignphotos" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/27/photoscanalignphotos/">PhotoScan手动对齐照片</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/27/photoscanalignphotos/" class="archive-article-date">
-  	<time datetime="2018-08-27T02:07:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>无人机飞回来的照片，拼接正射影像图，需要有一步对齐照片的工作，但是有的时候自动对齐会有一些照片因为找不到重叠匹配点而成为失效照片(Not Aligned，简称NA)，这些的失效照片无法参与到拼接工作中，导致正射影像图空洞，不是我们想要的结果。</p>
-<p><img src="/2018/08/27/photoscanalignphotos/1.png" alt="失效照片"></p>
-<p>所以我到网上查了一下资料，了解了如何通过添加标记的方式，手动对齐照片。参考文档是PhotoScan的用户手册(<a href="http://www.agisoft.com/pdf/photoscan-pro_1_4_en.pdf" target="_blank" rel="noopener">http://www.agisoft.com/pdf/photoscan-pro_1_4_en.pdf</a>)。</p>
-<p>手动对齐照片，需要在未对齐照片上添加四个及以上标记，并在已对齐照片中相应位置上放置这些标记，然后重新对齐照片即可。</p>
-<h5 id="具体操作步骤："><a href="#具体操作步骤：" class="headerlink" title="具体操作步骤："></a>具体操作步骤：</h5><p>1.在未对齐的照片上，找到明显的地面物体，右键并添加标记。<br><img src="/2018/08/27/photoscanalignphotos/2.png" alt="添加标记"><br><img src="/2018/08/27/photoscanalignphotos/3.png" alt="添加标记"></p>
-<p>2.在周围已对齐的照片上，找到相应地面物体，右键并放置标记。<br><img src="/2018/08/27/photoscanalignphotos/4.png" alt="放置标记"><br><img src="/2018/08/27/photoscanalignphotos/5.png" alt="放置标记"></p>
-<p>3.在未对齐照片上找到至少4个标记，并在周围已对齐照片上进行放置。<br><img src="/2018/08/27/photoscanalignphotos/6.png" alt="放置标记"><br><img src="/2018/08/27/photoscanalignphotos/7.png" alt="放置标记"><br><img src="/2018/08/27/photoscanalignphotos/8.png" alt="放置标记"></p>
-<p>4.在未对齐照片上右键，使用“重置相机对齐”功能，进行重置。<br><img src="/2018/08/27/photoscanalignphotos/9.png" alt="重置相机对齐"></p>
-<p>5.在未对齐照片上右键，使用“对齐选定相机”功能，进行手动对齐。<br><img src="/2018/08/27/photoscanalignphotos/10.png" alt="对齐选定相机"></p>
-<p>6.如果照片后面的NA标识被去掉了，证明手动对齐成功。<br><img src="/2018/08/27/photoscanalignphotos/11.png" alt="对齐成功"></p>
-<p>7.在模型中查看该照片，已经可以正常显示了。<br><img src="/2018/08/27/photoscanalignphotos/12.png" alt="查看模型"></p>
-<p>至此，一张照片的手动对齐工作已完成，其它的照片也做类似操作即可。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">无人机</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">PhotoScan</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/27/photoscanalignphotos/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1195,11 +1197,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1268,6 +1270,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Oracle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
               </li>
              
               <li class="article-tag-list-item">
