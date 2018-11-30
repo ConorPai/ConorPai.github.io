@@ -1,5 +1,5 @@
 ---
-title: 试用TileStrata-PostGISMVT插件
+title: 试用TileStrata-PostGISMVT矢量瓦片插件
 date: 2018-11-29 23:03:47
 tags: 
 	- GIS
@@ -10,11 +10,11 @@ tags:
 
 之前试用过TileStrata-vtile插件，但是使用过程中发现其空间参考只支持Web墨卡托坐标系，而我们主要用的坐标系是经纬度，如果要支持这种模式，需要改动node-mapnik的c++代码，比较麻烦。幸好TileStrata提供了另外一个矢量瓦片的插件：[PostGISMVT插件](https://github.com/Stezii/tilestrata-postgismvt)。
 
-接下来记录一下试过用过程遇到的坑：
+接下来记录一下试过用过程中遇到的坑s：
 
 #### 1.找不到ST_AsMVT函数
 
-大概看了一下PostGISMVT源码，其实现主要是通过PostGIS2.4版本以上提供的ST_AsMVT函数和ST_AsMVTGeom实现的，而我竟然发现我们装的PostGIS在函数列表里找不到ST_AsMVT函数。。
+大概看了一下PostGISMVT源码，主要是通过PostGIS2.4版本以上提供的ST_AsMVT函数和ST_AsMVTGeom实现的，而我竟然发现我们装的PostGIS在函数列表里找不到ST_AsMVT函数。。
 
 在网上找了一些资料发现原来ST_AsMVT函数需要依赖ProtoBuf库，所以安装了下面几个库：
 
@@ -23,13 +23,13 @@ ubuntu：
 sudo apt-get install libprotobuf-c1 libprotobuf-c-dev libprotobuf-dev protobuf-compiler protobuf-c-compiler
 ```
 
-安装完成之后ST_AsMVT调用不再报错，然而还是在函数列表里找不到。
+安装完成之后ST_AsMVT调用不再报错，然而还是在函数列表里还是找不到这个函数，无所谓了能用就行。。
 
 #### 2.找不到TileBBox函数
 
-这个在官方Readme中引用了[TileBBox.sql](https://github.com/mapbox/postgis-vt-util/blob/master/src/TileBBox.sql)进行扩展。执行即可。
+这个在官方Readme中引用了[TileBBox.sql](https://github.com/mapbox/postgis-vt-util/blob/master/src/TileBBox.sql)进行扩展。在数据库中执行此SQL即可。
 
-这里的TileBBox函数默认还是Web墨卡托坐标系，虽然支持传入SRID，但是通过代码逻辑可以知道，传入的XYZ必须得提Web墨卡托标准计算的行列号，Openlayers经纬度空间参考数据传过来的XYZ是经纬度标准计算的，所以这个函数用不了，得进行修改。
+然而这个TileBBox函数默认还是Web墨卡托坐标系，虽然支持传入SRID进行坐标变换，但是通过代码逻辑可以知道，传入的XYZ必须得是Web墨卡托标准计算的行列号，Openlayers经纬度空间参考数据传过来的XYZ是经纬度标准计算的，所以这个函数用不了，得进行修改。
 
 修改后：
 ```sql
@@ -71,11 +71,11 @@ end;
 $func$;
 ```
 
-#### 3.数据支持了经纬度，但出图还是Web墨卡托
+#### 3.PostGISMVT虽然支持了经纬度数据，但出图结果还是Web墨卡托
 
 在深入了解TileStrara-PostGISMVT源码过程中发现，虽然支持数据源是经纬度的，但是最终出图结果还是Web墨卡托的，这点可以通过[官方源码](https://github.com/Stezii/tilestrata-postgismvt/blob/master/index.js)中写死的3857进行确认。
 
-这里我临时修改了代码，将写死3857的地方使用${lyr.srid}进行修改，这样出图结果就是经纬度的了。修改结果已经上传到npm库，名称是`@conorpai/tilestrata-postgismvt`。
+这里我临时(数据和出图结果是同一坐标系)修改了代码，将写死3857的地方使用${lyr.srid}进行修改，这样出图结果就是经纬度的了。修改结果已经上传到npm库，名称是`@conorpai/tilestrata-postgismvt`。
 
 #### 4.发布地图服务
 
