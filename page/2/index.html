@@ -142,6 +142,93 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-segmentationbyecognition" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/30/segmentationbyecognition/">使用eCognition的面向对象多尺度分割技术进行影像树冠提取</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/30/segmentationbyecognition/" class="archive-article-date">
+  	<time datetime="2018-08-30T02:38:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近看一些论文，<a href="http://www.ecognition.com" target="_blank" rel="noopener">eCognition</a>经常被提及，而且作为影像分类提取的标杆进行结果对比，所以想试用一下效果。</p>
+<p>首先到官网上下载试用版本，并进行安装。eCognition最新版本是9.3，但下载比较慢，我上传了一份儿在百度网盘(<code>https://pan.baidu.com/s/1YhkYPqAoYWVAR5dcaE4oGg 密码：q8hw</code>)。</p>
+<p><img src="/2018/08/30/segmentationbyecognition/1.png" alt="软件界面"><br>首次打开软件界面是这样子的，后面在照着网上的教程来做蒙蔽了好一阵子，后来才发现用来显示影像的小窗口被藏在一个小角落，不细心还发现不了。。<br><img src="/2018/08/30/segmentationbyecognition/2.png" alt="被隐藏的窗口"><br>拉出来就好了。<br><img src="/2018/08/30/segmentationbyecognition/3.png" alt="完整窗口"></p>
+<p>然后新建工程，将影像加载进来，使用菜单”FILE-&gt;New Project”，并选择要处理的影像。<br><img src="/2018/08/30/segmentationbyecognition/4.png" alt="新建工程"><br>如果影像过大，可以使用”Subset Selection”功能，指定作业区域。目前还没有用到很高级的功能，添加影像后就直接创建工程即可。<br><img src="/2018/08/30/segmentationbyecognition/5.png" alt="新建工程"><br><img src="/2018/08/30/segmentationbyecognition/6.png" alt="新建工程"></p>
+<p>接下来进行多尺度分割工作，找到Process Tree窗口，右键使用”Append New”功能创建工作流。<br><img src="/2018/08/30/segmentationbyecognition/7.png" alt="多尺度分割"><br>对工作流重新命名，并选择处理类型为”multiresolution segmentation”，具体的参数可以在后期调整，这里点”ok”即可，最小化其它窗口，方便查看参数的应用效果。<br><img src="/2018/08/30/segmentationbyecognition/8.png" alt="多尺度分割"><br>在”Process Properties”窗口中使用执行命令，就可以执行多尺度分割了，最后分割结果显示在主窗口中。<br><img src="/2018/08/30/segmentationbyecognition/9.png" alt="多尺度分割"><br>分割完成：<br><img src="/2018/08/30/segmentationbyecognition/10.jpg" alt="多尺度分割"><br>可以使用工具栏上的”Show or Hide Outlines”功能显示、隐藏分割结果。<br><img src="/2018/08/30/segmentationbyecognition/11.png" alt="多尺度分割"></p>
+<p>多尺度分割主要有三个参数，一个是<code>Scale parameter(尺度参数)</code>，Composition of homogeneity criterion中的两个参数：<code>Shape(形状参数)</code>和<code>Compactness(紧凑度)</code>。</p>
+<p><code>Scale parameter(尺度参数)</code>：数值越小，提取出来的斑块越细碎。<br><code>Shape(形状参数)</code>：数值越大，提取出来的斑块面积越大。<br><code>Compactness(紧凑度)</code>：数值越大，则提取出来的斑块越紧密，且较接近规则形状。</p>
+<p>三个参数我分别设置：55，0.8，0.9，提取效果还可以。</p>
+<p><img src="/2018/08/30/segmentationbyecognition/12.jpg" alt="树冠提取"><br><img src="/2018/08/30/segmentationbyecognition/13.jpg" alt="树冠提取"></p>
+<p>目前对eCognition还不是很熟悉，使用的功能比较浅，以后随着深入了解，提取效果可能会更好。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">无人机</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">eCognition</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/30/segmentationbyecognition/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-photoscanalignphotos" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -991,89 +1078,6 @@
 
 
   
-    <article id="post-dronephotoscreatedom2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/04/dronephotoscreatedom2/">利用无人机拼接正射影像图(二)</a>
-    </h1>
-  
-
-        
-        <a href="/2018/06/04/dronephotoscreatedom2/" class="archive-article-date">
-  	<time datetime="2018-06-04T07:29:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="6-内业：照片拼接成正射影像图"><a href="#6-内业：照片拼接成正射影像图" class="headerlink" title="6.内业：照片拼接成正射影像图"></a>6.内业：照片拼接成正射影像图</h4><p>经过外业照片采集之后，通过内业软件进行拼接，形成正射影像图。</p>
-<h5 id="内业正射影像图拼接软件有以下几种："><a href="#内业正射影像图拼接软件有以下几种：" class="headerlink" title="内业正射影像图拼接软件有以下几种："></a>内业正射影像图拼接软件有以下几种：</h5><p>1.OpenDroneMap<br>2.PhotoScan<br>3.Pix4dmapper<br>4.ENVI OneButton</p>
-<h6 id="1-OpenDroneMap"><a href="#1-OpenDroneMap" class="headerlink" title="1.OpenDroneMap"></a>1.<a href="http://opendronemap.org" target="_blank" rel="noopener">OpenDroneMap</a></h6><p>OpenDroneMap是一款开源软件，可以对无人机照片进行拼接处理，生成正射影像图、DEM、纹理、点云等，实验证明拼接的效果不是很理想，而且没有UI操作界面用起来难度比较大。具体的拼接流程可以参考<a href="https://mp.weixin.qq.com/s?__biz=MzUzNDc0NjQ5NA==&amp;mid=2247484330&amp;idx=1&amp;sn=2fd17bbb9d9117344c3c0769a6a8bd21&amp;source=41#wechat_redirect" target="_blank" rel="noopener">这篇文章</a>。</p>
-<h5 id="2-PhotoScan"><a href="#2-PhotoScan" class="headerlink" title="2.PhotoScan"></a>2.PhotoScan</h5><p>PhotoScan可以使用GPU加速大大提高拼接效率，GPU加速设置在菜单Tools-Perferences中：<br><img src="/2018/06/04/dronephotoscreatedom2/9.png" alt="GPU加速设置"><br>下面说一下具体的拼接流程：<br>1）新建Workspace<br>点击Workspace组件中工具栏第一个按钮新建Workspace。<br><img src="/2018/06/04/dronephotoscreatedom2/1.png" alt="新建Workspace"><br>2）添加照片<br>点击菜单Workflow-Add Photos添加照片。<br><img src="/2018/06/04/dronephotoscreatedom2/1.1.png" alt="添加照片"><br>3）排列照片<br>点击菜单Workflow-Align Photos。<br><img src="/2018/06/04/dronephotoscreatedom2/2.png" alt="排列照片"><br>4）生成密集点云<br>点击菜单Workflow-Build Dense Cloud。由于有GPU加速，想试一下最高级的效果，不开GPU加速需要2天时间，开了只要20分钟，但是最高级效果在接下来生成三角网过程中报错，因为没有足够大的内存，所以这里选中等级别。<br><img src="/2018/06/04/dronephotoscreatedom2/3.png" alt="生成密集点云"><br>5）生成三角网<br>点击菜单Workflow-Build Mesh。<br><img src="/2018/06/04/dronephotoscreatedom2/4.png" alt="生成三角网"><br>6）生成纹理<br>点击菜单Workflow-Build Texture。<br><img src="/2018/06/04/dronephotoscreatedom2/5.png" alt="生成纹理"><br>7）生成正射影像图<br>点击菜单Workflow-Build Orthomosaic，生成正射影像图前，需要将Workspace生成的成果保存。<br><img src="/2018/06/04/dronephotoscreatedom2/6.png" alt="生成正射影像图"><br>8）导出正射影像图<br>点击菜单File-Export-Export Orthomosaic-Export JPEG/TIFF/PNG。<br><img src="/2018/06/04/dronephotoscreatedom2/7.png" alt="导出正射影像图"><br><img src="/2018/06/04/dronephotoscreatedom2/8.png" alt="导出正射影像图"></p>
-<h5 id="3-Pix4dmapper"><a href="#3-Pix4dmapper" class="headerlink" title="3.Pix4dmapper"></a>3.Pix4dmapper</h5><p>Pix4dmapper在前期设置之后，整个处理过程是完整的，而且会生成报告，体验比较好。<br>下面说一下具体的拼接流程：<br>1）新建项目<br><img src="/2018/06/04/dronephotoscreatedom2/12.png" alt="新建项目"><br>2）添加照片<br><img src="/2018/06/04/dronephotoscreatedom2/13.png" alt="添加照片"><br><img src="/2018/06/04/dronephotoscreatedom2/14.png" alt="添加照片"><br>3）选择输出坐标系<br>这里没有找到4326的WGS84 经纬度坐标系，使用的是3857的WGS84 Web墨卡托投影。<br><img src="/2018/06/04/dronephotoscreatedom2/15.png" alt="选择输出坐标系"><br>4）选择处理模板<br><img src="/2018/06/04/dronephotoscreatedom2/16.png" alt="选择处理模板"><br>5）新建项目完成<br><img src="/2018/06/04/dronephotoscreatedom2/17.png" alt="新建项目完成"><br>6）项目设置<br>点击左下角“处理选项”即可对项目参数进行设置，这里包括设置GPU加速。<br><img src="/2018/06/04/dronephotoscreatedom2/18.png" alt="项目设置"><br>7）开始处理<br><img src="/2018/06/04/dronephotoscreatedom2/18.1.jpg" alt="开始处理"><br>8）处理结果<br>处理完成之后，在项目目录下就保存了输出成果。<br><img src="/2018/06/04/dronephotoscreatedom2/19.png" alt="处理结果"><br>正射影像图在如下位置：<br><img src="/2018/06/04/dronephotoscreatedom2/20.png" alt="处理结果"></p>
-<h5 id="4-ENVI-OneButton"><a href="#4-ENVI-OneButton" class="headerlink" title="4.ENVI OneButton"></a>4.ENVI OneButton</h5><p>我申请了该软件的试用许可，但是还没有收到回复，等收到了试用许可再实验效果。</p>
-<h5 id="测试正射影像图效果"><a href="#测试正射影像图效果" class="headerlink" title="测试正射影像图效果"></a>测试正射影像图效果</h5><p>目前来看OpenDroneMap成果不理想，PhotoScan和Pix4dmapper成果差不多，Pix4dmapper略好些。<br>和GoogleEarth影像叠加效果：<br><img src="/2018/06/04/dronephotoscreatedom2/10.png" alt="添加照片"><br>放大之后和GoogleEarth影像对比效果：<br><img src="/2018/06/04/dronephotoscreatedom2/11.png" alt="添加照片"></p>
-<p>可以看出，还是有一些偏差的，如果需要提高精度，需要进行下一步：影像校正。</p>
-<h4 id="7-内业：正射影像图校正"><a href="#7-内业：正射影像图校正" class="headerlink" title="7.内业：正射影像图校正"></a>7.内业：正射影像图校正</h4><p>使用我们的软件或ArcMap都可以进行影像校正，在这里以ArcGIS为例演示校正效果。<br>1）在ArcGIS工具栏上添加“地理配准”工具条<br>2）为了方便校准，创建矢量图层，在GoogleEarth影像中找到比较明确的地物点，勾绘成矢量成果。<br>3）将正射影像图和矢量成果加载到ArcMap中，使用地理配准工具条，向地图中添加影像校正配准点：<br><img src="/2018/06/04/dronephotoscreatedom2/jz1.png" alt="影像校正"><br>所有配准点：<br><img src="/2018/06/04/dronephotoscreatedom2/jz2.png" alt="影像校正"><br>4）导出校正后的影像</p>
-<p>可以对比一下校正前后的效果：<br><img src="/2018/06/04/dronephotoscreatedom2/11.png" alt="校正前"><br><img src="/2018/06/04/dronephotoscreatedom2/jz3.png" alt="校正后"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">无人机</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/06/04/dronephotoscreatedom2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1171,11 +1175,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1235,11 +1239,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1255,11 +1263,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">直播</a>
+                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
+                <a href="javascript:void(0)" class="js-tag color3">直播</a>
               </li>
             
             <div class="clearfix"></div>

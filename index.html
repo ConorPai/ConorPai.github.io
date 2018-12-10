@@ -142,6 +142,96 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-postgistransformwithparams" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/10/postgistransformwithparams/">使用PostGIS函数进行带参数坐标变换</a>
+    </h1>
+  
+
+        
+        <a href="/2018/12/10/postgistransformwithparams/" class="archive-article-date">
+  	<time datetime="2018-12-10T08:38:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近需要对PostGIS数据进行带参数坐标变换，所以找了一些资料，PostGIS提供的函数只有<a href="https://postgis.net/docs/ST_Transform.html" target="_blank" rel="noopener">ST_Transform</a>。</p>
+<p><img src="/2018/12/10/postgistransformwithparams/1.png" alt="ST_Transform函数"></p>
+<p>好在这个函数支持传入proj4字符串，之前也了解过proj4字符串中可以加入+towgs84参数，但是一直没用过，所以想试一下能否通过这个参数实现带参数投影变换。</p>
+<p>首先通过MAPZONE 桌面GIS创建实验数据，解算转换参数，将原始数据和通过参数转换之后的CGCS2000经纬度数据导入到PostgreSQL数据库中。</p>
+<p><img src="/2018/12/10/postgistransformwithparams/2.jpg" alt="解算参数"></p>
+<p>在QGIS中查看：</p>
+<p><img src="/2018/12/10/postgistransformwithparams/3.jpg" alt="QGIS查看"></p>
+<p>经过反复测试发现，+towgs84参数只对目标是WGS84空间参考才能生效，转CGCS2000不起作用。</p>
+<p>完整的整表带参数坐标变换SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> shpimport.project <span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> geom <span class="keyword">TYPE</span> geometry (MULTIPOLYGON, <span class="number">4490</span>) <span class="keyword">USING</span> ST_SetSRID (</div><div class="line">	ST_Transform (</div><div class="line">		geom,</div><div class="line">		<span class="string">'+proj=tmerc +lat_0=0 +lon_0=129 +k=1 +x_0=500000 +y_0=0 +a=6378140 +b=6356755.288157528 +units=m +no_defs +towgs84=-98.8822695494164,-73.2299413849444,-13.6750870406007,0,0,0,0'</span>,</div><div class="line">		<span class="string">'+proj=longlat +datum=WGS84 +no_defs'</span></div><div class="line">	),</div><div class="line">	<span class="number">4490</span></div><div class="line">);</div></pre></td></tr></table></figure>
+<p>后来同事又发现，坐标变换目标空间参考proj4字符串中如果加入+towgs84=0,0,0,0,0,0,0，也可以实现带参数空间参考变换，不必强制转换到WGS84。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> shpimport.project <span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> geom <span class="keyword">TYPE</span> geometry (MULTIPOLYGON, <span class="number">4490</span>) <span class="keyword">USING</span> ST_SetSRID (</div><div class="line">    ST_Transform (</div><div class="line">        geom,</div><div class="line">        <span class="string">'+proj=tmerc +lat_0=0 +lon_0=129 +k=1 +x_0=500000 +y_0=0 +a=6378140 +b=6356755.288157528 +units=m +no_defs +towgs84=-98.8822695494164,-73.2299413849444,-13.6750870406007,0,0,0,0'</span>,</div><div class="line">        <span class="string">'+proj=longlat +ellps=GRS80 +no_defs +towgs84=0,0,0,0,0,0,0'</span></div><div class="line">    ),</div><div class="line">    <span class="number">4490</span></div><div class="line">);</div></pre></td></tr></table></figure>
+<p>带参数坐标变换之后的效果：<br><img src="/2018/12/10/postgistransformwithparams/4.jpg" alt="坐标变换效果"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">ST_Transform</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/12/10/postgistransformwithparams/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-testpostgismvt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1018,93 +1108,6 @@
 
 
   
-    <article id="post-segmentationbyecognition" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/30/segmentationbyecognition/">使用eCognition的面向对象多尺度分割技术进行影像树冠提取</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/30/segmentationbyecognition/" class="archive-article-date">
-  	<time datetime="2018-08-30T02:38:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近看一些论文，<a href="http://www.ecognition.com" target="_blank" rel="noopener">eCognition</a>经常被提及，而且作为影像分类提取的标杆进行结果对比，所以想试用一下效果。</p>
-<p>首先到官网上下载试用版本，并进行安装。eCognition最新版本是9.3，但下载比较慢，我上传了一份儿在百度网盘(<code>https://pan.baidu.com/s/1YhkYPqAoYWVAR5dcaE4oGg 密码：q8hw</code>)。</p>
-<p><img src="/2018/08/30/segmentationbyecognition/1.png" alt="软件界面"><br>首次打开软件界面是这样子的，后面在照着网上的教程来做蒙蔽了好一阵子，后来才发现用来显示影像的小窗口被藏在一个小角落，不细心还发现不了。。<br><img src="/2018/08/30/segmentationbyecognition/2.png" alt="被隐藏的窗口"><br>拉出来就好了。<br><img src="/2018/08/30/segmentationbyecognition/3.png" alt="完整窗口"></p>
-<p>然后新建工程，将影像加载进来，使用菜单”FILE-&gt;New Project”，并选择要处理的影像。<br><img src="/2018/08/30/segmentationbyecognition/4.png" alt="新建工程"><br>如果影像过大，可以使用”Subset Selection”功能，指定作业区域。目前还没有用到很高级的功能，添加影像后就直接创建工程即可。<br><img src="/2018/08/30/segmentationbyecognition/5.png" alt="新建工程"><br><img src="/2018/08/30/segmentationbyecognition/6.png" alt="新建工程"></p>
-<p>接下来进行多尺度分割工作，找到Process Tree窗口，右键使用”Append New”功能创建工作流。<br><img src="/2018/08/30/segmentationbyecognition/7.png" alt="多尺度分割"><br>对工作流重新命名，并选择处理类型为”multiresolution segmentation”，具体的参数可以在后期调整，这里点”ok”即可，最小化其它窗口，方便查看参数的应用效果。<br><img src="/2018/08/30/segmentationbyecognition/8.png" alt="多尺度分割"><br>在”Process Properties”窗口中使用执行命令，就可以执行多尺度分割了，最后分割结果显示在主窗口中。<br><img src="/2018/08/30/segmentationbyecognition/9.png" alt="多尺度分割"><br>分割完成：<br><img src="/2018/08/30/segmentationbyecognition/10.jpg" alt="多尺度分割"><br>可以使用工具栏上的”Show or Hide Outlines”功能显示、隐藏分割结果。<br><img src="/2018/08/30/segmentationbyecognition/11.png" alt="多尺度分割"></p>
-<p>多尺度分割主要有三个参数，一个是<code>Scale parameter(尺度参数)</code>，Composition of homogeneity criterion中的两个参数：<code>Shape(形状参数)</code>和<code>Compactness(紧凑度)</code>。</p>
-<p><code>Scale parameter(尺度参数)</code>：数值越小，提取出来的斑块越细碎。<br><code>Shape(形状参数)</code>：数值越大，提取出来的斑块面积越大。<br><code>Compactness(紧凑度)</code>：数值越大，则提取出来的斑块越紧密，且较接近规则形状。</p>
-<p>三个参数我分别设置：55，0.8，0.9，提取效果还可以。</p>
-<p><img src="/2018/08/30/segmentationbyecognition/12.jpg" alt="树冠提取"><br><img src="/2018/08/30/segmentationbyecognition/13.jpg" alt="树冠提取"></p>
-<p>目前对eCognition还不是很熟悉，使用的功能比较浅，以后随着深入了解，提取效果可能会更好。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">无人机</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">eCognition</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/30/segmentationbyecognition/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1202,11 +1205,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1266,11 +1269,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1286,11 +1293,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">直播</a>
+                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
+                <a href="javascript:void(0)" class="js-tag color3">直播</a>
               </li>
             
             <div class="clearfix"></div>
