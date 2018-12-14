@@ -6,23 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>记一次500万数据量出图效率优化的心路历程 | ConorPai的博客</title>
+  <title>解决CentOS服务器使用Yum连接源失败的问题 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。 服务器环境协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。 数据入库因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：1ogr2ogr -f &quot;">
-<meta name="keywords" content="Mapnik,PostGIS">
+  <meta name="description" content="今天又协调到一台服务器，CentOS操作系统的，准备部署Node.js服务。 上来第一步就用yum update进行更新，更新时发现有很多源连接失败，提示404 Not Found之类的。仍然能搜索到更新，但是安装失败。 由于使用yum install仍然可用，所以暂时没理这个问题。所有环境都部署好了，需要使用git下截代码的时候，提示yum install无法安装git，这个时候其实也可以下载代">
+<meta name="keywords" content="CentOS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记一次500万数据量出图效率优化的心路历程">
-<meta property="og:url" content="http://yoursite.com/2018/09/30/postgistilespeed/index.html">
+<meta property="og:title" content="解决CentOS服务器使用Yum连接源失败的问题">
+<meta property="og:url" content="http://yoursite.com/2018/12/14/centosyum404/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。 服务器环境协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。 数据入库因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：1ogr2ogr -f &quot;">
-<meta property="og:image" content="http://yoursite.com/2018/09/30/postgistilespeed/1.png">
-<meta property="og:image" content="http://yoursite.com/2018/09/30/postgistilespeed/2.png">
-<meta property="og:image" content="http://yoursite.com/2018/09/30/postgistilespeed/3.jpg">
-<meta property="og:updated_time" content="2018-09-30T02:48:45.250Z">
+<meta property="og:description" content="今天又协调到一台服务器，CentOS操作系统的，准备部署Node.js服务。 上来第一步就用yum update进行更新，更新时发现有很多源连接失败，提示404 Not Found之类的。仍然能搜索到更新，但是安装失败。 由于使用yum install仍然可用，所以暂时没理这个问题。所有环境都部署好了，需要使用git下截代码的时候，提示yum install无法安装git，这个时候其实也可以下载代">
+<meta property="og:updated_time" content="2018-12-14T07:09:50.592Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="记一次500万数据量出图效率优化的心路历程">
-<meta name="twitter:description" content="之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。 服务器环境协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。 数据入库因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：1ogr2ogr -f &quot;">
-<meta name="twitter:image" content="http://yoursite.com/2018/09/30/postgistilespeed/1.png">
+<meta name="twitter:title" content="解决CentOS服务器使用Yum连接源失败的问题">
+<meta name="twitter:description" content="今天又协调到一台服务器，CentOS操作系统的，准备部署Node.js服务。 上来第一步就用yum update进行更新，更新时发现有很多源连接失败，提示404 Not Found之类的。仍然能搜索到更新，但是安装失败。 由于使用yum install仍然可用，所以暂时没理这个问题。所有环境都部署好了，需要使用git下截代码的时候，提示yum install无法安装git，这个时候其实也可以下载代">
   
   
     <link rel="icon" href="/favicon.png">
@@ -146,46 +142,35 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-postgistilespeed" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-centosyum404" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      记一次500万数据量出图效率优化的心路历程
+      解决CentOS服务器使用Yum连接源失败的问题
     </h1>
   
 
         
-        <a href="/2018/09/30/postgistilespeed/" class="archive-article-date">
-  	<time datetime="2018-09-30T02:04:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-30</time>
+        <a href="/2018/12/14/centosyum404/" class="archive-article-date">
+  	<time datetime="2018-12-14T07:00:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-14</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。</p>
-<h5 id="服务器环境"><a href="#服务器环境" class="headerlink" title="服务器环境"></a>服务器环境</h5><p>协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。</p>
-<h5 id="数据入库"><a href="#数据入库" class="headerlink" title="数据入库"></a>数据入库</h5><p>因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=dlwy"</span> PG:<span class="string">"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=dlwy"</span> <span class="string">"t_hunan_09"</span> -progress</div></pre></td></tr></table></figure></p>
-<p>这样就把生产数据库中的<code>t_hunan_09</code>导入到测试数据库中。</p>
-<h5 id="启动瓦片服务"><a href="#启动瓦片服务" class="headerlink" title="启动瓦片服务"></a>启动瓦片服务</h5><p>配置好mapnik的配图XML，使用tilestrata-balancer做负载均衡，启动了48个node进程进行测试，然而现实是残酷的，每张瓦片的请求时间是10秒左右。</p>
-<p>然后就去参考OpenStreetMap的PostGIS数据库和配图方案，并没有什么特别的，gist空间索引也重建了，还是没有效果。</p>
-<h5 id="试用数据库连接池"><a href="#试用数据库连接池" class="headerlink" title="试用数据库连接池"></a>试用数据库连接池</h5><p>测试使用pgbouncer数据库连接池，也没有效果。</p>
-<h5 id="单进程竟然比多进程快？"><a href="#单进程竟然比多进程快？" class="headerlink" title="单进程竟然比多进程快？"></a>单进程竟然比多进程快？</h5><p>后来关闭了tilestrata-balancer负载均衡和48个node进程，只启动一个进程进行出图，然后神奇的事情来了，请求时间非常快，只有几百毫秒。这又是为何？</p>
-<p>基于这种情况用了一段时间发现了规律，每次重启服务后，第一次请求瓦片，需要10秒时间，后面再用就很快了。但是用过一段时间之后，又会有一次10秒的卡顿，时间不规律。</p>
-<p>这样的话之前的现象是可以解释的了，由于做了负载均衡，所以一屏的瓦片都相当于启动服务后初次请求，所以都很慢，把48个进程都用完需要一段时间，所以就造成了一直卡顿的问题。</p>
-<p>但是初次启动服务为10几秒是在做什么呢？</p>
-<h5 id="初期卡顿到底在做什么"><a href="#初期卡顿到底在做什么" class="headerlink" title="初期卡顿到底在做什么"></a>初期卡顿到底在做什么</h5><p>我对比了有瓦片缓存和无瓦片缓存的情况，有瓦片缓存很快，无瓦片缓存有卡顿，说明这个卡顿是在瓦片绘制环节，瓦片绘制环节主要是数据库查询了。</p>
-<p>后来在网上找了一些PostgreSQL数据库优化的贴子，其中有一个说PostgreSQL有一个机制，可以记录查询时间比较长的SQL，我就试着做了一下。</p>
-<p>首先找到postgresql.conf文件，将<code>log_min_duration_statement</code>注释去掉，并设置为1000毫秒，重启数据库之后，启动瓦片服务，再到postgresql.conf同级的log文件夹下查看日志。<br><img src="/2018/09/30/postgistilespeed/1.png" alt="慢SQL"></p>
-<p>发现有将近10秒的时间在做数据的范围统计，忽然想起来在配置mapnik的XML时，没有设置数据范围，导致这里实时计算500万数据的范围，造成卡顿。。</p>
-<p>重新配置mapnik的XML后，验证效果：<br><img src="/2018/09/30/postgistilespeed/2.png" alt="mapnik配图"></p>
-<p>果然不卡了，效果杠杠的。</p>
-<h5 id="是否需要数据库连接池"><a href="#是否需要数据库连接池" class="headerlink" title="是否需要数据库连接池"></a>是否需要数据库连接池</h5><p>之前使用了pgbouncer数据库连接池，但是实际使用效果不是特别理想，启动多个node进程后总会出现事务互斥的问题，导致有些瓦片加载特别慢，后来不用数据库连接池，直连数据库就正常了，可能对数据库连接池用的不到位吧。</p>
-<h5 id="开启负载均衡，丝般流畅"><a href="#开启负载均衡，丝般流畅" class="headerlink" title="开启负载均衡，丝般流畅"></a>开启负载均衡，丝般流畅</h5><p>重新开启tilestrata-balancer负载均衡和48个node进程，地图加载流畅，去掉了缓存机制在14级别也能轻松应对。</p>
-<p>最后上图镇楼：<br><img src="/2018/09/30/postgistilespeed/3.jpg" alt="最终效果"></p>
+        <p>今天又协调到一台服务器，CentOS操作系统的，准备部署Node.js服务。</p>
+<p>上来第一步就用yum update进行更新，更新时发现有很多源连接失败，提示<code>404 Not Found</code>之类的。仍然能搜索到更新，但是安装失败。</p>
+<p>由于使用<code>yum install</code>仍然可用，所以暂时没理这个问题。所有环境都部署好了，需要使用git下截代码的时候，提示yum install无法安装git，这个时候其实也可以下载代码zip，然后到服务器解压，但是想到后期如果有代码更新可能会比较麻烦，所以考虑解决这个问题。</p>
+<p>到网上搜到了这个<a href="http://blog.51cto.com/17532/2298743" target="_blank" rel="noopener">解决方案</a>，照着做竟然解决了。</p>
+<p>1.首先备份/etc/yum.repos.d/CentOS-Base.repo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</div></pre></td></tr></table></figure></p>
+<p>2.到<a href="http://mirrors.163.com/.help/centos.html" target="_blank" rel="noopener">这里</a>下载相应版本的repo文件</p>
+<p>3.将下载后的repo文件改名为<code>CentOS-Base.repo</code>，并使用rz上传到<code>/etc/yum.repos.d/</code>目录下。</p>
+<p>4.清理并重置缓存<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum clean all</div><div class="line">yum makecache</div></pre></td></tr></table></figure></p>
+<p>然后<code>yum update</code>和<code>yum install git</code>都可以正常使用了，问题解决！</p>
 
       
 
@@ -199,11 +184,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
         		</li>
       		
 		</ul>
@@ -259,7 +240,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/09/30/postgistilespeed/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/12/14/centosyum404/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -273,18 +254,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/10/08/runatbackground/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          试水进程转后台运行
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/09/29/usenodemapnikwithpostgisoncentos/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务</div>
+    <a href="/2018/12/10/postgistransformwithparams/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">使用PostGIS函数进行带参数坐标变换</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -323,7 +295,7 @@
 <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
-  id: "http://yoursite.com/2018/09/30/postgistilespeed/",
+  id: "http://yoursite.com/2018/12/14/centosyum404/",
   owner: 'ConorPai',
   repo: 'ConorPai.github.io',
   oauth: {

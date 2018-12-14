@@ -142,6 +142,88 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-centosyum404" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/14/centosyum404/">解决CentOS服务器使用Yum连接源失败的问题</a>
+    </h1>
+  
+
+        
+        <a href="/2018/12/14/centosyum404/" class="archive-article-date">
+  	<time datetime="2018-12-14T07:00:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天又协调到一台服务器，CentOS操作系统的，准备部署Node.js服务。</p>
+<p>上来第一步就用yum update进行更新，更新时发现有很多源连接失败，提示<code>404 Not Found</code>之类的。仍然能搜索到更新，但是安装失败。</p>
+<p>由于使用<code>yum install</code>仍然可用，所以暂时没理这个问题。所有环境都部署好了，需要使用git下截代码的时候，提示yum install无法安装git，这个时候其实也可以下载代码zip，然后到服务器解压，但是想到后期如果有代码更新可能会比较麻烦，所以考虑解决这个问题。</p>
+<p>到网上搜到了这个<a href="http://blog.51cto.com/17532/2298743" target="_blank" rel="noopener">解决方案</a>，照着做竟然解决了。</p>
+<p>1.首先备份/etc/yum.repos.d/CentOS-Base.repo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</div></pre></td></tr></table></figure></p>
+<p>2.到<a href="http://mirrors.163.com/.help/centos.html" target="_blank" rel="noopener">这里</a>下载相应版本的repo文件</p>
+<p>3.将下载后的repo文件改名为<code>CentOS-Base.repo</code>，并使用rz上传到<code>/etc/yum.repos.d/</code>目录下。</p>
+<p>4.清理并重置缓存<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum clean all</div><div class="line">yum makecache</div></pre></td></tr></table></figure></p>
+<p>然后<code>yum update</code>和<code>yum install git</code>都可以正常使用了，问题解决！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/12/14/centosyum404/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-postgistransformwithparams" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -363,6 +445,9 @@
 <p>应用环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">source</span> /etc/profile</div></pre></td></tr></table></figure></p>
 <h4 id="2-安装node-oracledb，及测试"><a href="#2-安装node-oracledb，及测试" class="headerlink" title="2.安装node-oracledb，及测试"></a>2.安装node-oracledb，及测试</h4><p>执行<code>npm install oracledb</code>进行安装，然后编辑下面的脚本，执行查看结果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> oracledb = <span class="built_in">require</span>(<span class="string">'oracledb'</span>);</div><div class="line">oracledb.getConnection(&#123;</div><div class="line">  user          : <span class="string">"user"</span>,</div><div class="line">  password      : <span class="string">"password"</span>,</div><div class="line">  connectString : <span class="string">"(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.100)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=orcl)))"</span></div><div class="line">&#125;,</div><div class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err,connection</span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span>(err)&#123;</div><div class="line">    <span class="built_in">console</span>.error(err.message);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">  connection.execute(</div><div class="line">    <span class="string">"select sysdate from dual"</span>,[],<span class="function"><span class="keyword">function</span>(<span class="params">err,result</span>)</span>&#123;</div><div class="line">       <span class="keyword">if</span>(err)&#123;</div><div class="line">         <span class="built_in">console</span>.error(err.message);</div><div class="line">         <span class="keyword">return</span>;</div><div class="line">       &#125;</div><div class="line">       <span class="built_in">console</span>.log(result.rows);</div><div class="line">     &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
 <p>如果打印出当前时间，则表示环境配置正常。<br><img src="/2018/11/26/testnodeoracledb/1.png" alt="打印时间"></p>
+<p>2018年12月14日更新：<br>今天在一台centos服务器上部署node-oracledb，验证时报错：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">64-bit Oracle Client library cannot be loaded: <span class="string">"libaio.so.1: cannot open shared object file: No such file or directory</span></div></pre></td></tr></table></figure></p>
+<p>到网上搜是因为缺少安装包libaio和libaio-devel，执行如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install libaio*</div></pre></td></tr></table></figure></p>
+<p>然后就可以正常使用了。</p>
 
       
 
@@ -772,15 +857,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
         		</li>
       		
 		</ul>
@@ -1003,111 +1088,6 @@
 
 
   
-    <article id="post-nodemapnikvectortiles" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/10/nodemapnikvectortiles/">基于TileStrata发布矢量瓦片服务</a>
-    </h1>
-  
-
-        
-        <a href="/2018/09/10/nodemapnikvectortiles/" class="archive-article-date">
-  	<time datetime="2018-09-10T02:32:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>随着对<a href="https://github.com/naturalatlas/tilestrata" target="_blank" rel="noopener">TileStrata</a>的深入了解，也想尝试一下<a href="https://github.com/naturalatlas/tilestrata-vtile" target="_blank" rel="noopener">矢量瓦片的相关插件</a>，但网上相关的资料好像不多，接下来就把我的试用过程记录下来，分享给大家。</p>
-<p>首先了解一下该插件提供的官方示例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> vtile = <span class="built_in">require</span>(<span class="string">'tilestrata-vtile'</span>);</div><div class="line"><span class="keyword">var</span> vtileraster = <span class="built_in">require</span>(<span class="string">'tilestrata-vtile-raster'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> common = &#123;</div><div class="line">    xml: <span class="string">'/path/to/map.xml'</span>,</div><div class="line">    tileSize: <span class="number">256</span>,</div><div class="line">    metatile: <span class="number">1</span>,</div><div class="line">    bufferSize: <span class="number">128</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">server.layer(<span class="string">'mylayer'</span>)</div><div class="line">    .route(<span class="string">'t.pbf'</span>).use(vtile(common))</div><div class="line">    .route(<span class="string">'t.png'</span>).use(vtileraster(common, &#123;</div><div class="line">        tilesource: [<span class="string">'mylayer'</span>, <span class="string">'t.pbf'</span>]</div><div class="line">    &#125;))</div><div class="line">    .route(<span class="string">'i.json'</span>).use(vtileraster(common, &#123;</div><div class="line">        tilesource: [<span class="string">'mylayer'</span>, <span class="string">'t.pbf'</span>],</div><div class="line">        interactivity: <span class="literal">true</span></div><div class="line">    &#125;));</div></pre></td></tr></table></figure></p>
-<p>这个示例发布了三种类型的服务，一种是基于protobuf(pbf)格式的矢量瓦片，一种是png瓦片，一种是geojson格式的矢量瓦片，这里主要试用pbf类型。</p>
-<p>安装好tilestrata、tilestrata-vtile和node-mapnik模块，补足完整示例代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> vtile = <span class="built_in">require</span>(<span class="string">'tilestrata-vtile'</span>);</div><div class="line"><span class="keyword">var</span> server = tilestrata();</div><div class="line"><span class="keyword">var</span> common = &#123;</div><div class="line">    xml: <span class="string">'/Users/paiconor/Desktop/server/dir/VectorTiles/8dd716c9-369c-4edd-9f20-a7aea283f5d0/thumbnail/mapnik.xml'</span>,</div><div class="line">    tileSize: <span class="number">256</span>,</div><div class="line">    metatile: <span class="number">1</span>,</div><div class="line">    bufferSize: <span class="number">128</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'t.pbf'</span>).use(vtile(common));</div><div class="line">server.listen(<span class="number">7988</span>);</div></pre></td></tr></table></figure></p>
-<p>在WebStorm中，按照Openlayers<a href="http://openlayers.org/en/latest/examples/mapbox-vector-tiles.html" target="_blank" rel="noopener">加载矢量瓦片示例</a>，简化前端代码如下(Openlayers版本用的是4系列)：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!Doctype html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">http://www.w3.org/1999/xhtml</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">Content-Type</span> <span class="attr">content</span>=<span class="string">"text/html;charset=utf-8"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">X-UA-Compatible</span> <span class="attr">content</span>=<span class="string">"IE=edge,chrome=1"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">content</span>=<span class="string">always</span> <span class="attr">name</span>=<span class="string">referrer</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Mapnik地图服务示例<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!--Let browser know website is optimized for mobile--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, user-scalable=no, initial-scale=1.0"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"ol.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"ol.js"</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">main</span> <span class="attr">class</span>=<span class="string">"bodymain"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"map"</span> <span class="attr">class</span>=<span class="string">"map"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">main</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> map = <span class="keyword">new</span> ol.Map(&#123;</span></div><div class="line"><span class="javascript">        target: <span class="string">'map'</span>,</span></div><div class="line"><span class="javascript">        view: <span class="keyword">new</span> ol.View(&#123;</span></div><div class="line"><span class="undefined">            center: [0, 0],</span></div><div class="line"><span class="undefined">            zoom: 2</span></div><div class="line"><span class="undefined">        &#125;),</span></div><div class="line"><span class="javascript">        layers: [<span class="keyword">new</span> ol.layer.VectorTile(&#123;</span></div><div class="line"><span class="javascript">            source: <span class="keyword">new</span> ol.source.VectorTile(&#123;</span></div><div class="line"><span class="javascript">                format: <span class="keyword">new</span> ol.format.MVT(),</span></div><div class="line"><span class="javascript">                url: <span class="string">'http://localhost:7988/mylayer/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;/t.pbf'</span></span></div><div class="line"><span class="undefined">            &#125;)</span></div><div class="line"><span class="undefined">        &#125;)]</span></div><div class="line"><span class="undefined">    &#125;);</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>用这种方式出现了个问题，就是提示跨域，原因是WebStorm启动的前端服务端口是63342，而矢量瓦片端口是7988。<br><img src="/2018/09/10/nodemapnikvectortiles/1.png" alt="跨域问题"></p>
-<p>因为对前端不熟悉，所以选择在服务端解决这个问题。之前看资料时发现TileStrata支持做为Express的中间件(目前不支持Koa)，所以这次尝试一下。</p>
-<p>安装express模块和express-static模块，将代码修改为如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> express();</div><div class="line"></div><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> vtile = <span class="built_in">require</span>(<span class="string">'tilestrata-vtile'</span>);</div><div class="line"><span class="keyword">var</span> server = tilestrata();</div><div class="line"><span class="keyword">var</span> common = &#123;</div><div class="line">    xml: <span class="string">'/Users/paiconor/Desktop/server/dir/VectorTiles/8dd716c9-369c-4edd-9f20-a7aea283f5d0/thumbnail/mapnik.xml'</span>,</div><div class="line">    tileSize: <span class="number">256</span>,</div><div class="line">    metatile: <span class="number">1</span>,</div><div class="line">    bufferSize: <span class="number">128</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'t.pbf'</span>).use(vtile(common));</div><div class="line"></div><div class="line"><span class="comment">//添加为Express中间件</span></div><div class="line">app.use(tilestrata.middleware(&#123;</div><div class="line">    server: server,</div><div class="line">    prefix: <span class="string">'/maps'</span></div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">//添加静态目录中间件</span></div><div class="line">app.use(<span class="built_in">require</span>(<span class="string">'express-static'</span>)(__dirname + <span class="string">'/public'</span>));</div><div class="line"></div><div class="line"><span class="comment">//启动服务器</span></div><div class="line">app.listen(<span class="number">7988</span>);</div></pre></td></tr></table></figure></p>
-<p>将之前的前端文件拷贝到public目录下，就可以在浏览器中访问了(这里注意一下，因为将TileStrata做为Express路由，加入了maps地址，所以矢量瓦片加载地址由之前的<code>http://localhost:7988/mylayer/{z}/{x}/{y}/t.pbf</code>变为<code>http://localhost:7988/maps/mylayer/{z}/{x}/{y}/t.pbf</code>)：<br><img src="/2018/09/10/nodemapnikvectortiles/2.png" alt="显示成功"></p>
-<p>配置OSM底图：<br><img src="/2018/09/10/nodemapnikvectortiles/3.png" alt="显示成功"></p>
-<p>在前端修改渲染：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> map = <span class="keyword">new</span> ol.Map(&#123;</div><div class="line">    target: <span class="string">'map'</span>,</div><div class="line">    view: <span class="keyword">new</span> ol.View(&#123;</div><div class="line">        center: [<span class="number">0</span>, <span class="number">0</span>],</div><div class="line">        zoom: <span class="number">2</span></div><div class="line">    &#125;),</div><div class="line">    layers: [</div><div class="line">        <span class="keyword">new</span> ol.layer.Tile(&#123;</div><div class="line">            title: <span class="string">"OSM"</span>,</div><div class="line">            source: <span class="keyword">new</span> ol.source.OSM(&#123;</div><div class="line">                attributions: []</div><div class="line">            &#125;)</div><div class="line">        &#125;),</div><div class="line">        <span class="keyword">new</span> ol.layer.VectorTile(&#123;</div><div class="line">        source: <span class="keyword">new</span> ol.source.VectorTile(&#123;</div><div class="line">            format: <span class="keyword">new</span> ol.format.MVT(),</div><div class="line">            url: <span class="string">'http://localhost:7988/maps/mylayer/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;/t.pbf'</span></div><div class="line">        &#125;),</div><div class="line">        style: <span class="function"><span class="keyword">function</span>(<span class="params">feature, resolution</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ol.style.Style(&#123;</div><div class="line">                stroke: <span class="keyword">new</span> ol.style.Stroke(&#123;</div><div class="line">                    color: <span class="string">'rgba(255, 0, 0)'</span>,</div><div class="line">                    width: <span class="number">1</span></div><div class="line">                &#125;)</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">    &#125;)]</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/09/10/nodemapnikvectortiles/4.png" alt="显示成功"></p>
-<p>根据Openlayers<a href="http://openlayers.org/en/latest/examples/vector-tile-info.html" target="_blank" rel="noopener">显示矢量瓦片信息示例</a>，加入如下代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">map.on(<span class="string">'singleclick'</span>, showInfo);</div><div class="line"></div><div class="line"><span class="keyword">var</span> info = <span class="built_in">document</span>.getElementById(<span class="string">'info'</span>);</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">showInfo</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> features = map.getFeaturesAtPixel(event.pixel);</div><div class="line">    <span class="keyword">if</span> (!features) &#123;</div><div class="line">        info.innerText = <span class="string">''</span>;</div><div class="line">        info.style.opacity = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">var</span> properties = features[<span class="number">0</span>].getProperties();</div><div class="line">    info.innerText = <span class="built_in">JSON</span>.stringify(properties, <span class="literal">null</span>, <span class="number">2</span>);</div><div class="line">    info.style.opacity = <span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>点击地图即可显示所点要素的属性：<br><img src="/2018/09/10/nodemapnikvectortiles/5.png" alt="查看属性"></p>
-<p>修改渲染，分类显示：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> map = <span class="keyword">new</span> ol.Map(&#123;</div><div class="line">    target: <span class="string">'map'</span>,</div><div class="line">    view: <span class="keyword">new</span> ol.View(&#123;</div><div class="line">        center: [<span class="number">0</span>, <span class="number">0</span>],</div><div class="line">        zoom: <span class="number">2</span></div><div class="line">    &#125;),</div><div class="line">    layers: [</div><div class="line">        <span class="keyword">new</span> ol.layer.Tile(&#123;</div><div class="line">            title: <span class="string">"OSM"</span>,</div><div class="line">            source: <span class="keyword">new</span> ol.source.OSM(&#123;</div><div class="line">                attributions: []</div><div class="line">            &#125;)</div><div class="line">        &#125;),</div><div class="line">        <span class="keyword">new</span> ol.layer.VectorTile(&#123;</div><div class="line">        source: <span class="keyword">new</span> ol.source.VectorTile(&#123;</div><div class="line">            format: <span class="keyword">new</span> ol.format.MVT(),</div><div class="line">            url: <span class="string">'http://localhost:7988/maps/mylayer/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;/t.pbf'</span></div><div class="line">        &#125;),</div><div class="line">        style: <span class="function"><span class="keyword">function</span>(<span class="params">feature, resolution</span>) </span>&#123;</div><div class="line">            <span class="keyword">var</span> properties = feature.getProperties();</div><div class="line">            <span class="keyword">if</span> (properties[<span class="string">'name'</span>] == <span class="string">""</span>) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ol.style.Style(&#123;</div><div class="line">                    stroke: <span class="keyword">new</span> ol.style.Stroke(&#123;</div><div class="line">                        color: <span class="string">'rgba(255, 0, 0)'</span>,</div><div class="line">                        width: <span class="number">1</span></div><div class="line">                    &#125;)</div><div class="line">                &#125;)</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ol.style.Style(&#123;</div><div class="line">                    stroke: <span class="keyword">new</span> ol.style.Stroke(&#123;</div><div class="line">                        color: <span class="string">'rgba(0, 255, 0)'</span>,</div><div class="line">                        width: <span class="number">1</span></div><div class="line">                    &#125;)</div><div class="line">                &#125;)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;)]</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/09/10/nodemapnikvectortiles/6.png" alt="分类渲染"></p>
-<h3 id="2018年9月13日更新—————————"><a href="#2018年9月13日更新—————————" class="headerlink" title="2018年9月13日更新—————————"></a>2018年9月13日更新—————————</h3><p>上边提到的跨域问题，除了使用Express之外，还有另外一种解决方案：<br>首先，安装tilestrata-headers组件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install tilestrata-headers</div></pre></td></tr></table></figure></p>
-<p>在代码中加入模块引用：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> headers = <span class="built_in">require</span>(<span class="string">'tilestrata-headers'</span>);</div></pre></td></tr></table></figure></p>
-<p>完整代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> vtile = <span class="built_in">require</span>(<span class="string">'tilestrata-vtile'</span>);</div><div class="line"><span class="keyword">var</span> headers = <span class="built_in">require</span>(<span class="string">'tilestrata-headers'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> server = tilestrata();</div><div class="line"><span class="keyword">var</span> common = &#123;</div><div class="line">    xml: <span class="string">'/Users/paiconor/Desktop/server/dir/VectorTiles/8dd716c9-369c-4edd-9f20-a7aea283f5d0/thumbnail/mapnik.xml'</span>,</div><div class="line">    tileSize: <span class="number">256</span>,</div><div class="line">    metatile: <span class="number">1</span>,</div><div class="line">    bufferSize: <span class="number">128</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">server.layer(<span class="string">'mylayer'</span>)</div><div class="line">    .route(<span class="string">'t.pbf'</span>)</div><div class="line">    .use(headers(&#123;</div><div class="line">        <span class="string">'Access-Control-Allow-Origin'</span>: <span class="string">'*'</span></div><div class="line">    &#125;))</div><div class="line">    .use(vtile(common));</div><div class="line"></div><div class="line">server.listen(<span class="number">7988</span>)</div></pre></td></tr></table></figure></p>
-<p>这样WebStorm发布出来的网页就不会提示跨域问题了。<br><img src="/2018/09/10/nodemapnikvectortiles/7.png" alt="解决跨域问题"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Vector Tiles</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/09/10/nodemapnikvectortiles/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1205,11 +1185,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1265,19 +1249,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1293,11 +1273,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
+                <a href="javascript:void(0)" class="js-tag color3">直播</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">直播</a>
+                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
               </li>
             
             <div class="clearfix"></div>
