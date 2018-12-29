@@ -35,7 +35,7 @@ service postgresql-10 stop
 
 #### 2.将原数据库Data拷贝到新的目录下
 ```bash
-cp -rf /var/lib/postgresql/10/ /data/pgsql
+cp -rf /var/lib/pgsql/10/ /data/pgsql
 ```
 
 #### 3.为新目录设置postgres用户权限
@@ -66,7 +66,7 @@ service postgresql-10 start
 #### 6.删除原数据目录
 做这一步需要慎重，由于我是第一次处理，而且数据比较重要，所以又拷贝了一份数据目录做为备份，然后使用如下命令删除原数据目录：
 ```bash
-rm -rf /var/lib/postgresql
+rm -rf /var/lib/pgsql
 ```
 
 #### 7.验证数据库是否正常
