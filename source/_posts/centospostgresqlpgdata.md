@@ -35,7 +35,7 @@ service postgresql-10 stop
 
 #### 2.将原数据库Data拷贝到新的目录下
 ```bash
-cp -rf /var/lib/pgsql/10/ /data/pgsql
+cp -rf /var/lib/pgsql/10 /data/pgsql/10
 ```
 
 #### 3.为新目录设置postgres用户权限
