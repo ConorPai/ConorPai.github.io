@@ -172,7 +172,7 @@
 <p>也就是说CentOS系统下在服务配置文件里，记录了PGDATA数据目录，服务启动时会到这个目录下进行加载，所以需要修改的是这个文件。</p>
 <p>再顺一遍处理过程：</p>
 <h4 id="1-关闭数据库服务"><a href="#1-关闭数据库服务" class="headerlink" title="1.关闭数据库服务"></a>1.关闭数据库服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service postgresql-10 stop</div></pre></td></tr></table></figure>
-<h4 id="2-将原数据库Data拷贝到新的目录下"><a href="#2-将原数据库Data拷贝到新的目录下" class="headerlink" title="2.将原数据库Data拷贝到新的目录下"></a>2.将原数据库Data拷贝到新的目录下</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -rf /var/lib/pgsql/10/ /data/pgsql</div></pre></td></tr></table></figure>
+<h4 id="2-将原数据库Data拷贝到新的目录下"><a href="#2-将原数据库Data拷贝到新的目录下" class="headerlink" title="2.将原数据库Data拷贝到新的目录下"></a>2.将原数据库Data拷贝到新的目录下</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -rf /var/lib/pgsql/10 /data/pgsql/10</div></pre></td></tr></table></figure>
 <h4 id="3-为新目录设置postgres用户权限"><a href="#3-为新目录设置postgres用户权限" class="headerlink" title="3.为新目录设置postgres用户权限"></a>3.为新目录设置postgres用户权限</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo chown -R postgres:postgres /data/pgsql/10</div><div class="line">sudo chmod 700 /data/pgsql/10</div></pre></td></tr></table></figure>
 <h4 id="4-修改数据库服务配置文件"><a href="#4-修改数据库服务配置文件" class="headerlink" title="4.修改数据库服务配置文件"></a>4.修改数据库服务配置文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /usr/lib/systemd/system/postgresql-10.service</div></pre></td></tr></table></figure>
 <p>修改如下部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># Location of database directory</div><div class="line">Environment=PGDATA=/data/pgsql/10/data/</div></pre></td></tr></table></figure></p>
@@ -1187,15 +1187,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
