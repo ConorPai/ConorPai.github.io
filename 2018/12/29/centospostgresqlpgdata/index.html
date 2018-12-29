@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/12/29/centospostgresqlpgdata/2.png">
 <meta property="og:image" content="http://yoursite.com/2018/12/29/centospostgresqlpgdata/3.png">
 <meta property="og:image" content="http://yoursite.com/2018/12/29/centospostgresqlpgdata/4.png">
-<meta property="og:updated_time" content="2018-12-29T02:27:43.459Z">
+<meta property="og:updated_time" content="2018-12-29T02:48:10.326Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS系统下变更Postgresqsl数据存储位置">
 <meta name="twitter:description" content="今天是2018年最后一个工作日，准备记录一下在CentOS系统下变更Postgresql数据存储位置的方法。 2018年1月，当时懵懵懂懂的体验了Postgresql的安装，到现在对这个数据库算是基本了解了，也感受到了pg数据库和PostGIS插件的强大，希望2019年把pg大法发扬光大！ 昨天发现服务器磁盘空间满了，提示No space left on device导致无法导入数据。 使用df">
@@ -177,13 +177,13 @@
 <p>也就是说CentOS系统下在服务配置文件里，记录了PGDATA数据目录，服务启动时会到这个目录下进行加载，所以需要修改的是这个文件。</p>
 <p>再顺一遍处理过程：</p>
 <h4 id="1-关闭数据库服务"><a href="#1-关闭数据库服务" class="headerlink" title="1.关闭数据库服务"></a>1.关闭数据库服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service postgresql-10 stop</div></pre></td></tr></table></figure>
-<h4 id="2-将原数据库Data拷贝到新的目录下"><a href="#2-将原数据库Data拷贝到新的目录下" class="headerlink" title="2.将原数据库Data拷贝到新的目录下"></a>2.将原数据库Data拷贝到新的目录下</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -rf /var/lib/postgresql/10/ /data/pgsql</div></pre></td></tr></table></figure>
+<h4 id="2-将原数据库Data拷贝到新的目录下"><a href="#2-将原数据库Data拷贝到新的目录下" class="headerlink" title="2.将原数据库Data拷贝到新的目录下"></a>2.将原数据库Data拷贝到新的目录下</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -rf /var/lib/pgsql/10/ /data/pgsql</div></pre></td></tr></table></figure>
 <h4 id="3-为新目录设置postgres用户权限"><a href="#3-为新目录设置postgres用户权限" class="headerlink" title="3.为新目录设置postgres用户权限"></a>3.为新目录设置postgres用户权限</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo chown -R postgres:postgres /data/pgsql/10</div><div class="line">sudo chmod 700 /data/pgsql/10</div></pre></td></tr></table></figure>
 <h4 id="4-修改数据库服务配置文件"><a href="#4-修改数据库服务配置文件" class="headerlink" title="4.修改数据库服务配置文件"></a>4.修改数据库服务配置文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /usr/lib/systemd/system/postgresql-10.service</div></pre></td></tr></table></figure>
 <p>修改如下部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># Location of database directory</div><div class="line">Environment=PGDATA=/data/pgsql/10/data/</div></pre></td></tr></table></figure></p>
 <p>修改之后，使用如下命令使其生效：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl daemon-reload</div></pre></td></tr></table></figure></p>
 <h4 id="5-重启数据库"><a href="#5-重启数据库" class="headerlink" title="5.重启数据库"></a>5.重启数据库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service postgresql-10 start</div></pre></td></tr></table></figure>
-<h4 id="6-删除原数据目录"><a href="#6-删除原数据目录" class="headerlink" title="6.删除原数据目录"></a>6.删除原数据目录</h4><p>做这一步需要慎重，由于我是第一次处理，而且数据比较重要，所以又拷贝了一份数据目录做为备份，然后使用如下命令删除原数据目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf /var/lib/postgresql</div></pre></td></tr></table></figure></p>
+<h4 id="6-删除原数据目录"><a href="#6-删除原数据目录" class="headerlink" title="6.删除原数据目录"></a>6.删除原数据目录</h4><p>做这一步需要慎重，由于我是第一次处理，而且数据比较重要，所以又拷贝了一份数据目录做为备份，然后使用如下命令删除原数据目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf /var/lib/pgsql</div></pre></td></tr></table></figure></p>
 <h4 id="7-验证数据库是否正常"><a href="#7-验证数据库是否正常" class="headerlink" title="7.验证数据库是否正常"></a>7.验证数据库是否正常</h4><p>使用数据库工具连接数据库、通过服务等方式对数据库做验证，验证结果一切正常。</p>
 <p>最后，使用<code>df -h</code>看一下数据目录迁移之后磁盘情况：<br><img src="/2018/12/29/centospostgresqlpgdata/4.png" alt="查看磁盘空间"></p>
 <p>致此，CentOS系统下pg数据库的数据目录迁移工作顺利完成！<br>最后祝2019年工作顺利！</p>
@@ -418,15 +418,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -474,11 +474,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -490,11 +490,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
