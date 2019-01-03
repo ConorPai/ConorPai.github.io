@@ -142,6 +142,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-centosyumupdatepostgiscrash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/03/centosyumupdatepostgiscrash/">记一次PostGIS版本更新导致的问题</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/03/centosyumupdatepostgiscrash/" class="archive-article-date">
+  	<time datetime="2019-01-03T06:24:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天手欠，在现场服务器上<code>yum update</code>了一下，发现三个更新：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/1.png" alt="yum更新"></p>
+<p>更新强迫症患者没过脑的yes了一下，然后整个PostGIS插件失效：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/2.png" alt="PostGIS插件失效"></p>
+<p>因为是生产服务器，马上有人反馈功能报错，顿时慌的一批。。马上上网搜解决方案。</p>
+<p>由于是yum的更新，首先想到的是能否进行回滚，所以查了一下PostGIS和GEOS的版本：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/3.png" alt="查看版本"></p>
+<p>PostGIS的版本肯定无法回滚了，GEOS的3.6版本和3.7版本在本机上都有安装，这条路也走不通了。</p>
+<p>用ldd命令查看postgis-2.4.so依赖关系：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/4.png" alt="查看依赖"><br>没有依赖缺失。</p>
+<p>那就拿<code>GEOSFrechetDistanceDensify</code>关键字看看能不能搜到结果。</p>
+<p>其间也在尝试重启数据库服务、更新插件等，都没有效果，直到看到有人说<code>GEOSFrechetDistanceDensify</code>是GEOS3.7版本新增加的函数，那就说明PostGIS插件本来应该依赖GEOS3.7版本，但是即引用的是GEOS3.6版本，导致这个函数找不到了。</p>
+<p>所以解决方案是卸载GEOS3.6版本，让PostGIS引用GEOS3.7版本即可。</p>
+<h4 id="首先卸载GEOS3-6版本"><a href="#首先卸载GEOS3-6版本" class="headerlink" title="首先卸载GEOS3.6版本"></a>首先卸载GEOS3.6版本</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/5.png" alt="卸载3.6"></p>
+<h4 id="然后卸载GEOS3-7版本"><a href="#然后卸载GEOS3-7版本" class="headerlink" title="然后卸载GEOS3.7版本"></a>然后卸载GEOS3.7版本</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/6.png" alt="卸载3.6"><br>这里发现，由于卸载了GEOS3.7版本，导致依赖GEOS3.7的PostGIS也被卸载了。</p>
+<h4 id="重新安装GEOS3-7和PostGIS"><a href="#重新安装GEOS3-7和PostGIS" class="headerlink" title="重新安装GEOS3.7和PostGIS"></a>重新安装GEOS3.7和PostGIS</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/7.png" alt="重新安装"><br><img src="/2019/01/03/centosyumupdatepostgiscrash/8.png" alt="重新安装"></p>
+<h4 id="再次查看postgis-2-4-so的依赖关系"><a href="#再次查看postgis-2-4-so的依赖关系" class="headerlink" title="再次查看postgis-2.4.so的依赖关系"></a>再次查看postgis-2.4.so的依赖关系</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/9.png" alt="查看依赖"><br>可以看到，都引用到了GEOS3.7版本上。</p>
+<h4 id="升级PostGIS插件"><a href="#升级PostGIS插件" class="headerlink" title="升级PostGIS插件"></a>升级PostGIS插件</h4><p>执行SQL：<code>alter extension postgis update</code>更新插件，然后验证PostGIS插件可以正常使用了，问题解决。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/03/centosyumupdatepostgiscrash/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-centospostgresqlpgdata" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -829,11 +920,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
         		</li>
       		
 		</ul>
@@ -958,11 +1049,11 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
         		</li>
       		
 		</ul>
@@ -973,94 +1064,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/09/29/usenodemapnikwithpostgisoncentos/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-testrtmplive" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/17/testrtmplive/">试水直播技术</a>
-    </h1>
-  
-
-        
-        <a href="/2018/09/17/testrtmplive/" class="archive-article-date">
-  	<time datetime="2018-09-17T07:07:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>周末和陈同学就行业形式进行了深入探(xian)讨(liao)，他们公司最近使用直播技术，开发了一套外业内容采集(无人机影像、手机视频)，内业查看指挥等一套东西。对于直播技术，之前了解不多，所以也想试试效果。</p>
-<p>查了一些资料，比较容易上手的是用<a href="https://github.com/ossrs/srs" target="_blank" rel="noopener">Simple-RTMP-Server(srs)</a>作为服务器，各端使用推流、拉流进行直播和查看，接下来主要介绍这方面的内容。</p>
-<h4 id="1-srs部署"><a href="#1-srs部署" class="headerlink" title="1.srs部署"></a>1.srs部署</h4><p>查看官方文档，srs部署比较简单，本次选择的系统是Ubuntu 18.04。<br>首先下载Release源码，解压后进入trunk目录下，执行<code>./configure</code>，然后现实是残酷的，报错了。。<br><img src="/2018/09/17/testrtmplive/1.png" alt="报错"></p>
-<p>到srs上搜issue，找到了<a href="https://github.com/ossrs/srs/issues/1065" target="_blank" rel="noopener">解决方案</a>，解压<code>3rdparty/http-parser-2.1.zip</code>，找到<code>http_parser.c</code>，修改那个注释，重新压缩，就可以了。</p>
-<p>执行<code>make</code>进行编译，然后执行<code>./etc/init.d/srs start</code>就可以开启服务了。</p>
-<h4 id="2-拉流"><a href="#2-拉流" class="headerlink" title="2.拉流"></a>2.拉流</h4><p>这里我们介绍使用<a href="http://www.videolan.org/vlc/" target="_blank" rel="noopener">VLC</a>客户端进行拉流，查看直播内容。</p>
-<p>ubuntu下安装VLC：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install vlc browser-plugin-vlc</div></pre></td></tr></table></figure></p>
-<p>安装完成之后启动，在媒体菜单中选择打开网络串流，在网络中输入网络URL即可。目前还没有推流，看不到效果，具体效果可以在后面体现。<br><img src="/2018/09/17/testrtmplive/2.png" alt="拉流"></p>
-<h4 id="3-推流"><a href="#3-推流" class="headerlink" title="3.推流"></a>3.推流</h4><p>这里介绍两端推流方式，一个是ubuntu使用<a href="https://obsproject.com/" target="_blank" rel="noopener">OBS</a>进行推流，一个是在安卓推流。</p>
-<h5 id="OBS推流"><a href="#OBS推流" class="headerlink" title="OBS推流"></a>OBS推流</h5><p>首先安装OBS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:obsproject/obs-studio</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install obs-studio</div></pre></td></tr></table></figure></p>
-<p>打开软件之后，首先在右侧设置流服务器，启动srs服务器的IP是192.168.1.140，后边的可以自定义，只要推和拉一致即可。<br><img src="/2018/09/17/testrtmplive/3.png" alt="设置"><br>然后设置来源，这里使用的是屏幕捕获。<br><img src="/2018/09/17/testrtmplive/4.png" alt="设置来源"><br>都设置好了之后，使用右侧开始推流就可以了。<br><img src="/2018/09/17/testrtmplive/5.png" alt="开始推流"></p>
-<p>在VLC中查看：<br><img src="/2018/09/17/testrtmplive/6.png" alt="查看推流"></p>
-<h5 id="安卓推流"><a href="#安卓推流" class="headerlink" title="安卓推流"></a>安卓推流</h5><p>这里使用的是<a href="https://github.com/begeekmyfriend/yasea" target="_blank" rel="noopener">yasea</a>，下载源码，编译部署即可。<br>修改代码中的流服务器地址：<br><img src="/2018/09/17/testrtmplive/7.png" alt="修改URL"></p>
-<p>最后的效果：<br><img src="/2018/09/17/testrtmplive/8.jpg" alt="效果"></p>
-<p>这里介绍的比较粗浅，如果想把这个功能做精，甚至达到陈同学那边上线的样子，可能还需要再下功夫，加油吧，再不疯狂就老了。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">直播</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/09/17/testrtmplive/">展开全文 >></a>
         </p>
       
 
@@ -1104,7 +1107,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 ConorPai
+    		&copy; 2019 ConorPai
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1199,11 +1202,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">C#</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1231,6 +1238,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
@@ -1239,19 +1250,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
