@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/01/03/centosyumupdatepostgiscrash/7.png">
 <meta property="og:image" content="http://yoursite.com/2019/01/03/centosyumupdatepostgiscrash/8.png">
 <meta property="og:image" content="http://yoursite.com/2019/01/03/centosyumupdatepostgiscrash/9.png">
-<meta property="og:updated_time" content="2019-01-03T07:08:34.519Z">
+<meta property="og:updated_time" content="2019-01-04T01:20:54.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次PostGIS版本更新导致的问题">
 <meta name="twitter:description" content="今天手欠，在现场服务器上yum update了一下，发现三个更新： 更新强迫症患者没过脑的yes了一下，然后整个PostGIS插件失效： 因为是生产服务器，马上有人反馈功能报错，顿时慌的一批。。马上上网搜解决方案。 由于是yum的更新，首先想到的是能否进行回滚，所以查了一下PostGIS和GEOS的版本： PostGIS的版本肯定无法回滚了，GEOS的3.6版本和3.7版本在本机上都有安装，这条路">
@@ -179,10 +179,10 @@
 <p>PostGIS的版本肯定无法回滚了，GEOS的3.6版本和3.7版本在本机上都有安装，这条路也走不通了。</p>
 <p>用ldd命令查看postgis-2.4.so依赖关系：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/4.png" alt="查看依赖"><br>没有依赖缺失。</p>
 <p>那就拿<code>GEOSFrechetDistanceDensify</code>关键字看看能不能搜到结果。</p>
-<p>其间也在尝试重启数据库服务、更新插件等，都没有效果，直到看到有人说<code>GEOSFrechetDistanceDensify</code>是GEOS3.7版本新增加的函数，那就说明PostGIS插件本来应该依赖GEOS3.7版本，但是即引用的是GEOS3.6版本，导致这个函数找不到了。</p>
+<p>其间也在尝试重启数据库服务、更新插件等，都没有效果，直到看到有人说<code>GEOSFrechetDistanceDensify</code>是GEOS3.7版本新增加的函数，那就说明PostGIS插件本来应该依赖GEOS3.7版本，但是现在引用的是GEOS3.6版本，导致这个函数找不到了。</p>
 <p>所以解决方案是卸载GEOS3.6版本，让PostGIS引用GEOS3.7版本即可。</p>
 <h4 id="首先卸载GEOS3-6版本"><a href="#首先卸载GEOS3-6版本" class="headerlink" title="首先卸载GEOS3.6版本"></a>首先卸载GEOS3.6版本</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/5.png" alt="卸载3.6"></p>
-<h4 id="然后卸载GEOS3-7版本"><a href="#然后卸载GEOS3-7版本" class="headerlink" title="然后卸载GEOS3.7版本"></a>然后卸载GEOS3.7版本</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/6.png" alt="卸载3.6"><br>这里发现，由于卸载了GEOS3.7版本，导致依赖GEOS3.7的PostGIS也被卸载了。</p>
+<h4 id="然后卸载GEOS3-7版本"><a href="#然后卸载GEOS3-7版本" class="headerlink" title="然后卸载GEOS3.7版本"></a>然后卸载GEOS3.7版本</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/6.png" alt="卸载3.6"><br>这里发现，由于卸载了GEOS3.7版本，导致依赖GEOS3.7的PostGIS也被卸载了，也从侧面证实新版本PostGIS插件依赖GEOS3.7版本。</p>
 <h4 id="重新安装GEOS3-7和PostGIS"><a href="#重新安装GEOS3-7和PostGIS" class="headerlink" title="重新安装GEOS3.7和PostGIS"></a>重新安装GEOS3.7和PostGIS</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/7.png" alt="重新安装"><br><img src="/2019/01/03/centosyumupdatepostgiscrash/8.png" alt="重新安装"></p>
 <h4 id="再次查看postgis-2-4-so的依赖关系"><a href="#再次查看postgis-2-4-so的依赖关系" class="headerlink" title="再次查看postgis-2.4.so的依赖关系"></a>再次查看postgis-2.4.so的依赖关系</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/9.png" alt="查看依赖"><br>可以看到，都引用到了GEOS3.7版本上。</p>
 <h4 id="升级PostGIS插件"><a href="#升级PostGIS插件" class="headerlink" title="升级PostGIS插件"></a>升级PostGIS插件</h4><p>执行SQL：<code>alter extension postgis update</code>更新插件，然后验证PostGIS插件可以正常使用了，问题解决。</p>
@@ -272,6 +272,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2019/01/04/centosupdatepostgisto2-5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          升级CentOS系统下PostgreSQL10的PostGIS插件大版本
+        
+      </div>
+    </a>
   
   
     <a href="/2018/12/29/centospostgresqlpgdata/" id="article-nav-older" class="article-nav-link-wrap">
@@ -465,15 +474,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">NPM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
