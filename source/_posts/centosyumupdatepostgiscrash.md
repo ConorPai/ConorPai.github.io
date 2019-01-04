@@ -25,7 +25,7 @@ PostGIS的版本肯定无法回滚了，GEOS的3.6版本和3.7版本在本机上
 
 那就拿`GEOSFrechetDistanceDensify`关键字看看能不能搜到结果。
 
-其间也在尝试重启数据库服务、更新插件等，都没有效果，直到看到有人说`GEOSFrechetDistanceDensify`是GEOS3.7版本新增加的函数，那就说明PostGIS插件本来应该依赖GEOS3.7版本，但是即引用的是GEOS3.6版本，导致这个函数找不到了。
+其间也在尝试重启数据库服务、更新插件等，都没有效果，直到看到有人说`GEOSFrechetDistanceDensify`是GEOS3.7版本新增加的函数，那就说明PostGIS插件本来应该依赖GEOS3.7版本，但是现在引用的是GEOS3.6版本，导致这个函数找不到了。
 
 所以解决方案是卸载GEOS3.6版本，让PostGIS引用GEOS3.7版本即可。
 
@@ -34,7 +34,7 @@ PostGIS的版本肯定无法回滚了，GEOS的3.6版本和3.7版本在本机上
 
 #### 然后卸载GEOS3.7版本
 ![卸载3.6](centosyumupdatepostgiscrash/6.png)
-这里发现，由于卸载了GEOS3.7版本，导致依赖GEOS3.7的PostGIS也被卸载了。
+这里发现，由于卸载了GEOS3.7版本，导致依赖GEOS3.7的PostGIS也被卸载了，也从侧面证实新版本PostGIS插件依赖GEOS3.7版本。
 
 #### 重新安装GEOS3.7和PostGIS
 ![重新安装](centosyumupdatepostgiscrash/7.png)
