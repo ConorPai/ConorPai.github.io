@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="ConorPai的博客">
 <meta property="og:description" content="最近项目要求使用Node.js连接Oracle数据库，用Node.js连接Oracle是比较麻烦的，不像使用mysql，Mogondb，redis等有相当丰富的库。就连官方提供的oracledb也在linux上安装的时候屡屡失败。我根据网上的文档做了部署和验证，最终走通，下面把在CentOS系统上的配置过程记录一下。 1.安装Oracle客户端首先使用yum update进行系统更新，然后使用yu">
 <meta property="og:image" content="http://yoursite.com/2018/11/26/testnodeoracledb/1.png">
-<meta property="og:updated_time" content="2018-12-14T03:15:16.985Z">
+<meta property="og:updated_time" content="2019-01-07T09:30:07.816Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="试用Node.js连接Oracle数据库">
 <meta name="twitter:description" content="最近项目要求使用Node.js连接Oracle数据库，用Node.js连接Oracle是比较麻烦的，不像使用mysql，Mogondb，redis等有相当丰富的库。就连官方提供的oracledb也在linux上安装的时候屡屡失败。我根据网上的文档做了部署和验证，最终走通，下面把在CentOS系统上的配置过程记录一下。 1.安装Oracle客户端首先使用yum update进行系统更新，然后使用yu">
@@ -175,9 +175,6 @@
 <p>应用环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">source</span> /etc/profile</div></pre></td></tr></table></figure></p>
 <h4 id="2-安装node-oracledb，及测试"><a href="#2-安装node-oracledb，及测试" class="headerlink" title="2.安装node-oracledb，及测试"></a>2.安装node-oracledb，及测试</h4><p>执行<code>npm install oracledb</code>进行安装，然后编辑下面的脚本，执行查看结果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> oracledb = <span class="built_in">require</span>(<span class="string">'oracledb'</span>);</div><div class="line">oracledb.getConnection(&#123;</div><div class="line">  user          : <span class="string">"user"</span>,</div><div class="line">  password      : <span class="string">"password"</span>,</div><div class="line">  connectString : <span class="string">"(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.100)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=orcl)))"</span></div><div class="line">&#125;,</div><div class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err,connection</span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span>(err)&#123;</div><div class="line">    <span class="built_in">console</span>.error(err.message);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">  connection.execute(</div><div class="line">    <span class="string">"select sysdate from dual"</span>,[],<span class="function"><span class="keyword">function</span>(<span class="params">err,result</span>)</span>&#123;</div><div class="line">       <span class="keyword">if</span>(err)&#123;</div><div class="line">         <span class="built_in">console</span>.error(err.message);</div><div class="line">         <span class="keyword">return</span>;</div><div class="line">       &#125;</div><div class="line">       <span class="built_in">console</span>.log(result.rows);</div><div class="line">     &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
 <p>如果打印出当前时间，则表示环境配置正常。<br><img src="/2018/11/26/testnodeoracledb/1.png" alt="打印时间"></p>
-<p>2018年12月14日更新：<br>今天在一台centos服务器上部署node-oracledb，验证时报错：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">64-bit Oracle Client library cannot be loaded: <span class="string">"libaio.so.1: cannot open shared object file: No such file or directory</span></div></pre></td></tr></table></figure></p>
-<p>到网上搜是因为缺少安装包libaio和libaio-devel，执行如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install libaio*</div></pre></td></tr></table></figure></p>
-<p>然后就可以正常使用了。</p>
 
       
 
@@ -478,11 +475,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -506,15 +503,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">直播</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
               </li>
             
             <div class="clearfix"></div>

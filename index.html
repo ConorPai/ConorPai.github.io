@@ -142,6 +142,90 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-centosinstallfonts" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/07/centosinstallfonts/">CentOS下安装字体文件</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/07/centosinstallfonts/" class="archive-article-date">
+  	<time datetime="2019-01-07T09:20:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在测试服务器(ubuntu)上配好的图，转移到现场服务器(CentOS)上，发现标注不见了。<br><img src="/2019/01/07/centosinstallfonts/1.png" alt="标注配置"></p>
+<p>考虑了半天，感觉应该是现场服务器上没有Ubuntu上的字体，所以搜了一下如何获取Ubuntu上的字体，并安装到CentOS系统上，参考博客看<a href="https://blog.csdn.net/wlwlwlwl015/article/details/51482065" target="_blank" rel="noopener">这里</a>。</p>
+<p>在Ubuntu系统上的<code>/usr/share/fonts/opentype/noto</code>文件夹内找到配置标注使用的字体<code>Noto Sans CJK SC Regular</code>的字体文件。<br><img src="/2019/01/07/centosinstallfonts/2.png" alt="标注字体"></p>
+<p>在现场服务器上使用<code>fc-list</code>查看已安装的字体，如果<code>fc-list</code>命令找不到，使用命令<code>yum install fontconfig</code>进行安装。</p>
+<p>进入<code>/usr/share/fonts</code>目录下，建立一个自定义文件夹，并将字体文件上传到该文件夹上，然后给该文件夹修改权限：<br><img src="/2019/01/07/centosinstallfonts/3.png" alt="上传字体"></p>
+<p>接下来需要安装ttmkfdir来搜索目录中所有的字体信息，并汇总生成fonts.scale文件:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install ttmkfdir</div></pre></td></tr></table></figure></p>
+<p>然后执行命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ttmkfdir -e /usr/share/X11/fonts/encodings/encodings.dir</div></pre></td></tr></table></figure></p>
+<p>然后编辑字体配置文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/fonts/fonts.conf</div></pre></td></tr></table></figure></p>
+<p><img src="/2019/01/07/centosinstallfonts/4.png" alt="修改配置"></p>
+<p>然后更新字体缓存：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">fc</span>-cache</div></pre></td></tr></table></figure></p>
+<p>再次查看字体文件，已经可以看到<code>Noto Sans CJK SC Regular</code>字体了：<br><img src="/2019/01/07/centosinstallfonts/5.png" alt="查看字体"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/07/centosinstallfonts/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-centosupdatepostgisto2-5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -723,9 +807,6 @@
 <p>应用环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">source</span> /etc/profile</div></pre></td></tr></table></figure></p>
 <h4 id="2-安装node-oracledb，及测试"><a href="#2-安装node-oracledb，及测试" class="headerlink" title="2.安装node-oracledb，及测试"></a>2.安装node-oracledb，及测试</h4><p>执行<code>npm install oracledb</code>进行安装，然后编辑下面的脚本，执行查看结果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> oracledb = <span class="built_in">require</span>(<span class="string">'oracledb'</span>);</div><div class="line">oracledb.getConnection(&#123;</div><div class="line">  user          : <span class="string">"user"</span>,</div><div class="line">  password      : <span class="string">"password"</span>,</div><div class="line">  connectString : <span class="string">"(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.100)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=orcl)))"</span></div><div class="line">&#125;,</div><div class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err,connection</span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span>(err)&#123;</div><div class="line">    <span class="built_in">console</span>.error(err.message);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">  connection.execute(</div><div class="line">    <span class="string">"select sysdate from dual"</span>,[],<span class="function"><span class="keyword">function</span>(<span class="params">err,result</span>)</span>&#123;</div><div class="line">       <span class="keyword">if</span>(err)&#123;</div><div class="line">         <span class="built_in">console</span>.error(err.message);</div><div class="line">         <span class="keyword">return</span>;</div><div class="line">       &#125;</div><div class="line">       <span class="built_in">console</span>.log(result.rows);</div><div class="line">     &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
 <p>如果打印出当前时间，则表示环境配置正常。<br><img src="/2018/11/26/testnodeoracledb/1.png" alt="打印时间"></p>
-<p>2018年12月14日更新：<br>今天在一台centos服务器上部署node-oracledb，验证时报错：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">64-bit Oracle Client library cannot be loaded: <span class="string">"libaio.so.1: cannot open shared object file: No such file or directory</span></div></pre></td></tr></table></figure></p>
-<p>到网上搜是因为缺少安装包libaio和libaio-devel，执行如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install libaio*</div></pre></td></tr></table></figure></p>
-<p>然后就可以正常使用了。</p>
 
       
 
@@ -957,103 +1038,6 @@
 
 
   
-    <article id="post-postgistilespeed" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/30/postgistilespeed/">记一次500万数据量出图效率优化的心路历程</a>
-    </h1>
-  
-
-        
-        <a href="/2018/09/30/postgistilespeed/" class="archive-article-date">
-  	<time datetime="2018-09-30T02:04:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。</p>
-<h5 id="服务器环境"><a href="#服务器环境" class="headerlink" title="服务器环境"></a>服务器环境</h5><p>协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。</p>
-<h5 id="数据入库"><a href="#数据入库" class="headerlink" title="数据入库"></a>数据入库</h5><p>因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=dlwy"</span> PG:<span class="string">"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=dlwy"</span> <span class="string">"t_hunan_09"</span> -progress</div></pre></td></tr></table></figure></p>
-<p>这样就把生产数据库中的<code>t_hunan_09</code>导入到测试数据库中。</p>
-<h5 id="启动瓦片服务"><a href="#启动瓦片服务" class="headerlink" title="启动瓦片服务"></a>启动瓦片服务</h5><p>配置好mapnik的配图XML，使用tilestrata-balancer做负载均衡，启动了48个node进程进行测试，然而现实是残酷的，每张瓦片的请求时间是10秒左右。</p>
-<p>然后就去参考OpenStreetMap的PostGIS数据库和配图方案，并没有什么特别的，gist空间索引也重建了，还是没有效果。</p>
-<h5 id="试用数据库连接池"><a href="#试用数据库连接池" class="headerlink" title="试用数据库连接池"></a>试用数据库连接池</h5><p>测试使用pgbouncer数据库连接池，也没有效果。</p>
-<h5 id="单进程竟然比多进程快？"><a href="#单进程竟然比多进程快？" class="headerlink" title="单进程竟然比多进程快？"></a>单进程竟然比多进程快？</h5><p>后来关闭了tilestrata-balancer负载均衡和48个node进程，只启动一个进程进行出图，然后神奇的事情来了，请求时间非常快，只有几百毫秒。这又是为何？</p>
-<p>基于这种情况用了一段时间发现了规律，每次重启服务后，第一次请求瓦片，需要10秒时间，后面再用就很快了。但是用过一段时间之后，又会有一次10秒的卡顿，时间不规律。</p>
-<p>这样的话之前的现象是可以解释的了，由于做了负载均衡，所以一屏的瓦片都相当于启动服务后初次请求，所以都很慢，把48个进程都用完需要一段时间，所以就造成了一直卡顿的问题。</p>
-<p>但是初次启动服务为10几秒是在做什么呢？</p>
-<h5 id="初期卡顿到底在做什么"><a href="#初期卡顿到底在做什么" class="headerlink" title="初期卡顿到底在做什么"></a>初期卡顿到底在做什么</h5><p>我对比了有瓦片缓存和无瓦片缓存的情况，有瓦片缓存很快，无瓦片缓存有卡顿，说明这个卡顿是在瓦片绘制环节，瓦片绘制环节主要是数据库查询了。</p>
-<p>后来在网上找了一些PostgreSQL数据库优化的贴子，其中有一个说PostgreSQL有一个机制，可以记录查询时间比较长的SQL，我就试着做了一下。</p>
-<p>首先找到postgresql.conf文件，将<code>log_min_duration_statement</code>注释去掉，并设置为1000毫秒，重启数据库之后，启动瓦片服务，再到postgresql.conf同级的log文件夹下查看日志。<br><img src="/2018/09/30/postgistilespeed/1.png" alt="慢SQL"></p>
-<p>发现有将近10秒的时间在做数据的范围统计，忽然想起来在配置mapnik的XML时，没有设置数据范围，导致这里实时计算500万数据的范围，造成卡顿。。</p>
-<p>重新配置mapnik的XML后，验证效果：<br><img src="/2018/09/30/postgistilespeed/2.png" alt="mapnik配图"></p>
-<p>果然不卡了，效果杠杠的。</p>
-<h5 id="是否需要数据库连接池"><a href="#是否需要数据库连接池" class="headerlink" title="是否需要数据库连接池"></a>是否需要数据库连接池</h5><p>之前使用了pgbouncer数据库连接池，但是实际使用效果不是特别理想，启动多个node进程后总会出现事务互斥的问题，导致有些瓦片加载特别慢，后来不用数据库连接池，直连数据库就正常了，可能对数据库连接池用的不到位吧。</p>
-<h5 id="开启负载均衡，丝般流畅"><a href="#开启负载均衡，丝般流畅" class="headerlink" title="开启负载均衡，丝般流畅"></a>开启负载均衡，丝般流畅</h5><p>重新开启tilestrata-balancer负载均衡和48个node进程，地图加载流畅，去掉了缓存机制在14级别也能轻松应对。</p>
-<p>最后上图镇楼：<br><img src="/2018/09/30/postgistilespeed/3.jpg" alt="最终效果"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/09/30/postgistilespeed/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1211,11 +1195,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1239,15 +1223,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">直播</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
               </li>
             
             <div class="clearfix"></div>
