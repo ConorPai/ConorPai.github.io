@@ -67,14 +67,3 @@ function(err,connection){
 
 如果打印出当前时间，则表示环境配置正常。
 ![打印时间](testnodeoracledb/1.png)
-
-2018年12月14日更新：
-今天在一台centos服务器上部署node-oracledb，验证时报错：
-```bash
-64-bit Oracle Client library cannot be loaded: "libaio.so.1: cannot open shared object file: No such file or directory
-```
-到网上搜是因为缺少安装包libaio和libaio-devel，执行如下命令：
-```bash
-yum install libaio*
-```
-然后就可以正常使用了。
