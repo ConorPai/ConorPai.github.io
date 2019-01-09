@@ -142,6 +142,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-npm2fa" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/09/npm2fa/">NPM开启两步验证</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/09/npm2fa/" class="archive-article-date">
+  	<time datetime="2019-01-09T02:45:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近NPM模块安全性受到了很多的质疑，具体的可以了解<code>event-stream</code>事件和<a href="https://zhuanlan.zhihu.com/p/43514079" target="_blank" rel="noopener">这篇文章</a>。</p>
+<p><img src="/2019/01/09/npm2fa/1.jpg" alt="npm"></p>
+<p>最近看到了NPM支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。</p>
+<p>NPM官方的说明文档，看<a href="https://docs.npmjs.com/configuring-two-factor-authentication" target="_blank" rel="noopener">这里</a>。</p>
+<p>在NPM的Setting页面里可以看到两步验证的选项：<br><img src="/2019/01/09/npm2fa/2.png" alt="2FA设置"></p>
+<p>输入密码后，可以看到两步验证选项，可以支持身份验证时、身份验证及发布包时使用两步验证，或者关闭两步验证：<br><img src="/2019/01/09/npm2fa/3.png" alt="2FA设置"></p>
+<p>接下来这个扫二维码让我困惑了很久。。一直不知道用什么扫，后来才查到用哪个APP。苹果App Store里搜<code>Authy</code>安装即可：<br><img src="/2019/01/09/npm2fa/4.jpg" alt="扫码APP"></p>
+<p>如果设置为发布包时使用身份验证，在<code>npm publish</code>时，会提示输入OTP(One-Time Password):<br><img src="/2019/01/09/npm2fa/5.png" alt="开启2FA"></p>
+<p>所以在输入之前，需要开启两步验证。<br>首先，输入<code>npm profile enable-2fa auth-and-writes</code>命令：<br><img src="/2019/01/09/npm2fa/6.png" alt="开启2FA"></p>
+<p>然后打开Authy APP，进行添加：<br><img src="/2019/01/09/npm2fa/7.jpg" alt="开启2FA"><br>使用扫码：<br><img src="/2019/01/09/npm2fa/8.jpg" alt="开启2FA"><br>扫码完成：<br><img src="/2019/01/09/npm2fa/9.jpg" alt="开启2FA"><br>这里显示的数字，就是OTP，然后将APP里显示的OTP输入到命令行中：<br><img src="/2019/01/09/npm2fa/10.png" alt="开启2FA"><br>然后就可以正常使用了。在npm publish的时候，输入这里的数字就可以发布了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/09/npm2fa/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-centosinstallfonts" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -948,96 +1031,6 @@
 
 
   
-    <article id="post-runatbackground" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/08/runatbackground/">试水进程转后台运行</a>
-    </h1>
-  
-
-        
-        <a href="/2018/10/08/runatbackground/" class="archive-article-date">
-  	<time datetime="2018-10-08T06:17:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近使用xshell连CentOS服务器，启动瓦片服务之后，xshell不能关闭，否则服务就会被关闭，所以想尝试解决这个问题。</p>
-<p>接下来介绍的方法可能不是很正规，如果有更好的方法麻烦告知，感谢！</p>
-<p>启动瓦片服务需要三个命令：<br>1.tilestrata-balancer负载均衡命令<br>2.瓦片服务集群<br>3.Demo网页服务</p>
-<h4 id="NODE-JS进程"><a href="#NODE-JS进程" class="headerlink" title="NODE.JS进程"></a>NODE.JS进程</h4><p>这里的瓦片服务集群和Demo网页服务，都是node.js命令，在网上查到这类可以使用<a href="https://github.com/Unitech/pm2" target="_blank" rel="noopener">pm2</a>来进行管理。</p>
-<p>首先全局安装pm2：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g pm2</div></pre></td></tr></table></figure>
-<p>然后可以使用<code>pm2 start</code>启动：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pm2 start cluster.js</div><div class="line">pm2 start httpserver.js</div></pre></td></tr></table></figure>
-<p>可以使用<code>pm2 list</code>进行查看：<br><img src="/2018/10/08/runatbackground/1.png" alt="查看进程"></p>
-<p>还有一些其它的命令，感兴趣可以到官网上了解：<br><img src="/2018/10/08/runatbackground/2.png" alt="其它命令"></p>
-<h4 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h4><p>我在网上查到有说用nohup命令的，但是尝试没有成功，后来选择了screen，详细介绍看<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-screen/" target="_blank" rel="noopener">这里</a>。</p>
-<p>首先，安装screen：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install -y screen</div></pre></td></tr></table></figure></p>
-<p>安装完成之后，输入screen后回车，就可以进入到一个新的屏幕中，在这个屏幕里，输入tilestrata-balancer命令，启动负载均衡服务，然后使用快捷键<code>Ctrl + A + D</code>就可以退出当前屏幕。</p>
-<p>此时关闭xshell之后，瓦片服务仍可以正常访问。</p>
-<p>如果需要重新回到之前的屏幕中，使用<code>screen -ls</code>命令可以查看当前有哪些屏幕：<br><img src="/2018/10/08/runatbackground/3.png" alt="查看屏幕"></p>
-<p>使用<code>screen -r &lt;id&gt;</code>就可以回到该屏幕中，上边的例子中列出来的屏幕ID是135240。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">screen -r 135240</div></pre></td></tr></table></figure></p>
-<p>关闭屏幕只需要在屏幕命令行中输入<code>exit</code>即可。<br><img src="/2018/10/08/runatbackground/4.png" alt="关闭屏幕"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/10/08/runatbackground/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1151,11 +1144,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1195,11 +1188,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1223,15 +1216,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">直播</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
               </li>
             
             <div class="clearfix"></div>
