@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>NPM开启两步验证 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近NPM模块安全性受到了很多的质疑，具体的可以了解event-stream事件和这篇文章。  最近看到了NPM支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。 NPM官方的说明文档，看这里。 在NPM的Setting页面里可以看到两步验证的选项： 输入密码后，">
+  <meta name="description" content="最近NPM模块安全性受到了很多的质疑，具体的可以了解event-stream事件和这篇文章。  NPM在近两个月支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。 NPM官方的说明文档，看这里。 在NPM的Setting页面里可以看到两步验证的选项： 输入密码后，">
 <meta name="keywords" content="NPM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NPM开启两步验证">
 <meta property="og:url" content="http://yoursite.com/2019/01/09/npm2fa/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="最近NPM模块安全性受到了很多的质疑，具体的可以了解event-stream事件和这篇文章。  最近看到了NPM支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。 NPM官方的说明文档，看这里。 在NPM的Setting页面里可以看到两步验证的选项： 输入密码后，">
+<meta property="og:description" content="最近NPM模块安全性受到了很多的质疑，具体的可以了解event-stream事件和这篇文章。  NPM在近两个月支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。 NPM官方的说明文档，看这里。 在NPM的Setting页面里可以看到两步验证的选项： 输入密码后，">
 <meta property="og:image" content="http://yoursite.com/2019/01/09/npm2fa/1.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/01/09/npm2fa/2.png">
 <meta property="og:image" content="http://yoursite.com/2019/01/09/npm2fa/3.png">
@@ -25,10 +25,10 @@
 <meta property="og:image" content="http://yoursite.com/2019/01/09/npm2fa/8.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/01/09/npm2fa/9.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/01/09/npm2fa/10.png">
-<meta property="og:updated_time" content="2019-01-09T03:22:26.282Z">
+<meta property="og:updated_time" content="2019-01-09T03:26:08.449Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NPM开启两步验证">
-<meta name="twitter:description" content="最近NPM模块安全性受到了很多的质疑，具体的可以了解event-stream事件和这篇文章。  最近看到了NPM支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。 NPM官方的说明文档，看这里。 在NPM的Setting页面里可以看到两步验证的选项： 输入密码后，">
+<meta name="twitter:description" content="最近NPM模块安全性受到了很多的质疑，具体的可以了解event-stream事件和这篇文章。  NPM在近两个月支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。 NPM官方的说明文档，看这里。 在NPM的Setting页面里可以看到两步验证的选项： 输入密码后，">
 <meta name="twitter:image" content="http://yoursite.com/2019/01/09/npm2fa/1.jpg">
   
   
@@ -175,7 +175,7 @@
       
         <p>最近NPM模块安全性受到了很多的质疑，具体的可以了解<code>event-stream</code>事件和<a href="https://zhuanlan.zhihu.com/p/43514079" target="_blank" rel="noopener">这篇文章</a>。</p>
 <p><img src="/2019/01/09/npm2fa/1.jpg" alt="npm"></p>
-<p>最近看到了NPM支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。</p>
+<p>NPM在近两个月支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。</p>
 <p>NPM官方的说明文档，看<a href="https://docs.npmjs.com/configuring-two-factor-authentication" target="_blank" rel="noopener">这里</a>。</p>
 <p>在NPM的Setting页面里可以看到两步验证的选项：<br><img src="/2019/01/09/npm2fa/2.png" alt="2FA设置"></p>
 <p>输入密码后，可以看到两步验证选项，可以支持身份验证时、身份验证及发布包时使用两步验证，或者关闭两步验证：<br><img src="/2019/01/09/npm2fa/3.png" alt="2FA设置"></p>
@@ -426,11 +426,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
