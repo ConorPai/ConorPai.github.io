@@ -8,7 +8,7 @@ tags: NPM
 
 ![npm](npm2fa/1.jpg)
 
-最近看到了NPM支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。
+NPM在近两个月支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。
 
 NPM官方的说明文档，看[这里](https://docs.npmjs.com/configuring-two-factor-authentication)。
 
