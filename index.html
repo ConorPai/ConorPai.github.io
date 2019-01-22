@@ -142,6 +142,99 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-centospostgismvt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/22/centospostgismvt/">CentOS下使用PostGIS的ST_AsMVT函数</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/22/centospostgismvt/" class="archive-article-date">
+  	<time datetime="2019-01-22T06:55:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近准备在生产环境(CentOS系统)上试用矢量瓦片，所有都部署妥当之后请求矢量瓦片报错，Missing  libprotobuf-c。使用yum安装，包括源码编译protobuf-c之后，还是报这个错，后来看了PostGIS的源码，判断是由于CentOS里使用yum安装的PostGIS版本，编译时没有protobuf-c环境，所以如果需要用ST_AsMVT函数，需要配置好protobuf-c之后，重新编译PostGIS才可以。<br><img src="/2019/01/22/centospostgismvt/1.png" alt="源码"><br><img src="/2019/01/22/centospostgismvt/2.png" alt="源码"></p>
+<h4 id="首先编译protobuf和protobuf-c"><a href="#首先编译protobuf和protobuf-c" class="headerlink" title="首先编译protobuf和protobuf-c"></a>首先编译protobuf和protobuf-c</h4><p>从Git上下载<a href="https://github.com/protocolbuffers/protobuf" target="_blank" rel="noopener">protobuf</a>和<a href="https://github.com/protobuf-c/protobuf-c" target="_blank" rel="noopener">protobuf-c</a>代码，并依次编译。</p>
+<p>这两个编译比较简单，略过。。</p>
+<h4 id="编译PostGIS"><a href="#编译PostGIS" class="headerlink" title="编译PostGIS"></a>编译PostGIS</h4><p>下载2.5.1版本PostGIS源码，然后使用<code>./autogen.sh</code>脚本初始化。<br><img src="/2019/01/22/centospostgismvt/3.png" alt="初始化"><br>初始化完成之后，使用<code>./configure</code>检查编译环境，我这里报了几个错，依次处理就可以了。</p>
+<p>指向了旧版本Postgresql上：<br><img src="/2019/01/22/centospostgismvt/4.png" alt="环境检查"><br>Postgresql版本是通过pg_config命令获取的，所以只需要查找到10版本的pg_config命令位置，做为configure参数传入即可。<br><img src="/2019/01/22/centospostgismvt/5.png" alt="环境检查"><br><img src="/2019/01/22/centospostgismvt/6.png" alt="环境检查"></p>
+<p>安装各个组件的devel开发版本，包括<code>postgresql10-devel</code>、<code>geos37-devel</code>、<code>proj-devel</code>。</p>
+<p>configure顺利完成：<br><img src="/2019/01/22/centospostgismvt/7.png" alt="环境检查"></p>
+<p>可以看到PROTOBUFC的检查状态是yes，就可以使用make和make install进行编译部署了。<br><img src="/2019/01/22/centospostgismvt/8.png" alt="环境检查"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Vector Tiles</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/22/centospostgismvt/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-npm2fa" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -807,11 +900,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -819,7 +908,11 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
         		</li>
       		
 		</ul>
@@ -918,90 +1011,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/11/26/testnodeoracledb/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-testapolloconfigcenter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/08/testapolloconfigcenter/">试用携程Apollo配置中心</a>
-    </h1>
-  
-
-        
-        <a href="/2018/11/08/testapolloconfigcenter/" class="archive-article-date">
-  	<time datetime="2018-11-08T08:35:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>因为最近要开发几个服务，对于服务部署心有余悸，为了减少配置上的难题，经过考察，准备引入配置中心。<br>因为我们开发服务用到了Node.js、Python之类的语言，所以选择了携程Apollo配置中心。</p>
-<h4 id="部署Apollo配置中心"><a href="#部署Apollo配置中心" class="headerlink" title="部署Apollo配置中心"></a>部署Apollo配置中心</h4><p>根据Apollo的Wiki，使用Docker的方式进行部署，文档<a href="https://github.com/ctripcorp/apollo/wiki/Apollo-Quick-Start-Docker部署" target="_blank" rel="noopener">在此</a>。</p>
-<p>1.首先下载Apollo源码</p>
-<p>2.进入到<code>apollo/scripts/docker-quick-start/</code>目录下执行<code>docker-compose up</code>，这里遇到了两个问题：<br>1）提示urllib3模块版本不匹配，可能我的机器上环境比较复杂，所以尝试删除urllib3模块，删除后正常。<br><img src="/2018/11/08/testapolloconfigcenter/1.png" alt="版本不匹配"><br>2）提示<code>Couldn&#39;t connect to Docker daemon at http+docker://localunixsocket - is it running?</code>，在网上找到了<a href="https://blog.csdn.net/xiojing825/article/details/79494408" target="_blank" rel="noopener">解决方案</a>即可解决。<br><img src="/2018/11/08/testapolloconfigcenter/2.png" alt="连接不正确"><br>然后Apollo配置中心就可以正常启动了。<br><img src="/2018/11/08/testapolloconfigcenter/3.png" alt="正确启动"></p>
-<h4 id="进入Apollo配置中心进行配置"><a href="#进入Apollo配置中心进行配置" class="headerlink" title="进入Apollo配置中心进行配置"></a>进入Apollo配置中心进行配置</h4><p>使用<code>http://localhost:8070</code>进入配置中心，使用<code>apollo/admin</code>进行登陆。<br><img src="/2018/11/08/testapolloconfigcenter/4.png" alt="配置中心"><br>配置中心内置了一个样例项目。<br><img src="/2018/11/08/testapolloconfigcenter/5.png" alt="样例项目"><br>具体的配置就不在这里说了，接下来介绍如何使用Node.js和Python连接配置中心获取配置。</p>
-<h4 id="Node-js和Python客户端获取配置"><a href="#Node-js和Python客户端获取配置" class="headerlink" title="Node.js和Python客户端获取配置"></a>Node.js和Python客户端获取配置</h4><p><a href="https://github.com/ctripcorp/apollo/wiki/Go、Python、NodeJS、PHP等客户端使用指南" target="_blank" rel="noopener">官方文档</a>介绍了小众客户端如何连接配置中心获取配置，这里试用Node.js和Python客户端。</p>
-<p>1.<a href="https://github.com/Quinton/node-apollo" target="_blank" rel="noopener">Node.js</a><br>用NPM安装node-apollo，建立测试工程，编写测试代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> apollo = <span class="built_in">require</span>(<span class="string">'node-apollo'</span>);</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    </div><div class="line">    <span class="comment">// 携程apollo配置中心配置</span></div><div class="line">    <span class="keyword">const</span> apollo_config = &#123;</div><div class="line">        configServerUrl: <span class="string">'http://192.168.1.140:8080'</span>,</div><div class="line">        appId: <span class="string">'SampleApp'</span>,</div><div class="line">        clusterName: <span class="string">'default'</span>,</div><div class="line">        namespaceName: <span class="string">'application'</span>,</div><div class="line">        apolloEnv: <span class="string">'dev'</span></div><div class="line">    &#125;;</div><div class="line">    </div><div class="line">    <span class="keyword">const</span> result = <span class="keyword">await</span> apollo.remoteConfigServiceFromCache(apollo_config);</div><div class="line">    <span class="built_in">console</span>.log(result);</div><div class="line">&#125;</div><div class="line"></div><div class="line">test();</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/11/08/testapolloconfigcenter/6.png" alt="Node.js"></p>
-<p>2.<a href="https://github.com/filamoon/pyapollo" target="_blank" rel="noopener">Python</a><br>Python客户端好像有些单薄，也有一些其它fork在维护，这里目前先使用原始作者的版本。下载github中的apollo_client.py到python目录下，并编写如下代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> apollo_client</div><div class="line"></div><div class="line">client = apollo_client.ApolloClient(app_id=<span class="string">"SampleApp"</span>, cluster=<span class="string">"default"</span>, config_server_url=<span class="string">"http://192.168.1.140:8080"</span>)</div><div class="line">client.start()</div><div class="line"></div><div class="line">to = client.get_value(<span class="string">"timeout"</span>, <span class="number">10</span>)</div><div class="line"></div><div class="line"><span class="keyword">print</span> (to)</div><div class="line"></div><div class="line">client.stop()</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/11/08/testapolloconfigcenter/7.png" alt="Python"></p>
-<p>这里用的还比较初级，如果想运用在生产环境中，还需要再做深入研究。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">微服务</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/11/08/testapolloconfigcenter/">展开全文 >></a>
         </p>
       
 
@@ -1136,11 +1145,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Vector Tiles</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1172,10 +1189,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Vector Tiles</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
@@ -1200,11 +1213,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1213,10 +1226,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Oracle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
               </li>
              
               <li class="article-tag-list-item">

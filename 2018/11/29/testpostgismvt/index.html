@@ -9,7 +9,7 @@
   <title>试用TileStrata-PostGISMVT矢量瓦片插件 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="之前试用过TileStrata-vtile插件，但是使用过程中发现其空间参考只支持Web墨卡托坐标系，而我们主要用的坐标系是经纬度，如果要支持这种模式，需要改动node-mapnik的c++代码，比较麻烦。幸好TileStrata提供了另外一个矢量瓦片的插件：PostGISMVT插件。 接下来记录一下试过用过程中遇到的坑s： 1.找不到ST_AsMVT函数大概看了一下PostGISMVT源码，主要">
-<meta name="keywords" content="GIS,TileStrata,Vector Tiles,PostGISMVT">
+<meta name="keywords" content="PostGISMVT,Vector Tiles,GIS,TileStrata">
 <meta property="og:type" content="article">
 <meta property="og:title" content="试用TileStrata-PostGISMVT矢量瓦片插件">
 <meta property="og:url" content="http://yoursite.com/2018/11/29/testpostgismvt/index.html">
@@ -192,11 +192,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -204,7 +200,11 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
         		</li>
       		
 		</ul>
@@ -435,11 +435,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Vector Tiles</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -471,10 +479,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Vector Tiles</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
@@ -499,11 +503,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -512,10 +516,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Oracle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostGISMVT</a>
               </li>
              
               <li class="article-tag-list-item">
