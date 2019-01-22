@@ -165,11 +165,18 @@
         <p>最近准备在生产环境(CentOS系统)上试用矢量瓦片，所有都部署妥当之后请求矢量瓦片报错，Missing  libprotobuf-c。使用yum安装，包括源码编译protobuf-c之后，还是报这个错，后来看了PostGIS的源码，判断是由于CentOS里使用yum安装的PostGIS版本，编译时没有protobuf-c环境，所以如果需要用ST_AsMVT函数，需要配置好protobuf-c之后，重新编译PostGIS才可以。<br><img src="/2019/01/22/centospostgismvt/1.png" alt="源码"><br><img src="/2019/01/22/centospostgismvt/2.png" alt="源码"></p>
 <h4 id="首先编译protobuf和protobuf-c"><a href="#首先编译protobuf和protobuf-c" class="headerlink" title="首先编译protobuf和protobuf-c"></a>首先编译protobuf和protobuf-c</h4><p>从Git上下载<a href="https://github.com/protocolbuffers/protobuf" target="_blank" rel="noopener">protobuf</a>和<a href="https://github.com/protobuf-c/protobuf-c" target="_blank" rel="noopener">protobuf-c</a>代码，并依次编译。</p>
 <p>这两个编译比较简单，略过。。</p>
-<h4 id="编译PostGIS"><a href="#编译PostGIS" class="headerlink" title="编译PostGIS"></a>编译PostGIS</h4><p>下载2.5.1版本PostGIS源码，然后使用<code>./autogen.sh</code>脚本初始化。<br><img src="/2019/01/22/centospostgismvt/3.png" alt="初始化"><br>初始化完成之后，使用<code>./configure</code>检查编译环境，我这里报了几个错，依次处理就可以了。</p>
+<h4 id="配置PostGIS"><a href="#配置PostGIS" class="headerlink" title="配置PostGIS"></a>配置PostGIS</h4><p>下载2.5.1版本PostGIS源码，然后使用<code>./autogen.sh</code>脚本初始化。<br><img src="/2019/01/22/centospostgismvt/3.png" alt="初始化"><br>初始化完成之后，使用<code>./configure</code>检查编译环境，我这里报了几个错，依次处理就可以了。</p>
 <p>指向了旧版本Postgresql上：<br><img src="/2019/01/22/centospostgismvt/4.png" alt="环境检查"><br>Postgresql版本是通过pg_config命令获取的，所以只需要查找到10版本的pg_config命令位置，做为configure参数传入即可。<br><img src="/2019/01/22/centospostgismvt/5.png" alt="环境检查"><br><img src="/2019/01/22/centospostgismvt/6.png" alt="环境检查"></p>
 <p>安装各个组件的devel开发版本，包括<code>postgresql10-devel</code>、<code>geos37-devel</code>、<code>proj-devel</code>。</p>
 <p>configure顺利完成：<br><img src="/2019/01/22/centospostgismvt/7.png" alt="环境检查"></p>
-<p>可以看到PROTOBUFC的检查状态是yes，就可以使用make和make install进行编译部署了。<br><img src="/2019/01/22/centospostgismvt/8.png" alt="环境检查"></p>
+<p>可以看到PROTOBUFC的检查状态是yes，就可以使用make进行编译了。<br><img src="/2019/01/22/centospostgismvt/8.png" alt="环境检查"></p>
+<h4 id="编译、部署PostGIS"><a href="#编译、部署PostGIS" class="headerlink" title="编译、部署PostGIS"></a>编译、部署PostGIS</h4><p>果不其然，编译是报错找不到SFCGAL头文件之类的，在网上查了半天，才知道这个组件包必须使用大写，否则yum查不到。。<br><img src="/2019/01/22/centospostgismvt/9.png" alt="编译报错"></p>
+<p>然后就可以正常编译了，编译完成之后使用make install进行部署。</p>
+<h4 id="使用编译好的PostGIS库"><a href="#使用编译好的PostGIS库" class="headerlink" title="使用编译好的PostGIS库"></a>使用编译好的PostGIS库</h4><p>这次虽然没有报Missing libprotobuf-c，但是报表无法加载<code>libprotobuf-c.so.1</code>，使用ldd查看postgis-2.5.so确实没有找到。</p>
+<p>使用find查找，可以找到：<br><img src="/2019/01/22/centospostgismvt/10.png" alt="引用报错"></p>
+<p>在网上查了半天，发现了<a href="https://www.jianshu.com/p/e08dbc60a3b2" target="_blank" rel="noopener">这篇贴子</a>，即编辑<code>/etc/ld.so.conf</code>文件，加入libprotobuf-c.so.1所在位置路径，刷新缓存之后，再编译就正常了。</p>
+<p>最后查看postgis-2.5.so的引用关系：<br><img src="/2019/01/22/centospostgismvt/11.png" alt="引用报错"></p>
+<p>引用正常，使用ST_AsMVT就可以正常使用了。</p>
 
       
 
@@ -1137,11 +1144,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
+                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
+                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1154,10 +1161,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Vector Tiles</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1189,11 +1192,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
+                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1209,15 +1212,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
