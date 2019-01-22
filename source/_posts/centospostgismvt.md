@@ -17,7 +17,7 @@ tags:
 
 这两个编译比较简单，略过。。
 
-#### 编译PostGIS
+#### 配置PostGIS
 下载2.5.1版本PostGIS源码，然后使用`./autogen.sh`脚本初始化。
 ![初始化](centospostgismvt/3.png)
 初始化完成之后，使用`./configure`检查编译环境，我这里报了几个错，依次处理就可以了。
@@ -33,5 +33,24 @@ Postgresql版本是通过pg_config命令获取的，所以只需要查找到10�
 configure顺利完成：
 ![环境检查](centospostgismvt/7.png)
 
-可以看到PROTOBUFC的检查状态是yes，就可以使用make和make install进行编译部署了。
+可以看到PROTOBUFC的检查状态是yes，就可以使用make进行编译了。
 ![环境检查](centospostgismvt/8.png)
+
+#### 编译、部署PostGIS
+果不其然，编译是报错找不到SFCGAL头文件之类的，在网上查了半天，才知道这个组件包必须使用大写，否则yum查不到。。
+![编译报错](centospostgismvt/9.png)
+
+然后就可以正常编译了，编译完成之后使用make install进行部署。
+
+#### 使用编译好的PostGIS库
+这次虽然没有报Missing libprotobuf-c，但是报表无法加载`libprotobuf-c.so.1`，使用ldd查看postgis-2.5.so确实没有找到。
+
+使用find查找，可以找到：
+![引用报错](centospostgismvt/10.png)
+
+在网上查了半天，发现了[这篇贴子](https://www.jianshu.com/p/e08dbc60a3b2)，即编辑`/etc/ld.so.conf`文件，加入libprotobuf-c.so.1所在位置路径，刷新缓存之后，再编译就正常了。
+
+最后查看postgis-2.5.so的引用关系：
+![引用报错](centospostgismvt/11.png)
+
+引用正常，使用ST_AsMVT就可以正常使用了。
