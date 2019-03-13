@@ -142,6 +142,85 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-gdiplugpixeloffset" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/30/gdiplugpixeloffset/">使用GDI+绘制Image拼接处出现白边的问题</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/30/gdiplugpixeloffset/" class="archive-article-date">
+  	<time datetime="2018-05-30T08:17:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近发现瓦片地图有白边，看起来比较难受(效果如下)，所以想办法处理一下。<br><img src="/2018/05/30/gdiplugpixeloffset/webtiles.png" alt="白边"></p>
+<h5 id="查找原因"><a href="#查找原因" class="headerlink" title="查找原因"></a>查找原因</h5><p>最开始以为是坐标转换时出现的精度损失，因为瓦片都是地图坐标(double)，需要转成屏幕逻辑坐标(float)，如果出现精度损失就会出现两个瓦片接不上的问题。</p>
+<p>但是通过调试发现这个过程逻辑坐标都是正常的，在缝隙处两个瓦片的坐标是相接的。</p>
+<p>所以怀疑在逻辑坐标(float)向屏幕像素坐标(int)转换时出问题了，但是这个过程是GDI+绘制的，所以考虑需要通过设置选项来控制的。</p>
+<h5 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h5><p>在网上搜到了<a href="http://webserver2.tecgraf.puc-rio.br/~scuri/gdiplus/drawimage_scale_problem.html" target="_blank" rel="noopener">这篇资料</a>，测试可以解决。主要是以下几行代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ImageAttributes imAtt;</div><div class="line">imAtt.SetWrapMode(WrapModeTileFlipXY);</div><div class="line">graphics-&gt;SetInterpolationMode(InterpolationModeNearestNeighbor);</div><div class="line">graphics-&gt;SetPixelOffsetMode(PixelOffsetModeHalf);</div><div class="line">graphics-&gt;DrawImage(&amp;image, zoomRect, <span class="number">0</span>, <span class="number">0</span>, image.GetWidth(), image.GetHeight(), UnitPixel, &amp;imAtt);</div></pre></td></tr></table></figure></p>
+<p>改正后效果：<br><img src="/2018/05/30/gdiplugpixeloffset/normal.png" alt="正常"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/30/gdiplugpixeloffset/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-pip3main" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -886,81 +965,6 @@
 
 
   
-    <article id="post-testbaiduai" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/08/testbaiduai/">试用百度AI</a>
-    </h1>
-  
-
-        
-        <a href="/2017/12/08/testbaiduai/" class="archive-article-date">
-  	<time datetime="2017-12-08T08:31:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近了解到百度AI做的不错，就试用了一下，效果很好。<br>废话不多说，上图</p>
-<p>1.文字识别（<a href="http://ai.baidu.com/docs#/OCR-API/top" target="_blank" rel="noopener">技术文档</a>）<br><img src="/2017/12/08/testbaiduai/ocr.png" alt="高精度文字识别"><br>2.图像识别（<a href="http://ai.baidu.com/docs#/ImageClassify-API/top" target="_blank" rel="noopener">技术文档</a>）<br>车型识别<br><img src="/2017/12/08/testbaiduai/cardetect.png" alt="车型识别"><br>植物识别<br><img src="/2017/12/08/testbaiduai/plantdetect.png" alt="植物识别"><br>3.定制化图像识别（<a href="http://ai.baidu.com/customize/" target="_blank" rel="noopener">网址</a>）<br>这个服务支持上传自己的分类图片进行训练，然后使用接口调用识别图像分类。但是目前还没审核通过，具体效果后续更新<br><img src="/2017/12/08/testbaiduai/custom.png" alt="定制识别"><br>等待审核<br><img src="/2017/12/08/testbaiduai/customdone.png" alt="等待审核"><br>审核成功<br><img src="/2017/12/08/testbaiduai/customservice.png" alt="审核成功"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/08/testbaiduai/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -1062,7 +1066,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1075,6 +1079,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Vector Tiles</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1106,11 +1114,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
+                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1126,15 +1134,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1143,6 +1143,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1155,6 +1159,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">VSCode</a>
               </li>
             
             <div class="clearfix"></div>
