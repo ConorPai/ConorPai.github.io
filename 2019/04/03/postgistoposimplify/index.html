@@ -27,7 +27,8 @@
 <meta property="og:image" content="http://yoursite.com/2019/04/03/postgistoposimplify/10.png">
 <meta property="og:image" content="http://yoursite.com/2019/04/03/postgistoposimplify/11.png">
 <meta property="og:image" content="http://yoursite.com/2019/04/03/postgistoposimplify/12.png">
-<meta property="og:updated_time" content="2019-04-03T03:10:04.751Z">
+<meta property="og:image" content="http://yoursite.com/2019/04/03/postgistoposimplify/13.png">
+<meta property="og:updated_time" content="2019-04-03T03:16:00.754Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用PostGIS进行拓扑抽稀">
 <meta name="twitter:description" content="抽稀，是指减少图形的节点密度。有些图形例如国界、省界、市界等节点数能达到几万个，这样的图形在渲染和空间关系判断等环节中效率会很慢，所以在一些要求不是很严格的情况下，可以使用抽稀方法减少图形的节点密度，加快处理效率。 对于抽稀的要求，最重要的是要基本保持原图形的形状，这个大部分抽稀算法都可以达到。今天我们说的是进一步的要求，就是相邻图形抽稀之后不能出现重叠和缝隙。 下面是使用PostGIS的ST_S">
@@ -197,6 +198,7 @@
 <p><img src="/2019/04/03/postgistoposimplify/10.png" alt="抽稀前节点数"><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> ST_NumPoints(ST_ExteriorRing(ST_GeometryN(geom,<span class="number">1</span>))) <span class="keyword">from</span> chn_adm1_bak <span class="keyword">where</span> name_1 = <span class="string">'Gansu'</span></div></pre></td></tr></table></figure></p>
 <p><img src="/2019/04/03/postgistoposimplify/11.png" alt="抽稀后节点数"></p>
 <p>通过工具查看抽稀后省界间是否存在重叠和缝隙：<br><img src="/2019/04/03/postgistoposimplify/12.png" alt="查看抽稀结果"></p>
+<p>通过工具查看抽稀后的图形形状是否有比较大的变化：<br><img src="/2019/04/03/postgistoposimplify/13.png" alt="查看抽稀结果"></p>
 <h4 id="11-后续工作"><a href="#11-后续工作" class="headerlink" title="11.后续工作"></a>11.后续工作</h4><p>如果需要将抽稀后的几何更新到原始表中，可以使用如下SQL进行更新：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> chn_adm1 a <span class="keyword">set</span> geom = (<span class="keyword">select</span> b.geom <span class="keyword">from</span> chn_adm1_bak b <span class="keyword">where</span> a.pk_uid = b.pk_uid);</div></pre></td></tr></table></figure></p>
 <p>如果需要将抽稀后的结果导出，可以继续使用ogr2ogr工具进行导出。</p>
 
@@ -482,10 +484,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">TileStrata</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
@@ -494,15 +492,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">TileStrata</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
