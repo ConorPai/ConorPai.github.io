@@ -64,6 +64,8 @@ SELECT topology.AddTopoGeometryColumn('chn_adm1_topo', 'public', 'chn_adm1_bak',
 UPDATE chn_adm1_bak SET topo_geom = topology.toTopoGeom(geom, 'chn_adm1_topo', 1, 0.000000008983153);
 ```
 这个处理过程和图形有关，由于我使用的是全国省界，节点非常密集，时间也比较久，处理完成之后：
+![构建拓扑](postgistoposimplify/7.png)
+![构建拓扑](postgistoposimplify/8.png)
 
 #### 8.拓扑弧段抽稀
 接下来使用[Sandro Santilli](http://strk.kbt.io/blog/2012/04/13/simplifying-a-map-layer-using-postgis-topology/)提供的[SimplifyEdgeGeom](https://gist.github.com/leplatrem/5729022)函数进行拓扑弧段抽稀。
@@ -92,3 +94,11 @@ select ST_NumPoints(ST_ExteriorRing(ST_GeometryN(geom,1))) from chn_adm1_bak whe
 
 通过工具查看抽稀后省界间是否存在重叠和缝隙：
 ![查看抽稀结果](postgistoposimplify/12.png)
+
+#### 11.后续工作
+如果需要将抽稀后的几何更新到原始表中，可以使用如下SQL进行更新：
+```sql
+update chn_adm1 a set geom = (select b.geom from chn_adm1_bak b where a.pk_uid = b.pk_uid);
+```
+
+如果需要将抽稀后的结果导出，可以继续使用ogr2ogr工具进行导出。
