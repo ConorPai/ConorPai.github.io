@@ -95,6 +95,9 @@ select ST_NumPoints(ST_ExteriorRing(ST_GeometryN(geom,1))) from chn_adm1_bak whe
 通过工具查看抽稀后省界间是否存在重叠和缝隙：
 ![查看抽稀结果](postgistoposimplify/12.png)
 
+通过工具查看抽稀后的图形形状是否有比较大的变化：
+![查看抽稀结果](postgistoposimplify/13.png)
+
 #### 11.后续工作
 如果需要将抽稀后的几何更新到原始表中，可以使用如下SQL进行更新：
 ```sql
