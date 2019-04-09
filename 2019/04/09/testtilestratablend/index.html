@@ -6,17 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/7 | ConorPai的博客</title>
+  <title>试用TileStrata-blend插件 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/archives/2018/07/index.html">
+  <meta name="description" content="最近经常遇到这样的情况，服务端发布的瓦片服务过多，导致前端加载太多的layer，增加前端网络请求负担，所以我们想某些相似的瓦片服务是否可以组合在一起，对于前端来说就是一个layer，瓦片合并的工作交给服务端进行。今天提到的TileStrata-blend插件就是用来做瓦片服务合并工作的。 首先发布三个瓦片服务，分别是林地小班、叠加分析结果和林地小班标注，配图和效果如下：林地小班：123456789">
+<meta name="keywords" content="TileStrata">
+<meta property="og:type" content="article">
+<meta property="og:title" content="试用TileStrata-blend插件">
+<meta property="og:url" content="http://yoursite.com/2019/04/09/testtilestratablend/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="最近经常遇到这样的情况，服务端发布的瓦片服务过多，导致前端加载太多的layer，增加前端网络请求负担，所以我们想某些相似的瓦片服务是否可以组合在一起，对于前端来说就是一个layer，瓦片合并的工作交给服务端进行。今天提到的TileStrata-blend插件就是用来做瓦片服务合并工作的。 首先发布三个瓦片服务，分别是林地小班、叠加分析结果和林地小班标注，配图和效果如下：林地小班：123456789">
+<meta property="og:image" content="http://yoursite.com/2019/04/09/testtilestratablend/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/09/testtilestratablend/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/09/testtilestratablend/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/09/testtilestratablend/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/09/testtilestratablend/5.png">
+<meta property="og:updated_time" content="2019-04-09T03:52:34.252Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="试用TileStrata-blend插件">
+<meta name="twitter:description" content="最近经常遇到这样的情况，服务端发布的瓦片服务过多，导致前端加载太多的layer，增加前端网络请求负担，所以我们想某些相似的瓦片服务是否可以组合在一起，对于前端来说就是一个layer，瓦片合并的工作交给服务端进行。今天提到的TileStrata-blend插件就是用来做瓦片服务合并工作的。 首先发布三个瓦片服务，分别是林地小班、叠加分析结果和林地小班标注，配图和效果如下：林地小班：123456789">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/09/testtilestratablend/1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,110 +148,169 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-testtilestratablend" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/07/25/nodemapnikcluster/" class="archive-article-date">
-  	<time datetime="2018-07-25T07:09:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-25</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/07/25/nodemapnikcluster/">node-mapnik集群负载均衡配置</a>
+    <h1 class="article-title" itemprop="name">
+      试用TileStrata-blend插件
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/04/09/testtilestratablend/" class="archive-article-date">
+  	<time datetime="2019-04-09T03:22:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近经常遇到这样的情况，服务端发布的瓦片服务过多，导致前端加载太多的layer，增加前端网络请求负担，所以我们想某些相似的瓦片服务是否可以组合在一起，对于前端来说就是一个layer，瓦片合并的工作交给服务端进行。今天提到的<a href="https://github.com/naturalatlas/tilestrata-blend" target="_blank" rel="noopener">TileStrata-blend</a>插件就是用来做瓦片服务合并工作的。</p>
+<p>首先发布三个瓦片服务，分别是林地小班、叠加分析结果和林地小班标注，配图和效果如下：<br>林地小班：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Map</span>  <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=GRS80 +no_defs"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Style</span> <span class="attr">name</span>=<span class="string">"My Style"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="xml">    <span class="tag">&lt;<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="xml">      <span class="tag">&lt;<span class="name">PolygonSymbolizer</span> <span class="attr">fill</span>=<span class="string">"rgb(0,255,0)"</span> /&gt;</span></span></div><div class="line"><span class="xml">      <span class="tag">&lt;<span class="name">LineSymbolizer</span> <span class="attr">stroke</span>=<span class="string">"rgb(255,255,0)"</span> <span class="attr">stroke-width</span>=<span class="string">"1"</span>/&gt;</span></span></div><div class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">Layer</span> <span class="attr">name</span>=<span class="string">"layer"</span> <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=GRS80 +no_defs "</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">StyleName</span>&gt;</span>My Style<span class="tag">&lt;/<span class="name">StyleName</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Datasource</span>&gt;</span></div><div class="line">		...</div><div class="line">    <span class="tag">&lt;/<span class="name">Datasource</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Layer</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Map</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2019/04/09/testtilestratablend/1.png" alt="林地小班"><br>叠加分析结果：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Map</span>  <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=GRS80 +no_defs"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Style</span> <span class="attr">name</span>=<span class="string">"My Style"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="xml">    <span class="tag">&lt;<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="xml">      <span class="tag">&lt;<span class="name">LineSymbolizer</span> <span class="attr">stroke</span>=<span class="string">"rgb(255,0,0)"</span> <span class="attr">stroke-width</span>=<span class="string">"1"</span>/&gt;</span></span></div><div class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">Layer</span> <span class="attr">name</span>=<span class="string">"layer"</span> <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=GRS80 +no_defs "</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">StyleName</span>&gt;</span>My Style<span class="tag">&lt;/<span class="name">StyleName</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Datasource</span>&gt;</span></div><div class="line">		...</div><div class="line">    <span class="tag">&lt;/<span class="name">Datasource</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Layer</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Map</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2019/04/09/testtilestratablend/2.png" alt="叠加分析结果"><br>林地小班标注：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Map</span>  <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=GRS80 +no_defs"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Style</span> <span class="attr">name</span>=<span class="string">"My Style"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="xml">    <span class="tag">&lt;<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="xml">      <span class="tag">&lt;<span class="name">TextSymbolizer</span> <span class="attr">face-name</span>=<span class="string">"Noto Sans CJK SC Regular"</span> <span class="attr">size</span>=<span class="string">"10"</span> <span class="attr">halo-fill</span>=<span class="string">"white"</span> <span class="attr">halo-radius</span>=<span class="string">"1"</span> <span class="attr">allow-overlap</span>=<span class="string">"false"</span>&gt;</span>[mian_ji]<span class="tag">&lt;/<span class="name">TextSymbolizer</span>&gt;</span></span></div><div class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">Layer</span> <span class="attr">name</span>=<span class="string">"layer"</span> <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=GRS80 +no_defs "</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">StyleName</span>&gt;</span>My Style<span class="tag">&lt;/<span class="name">StyleName</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Datasource</span>&gt;</span></div><div class="line">		...</div><div class="line">    <span class="tag">&lt;/<span class="name">Datasource</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Layer</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Map</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2019/04/09/testtilestratablend/3.png" alt="林地小班标注"></p>
+<p>通过如下代码进行瓦片服务合并：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata'</span>);</div><div class="line"><span class="keyword">const</span> mapnik = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata-mapnik'</span>);</div><div class="line"><span class="keyword">const</span> disk = <span class="built_in">require</span>(<span class="string">'tilestrata-disk'</span>);</div><div class="line"><span class="keyword">var</span> blend = <span class="built_in">require</span>(<span class="string">'tilestrata-blend'</span>);</div><div class="line"><span class="keyword">var</span> strata = tilestrata();</div><div class="line"></div><div class="line"><span class="comment">//林地小班</span></div><div class="line">strata.layer(<span class="string">'847a30b3-3763-48ee-a754-57b338700d09'</span>)</div><div class="line">    .route(<span class="string">'tile.png'</span>)</div><div class="line">        .use(disk.cache(&#123;<span class="attr">dir</span>: <span class="string">'/Users/paiconor/Desktop/server/dir/map/847a30b3-3763-48ee-a754-57b338700d09/cache/'</span>&#125;))</div><div class="line">        .use(mapnik(&#123;</div><div class="line">            pathname: <span class="string">'/Users/paiconor/Desktop/server/dir/map/847a30b3-3763-48ee-a754-57b338700d09/mapnik.xml'</span>,</div><div class="line">            OriX: <span class="number">-180</span>,</div><div class="line">            OriY: <span class="number">90</span>,</div><div class="line">            FirstDPI: <span class="number">1.40625</span>,</div><div class="line">            tileSize: <span class="number">512</span>,</div><div class="line">            scale: <span class="number">2</span></div><div class="line">        &#125;));</div><div class="line"></div><div class="line"><span class="comment">//叠加分析结果</span></div><div class="line">strata.layer(<span class="string">'50b6be1f-d2ff-4797-9686-cf525dfde42b'</span>)</div><div class="line">    .route(<span class="string">'tile.png'</span>)</div><div class="line">        .use(disk.cache(&#123;<span class="attr">dir</span>: <span class="string">'/Users/paiconor/Desktop/server/dir/map/50b6be1f-d2ff-4797-9686-cf525dfde42b/cache/'</span>&#125;))</div><div class="line">        .use(mapnik(&#123;</div><div class="line">            pathname: <span class="string">'/Users/paiconor/Desktop/server/dir/map/50b6be1f-d2ff-4797-9686-cf525dfde42b/mapnik.xml'</span>,</div><div class="line">            OriX: <span class="number">-180</span>,</div><div class="line">            OriY: <span class="number">90</span>,</div><div class="line">            FirstDPI: <span class="number">1.40625</span>,</div><div class="line">            tileSize: <span class="number">512</span>,</div><div class="line">            scale: <span class="number">2</span></div><div class="line">        &#125;));</div><div class="line"></div><div class="line"><span class="comment">//林地小班标注</span></div><div class="line">strata.layer(<span class="string">'54681f08-baf3-45d8-8052-770945f0a3ea'</span>)</div><div class="line">    .route(<span class="string">'tile.png'</span>)</div><div class="line">        .use(disk.cache(&#123;<span class="attr">dir</span>: <span class="string">'/Users/paiconor/Desktop/server/dir/map/54681f08-baf3-45d8-8052-770945f0a3ea/cache/'</span>&#125;))</div><div class="line">        .use(mapnik(&#123;</div><div class="line">            pathname: <span class="string">'/Users/paiconor/Desktop/server/dir/map/54681f08-baf3-45d8-8052-770945f0a3ea/mapnik.xml'</span>,</div><div class="line">            OriX: <span class="number">-180</span>,</div><div class="line">            OriY: <span class="number">90</span>,</div><div class="line">            FirstDPI: <span class="number">1.40625</span>,</div><div class="line">            tileSize: <span class="number">512</span>,</div><div class="line">            scale: <span class="number">2</span></div><div class="line">        &#125;));</div><div class="line"></div><div class="line"><span class="comment">//瓦片服务合并</span></div><div class="line">strata.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(blend([</div><div class="line">        [<span class="string">'847a30b3-3763-48ee-a754-57b338700d09'</span>,<span class="string">'tile.png'</span>],</div><div class="line">        [<span class="string">'50b6be1f-d2ff-4797-9686-cf525dfde42b'</span>,<span class="string">'tile.png'</span>],</div><div class="line">        [<span class="string">'54681f08-baf3-45d8-8052-770945f0a3ea'</span>,<span class="string">'tile.png'</span>]</div><div class="line">    ]));</div><div class="line"></div><div class="line">strata.listen(<span class="number">22222</span>);</div></pre></td></tr></table></figure></p>
+<p>前端加载合并后的瓦片服务：<br><img src="/2019/04/09/testtilestratablend/4.png" alt="合并结果"><br><img src="/2019/04/09/testtilestratablend/5.png" alt="合并结果"></p>
+<p>TileStrata-blend还有一些选项可以设置，比如给合并结果设置背景色、设置某个瓦片服务的透明度等，这些待实际应用中再仔细研究。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/04/09/testtilestratablend/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/07/10/openstreetmapcarto/" class="archive-article-date">
-  	<time datetime="2018-07-10T06:13:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-10</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/03/postgistoposimplify/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">使用PostGIS进行拓扑抽稀</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/07/10/openstreetmapcarto/">使用node-mapnik和OpenStreetMap Carto发布在线瓦片地图服务</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">OpenStreetMap</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2019/04/09/testtilestratablend/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+  
 
 
           </div>
@@ -266,8 +333,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
