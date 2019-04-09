@@ -82,7 +82,7 @@ UPDATE chn_adm1_bak SET geom = topo_geom::geometry;
 ```
 
 #### 10.抽稀结果检查
-通过SQL查询抽稀之前后甘肃省界的节点数：
+通过SQL查询抽稀前后甘肃省界的节点数：
 ```sql
 select ST_NumPoints(ST_ExteriorRing(ST_GeometryN(geom,1))) from chn_adm1 where name_1 = 'Gansu'
 ```
