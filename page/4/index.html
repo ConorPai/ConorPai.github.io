@@ -142,6 +142,91 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-csharpdecompile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/07/csharpdecompile/">试水C#成果反编译(一)</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/07/csharpdecompile/" class="archive-article-date">
+  	<time datetime="2018-06-07T06:57:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>对于反编译的了解，我之前还停留在将工作成果混淆防止反编译看到源码的阶段，今天看到了一篇文章，不但可以反编译C#成果，而且可以修改其中的部分代码并保存成新的成果来使用，所以打算试一下。</p>
+<p>使用的工具是ILSpy加上Reflexil插件，下载地址：<br><a href="https://github.com/icsharpcode/ILSpy/releases" target="_blank" rel="noopener">https://github.com/icsharpcode/ILSpy/releases</a><br><a href="https://github.com/sailro/Reflexil/releases" target="_blank" rel="noopener">https://github.com/sailro/Reflexil/releases</a>，下载reflexil.for.ILSpy.2.2.AIO.bin.zip，AIO的意思是All In One。</p>
+<p>下载后解压到同一个目录下，打开ILSpy软件，在View菜单中可以看到Reflexil v2.2菜单即可。<br><img src="/2018/06/07/csharpdecompile/1.png" alt="配置成功"></p>
+<p>建新一个简单的WinForm工程，简单的写几行代码，点击按钮弹出提示框，接下来要做的是修改提示框标题。<br><img src="/2018/06/07/csharpdecompile/2.png" alt="原始效果"><br>代码如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">using</span> System;</div><div class="line"><span class="keyword">using</span> System.Collections.Generic;</div><div class="line"><span class="keyword">using</span> System.ComponentModel;</div><div class="line"><span class="keyword">using</span> System.Data;</div><div class="line"><span class="keyword">using</span> System.Drawing;</div><div class="line"><span class="keyword">using</span> System.Linq;</div><div class="line"><span class="keyword">using</span> System.Text;</div><div class="line"><span class="keyword">using</span> System.Windows.Forms;</div><div class="line"></div><div class="line"><span class="keyword">namespace</span> <span class="title">TestDecompile</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">Form1</span> : <span class="title">Form</span></div><div class="line">    &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Form1</span>(<span class="params"></span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            InitializeComponent();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ShowMessage</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            MessageBox.Show(<span class="keyword">string</span>.Format(<span class="string">"&#123;0&#125;+&#123;1&#125;=&#123;2&#125;"</span>, x, y, x + y));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">button1_Click</span>(<span class="params"><span class="keyword">object</span> sender, EventArgs e</span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            ShowMessage(<span class="number">3</span>, <span class="number">4</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用ILSpy打开exe，即可看到程序源码。<br><img src="/2018/06/07/csharpdecompile/3.png" alt="ILSpy反编译源码"></p>
+<p>对于简单的程序，可以将程序源码导出后重新编译，但是对于复杂的程序这样会比较麻烦，所以考虑直接修改exe。<br><img src="/2018/06/07/csharpdecompile/4.png" alt="ILSpy保存源码"></p>
+<p>点击View-Reflexil v2.2菜单，打开Reflexil界面，并且定位到要修改的ShowMessage函数。<br><img src="/2018/06/07/csharpdecompile/5.png" alt="准备修改"></p>
+<p>第一种方法是比较简单的方法，在Reflexil界面右键，点击Replace all with code，弹出如下界面：<br><img src="/2018/06/07/csharpdecompile/6.png" alt="准备修改"><br>在ShowMessage中添加代码，然后点击左下角的Compile按钮，确认没有问题之后点击Ok按钮。<br><img src="/2018/06/07/csharpdecompile/7.png" alt="修改完成"><br>修改完成之后，在程序的根节点上右键Save as，即可将修改结果保存成新的exe，默认在原文件名的基础上增加Patched字符。<br><img src="/2018/06/07/csharpdecompile/8.png" alt="保存修改"><br>修改之后的效果：<br><img src="/2018/06/07/csharpdecompile/9.png" alt="修改效果"></p>
+<p>这种方式确实很方便，对于我们也很友好，但是在某些情况下修改代码之后编译失败，那就需要修改IL代码，即Reflexil界面中显示的那一堆。。<br><img src="/2018/06/07/csharpdecompile/10.png" alt="IL代码"></p>
+<p>关于IL相关的知识可以去网上再了解一下，在这里就不再重复了，接下来介绍如何通过修改IL代码实现一样的效果。<br>在IL代码中，索引是11的那一行，可以看出是调用了MessageBox的Show方法，之前的代码是在构建Show的参数，消息字符串，所以需要在Show之前传入第二个参数，并修改Show的实现方法。<br>首先，创建消息标题字符串：<br><img src="/2018/06/07/csharpdecompile/11.png" alt="创建标题字符串"><br><img src="/2018/06/07/csharpdecompile/12.png" alt="创建标题字符串"><br>创建完成之后默认是添加在最后一行，拖动到Show方法之前即可：<br><img src="/2018/06/07/csharpdecompile/13.png" alt="创建标题字符串"><br>右键点击Show方法，点击Edit菜单：<br><img src="/2018/06/07/csharpdecompile/14.png" alt="修改Show方法"><br>弹出对话框中点击Show方法后边的下拉按钮，在弹出列表中选择两个字符串参数的方法，选中之后Update即可。<br><img src="/2018/06/07/csharpdecompile/15.png" alt="修改Show方法"><br>修改完成效果：<br><img src="/2018/06/07/csharpdecompile/16.png" alt="修改完成"><br>重复之前保存exe方法，效果与之前一致。</p>
+<p>如果想避免自己的成果被反编译和破解，最好使用混淆方法，目前我们的成果做了混淆，会导致ILSpy报错，效果如下：<br><img src="/2018/06/07/csharpdecompile/17.png" alt="代码混淆"></p>
+<p>下一篇将会介绍如何使用ILSpy和Reflexil对一个复杂软件进行破解。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/07/csharpdecompile/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-dronephotoscreatedom2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -881,84 +966,6 @@
 
 
   
-    <article id="post-postgisshapefile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/01/postgisshapefile/">使用QGIS向PostGIS中导入Shapefile数据</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/01/postgisshapefile/" class="archive-article-date">
-  	<time datetime="2018-02-01T02:05:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.打开QGIS，使用菜单中的添加图层功能，添加PostGIS图层<br><img src="/2018/02/01/postgisshapefile/1.png" alt="1"><br>2.创建PostGIS连接<br><img src="/2018/02/01/postgisshapefile/2.png" alt="1"><br>3.测试连接是否正常<br><img src="/2018/02/01/postgisshapefile/3.png" alt="1"><br>4.使用数据库管理功能向PostGIS数据库中导入Shapefile数据<br><img src="/2018/02/01/postgisshapefile/4.png" alt="1"><br>5.找到刚刚添加的PostGIS连接<br><img src="/2018/02/01/postgisshapefile/5.png" alt="1"><br>6.使用导入功能<br><img src="/2018/02/01/postgisshapefile/6.png" alt="1"><br>7.导入Shapefile数据<br><img src="/2018/02/01/postgisshapefile/7.png" alt="1"><br>8.导入成功<br><img src="/2018/02/01/postgisshapefile/8.png" alt="1"><br>9.刷新PostGIS连接，查看导入数据<br><img src="/2018/02/01/postgisshapefile/9.png" alt="1"><br>10.使用pgAdmin查看导入数据<br><img src="/2018/02/01/postgisshapefile/10.png" alt="1"><br>11.再次使用添加PostGIS图层功能<br><img src="/2018/02/01/postgisshapefile/11.png" alt="1"><br>12.添加完成<br><img src="/2018/02/01/postgisshapefile/12.png" alt="1"><br>13.采编数据<br><img src="/2018/02/01/postgisshapefile/13.png" alt="1"><br>14.录入属性<br><img src="/2018/02/01/postgisshapefile/14.png" alt="1"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/01/postgisshapefile/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -1144,11 +1151,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">

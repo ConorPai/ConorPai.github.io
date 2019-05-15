@@ -142,6 +142,98 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-vscoderemotework" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/15/vscoderemotework/">试用VS Code Remote</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/15/vscoderemotework/" class="archive-article-date">
+  	<time datetime="2019-05-15T01:44:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>几天前，微软发布了VS Code Remote，用来做远程开发，可以支持在物理机、容器以及Windows Subsystem for Linux(WSL)上实现无缝远程开发，可以做到：</p>
+<ul>
+<li>在部署相同的操作系统上进行开发，或者使用更大或更专业的硬件</li>
+<li>把开发环境作为沙箱，以免影响本地计算机配置</li>
+<li>让新手轻松上手，让每个人都保持一致的开发环境</li>
+<li>使用原本在本地环境不可用的工具或运行时，或者管理它们的多个版本</li>
+<li>在WSL里开发Linux应用</li>
+<li>从多台不同的计算机访问现有的开发环境</li>
+<li>调试在其它位置(比如客户网站或云端)运行的应用程序</li>
+</ul>
+<p>本次试用的是通过SSH来连接远程物理机，实现远程开发。</p>
+<p>由于我们近期使用的Mapnik没有windows版本，所以之前的开发工作都是在Ubuntu上或者MacOS上进行的，有些不方便，VS Code Remote推出之后，就可以在windows上连接Ubuntu或者MacOS来进行开发和调试工作。</p>
+<h4 id="安装VS-Code-Insiders版本"><a href="#安装VS-Code-Insiders版本" class="headerlink" title="安装VS Code Insiders版本"></a>安装VS Code Insiders版本</h4><p>目前VS Code Remote只能在预览版中使用，到<a href="https://code.visualstudio.com/insiders/" target="_blank" rel="noopener">这里</a>下载、安装预览版，预览版的图标是不可描述的绿。。<br><img src="/2019/05/15/vscoderemotework/1.png" alt="图标"></p>
+<h4 id="安装Remote-Development插件"><a href="#安装Remote-Development插件" class="headerlink" title="安装Remote Development插件"></a>安装Remote Development插件</h4><p>到扩展商店中搜索remote，安装Remote Development插件，同时会安装Remote - SSH、Remote - Containers和Remote - WSL，用于三种不用的远程登陆方式。<br><img src="/2019/05/15/vscoderemotework/2.png" alt="安装扩展"></p>
+<h4 id="安装、配置SSH"><a href="#安装、配置SSH" class="headerlink" title="安装、配置SSH"></a>安装、配置SSH</h4><p>在远程端需要安装ssh-server，本机安装ssh-client。<br>这次本机是Windows 7操作系统，使用提OpenSSH做为ssh-clinet。到<a href="https://github.com/PowerShell/Win32-OpenSSH/releases" target="_blank" rel="noopener">这里</a>下载最新版本，在本机解压后，将其路径添加到系统环境变量的Path中。<br><img src="/2019/05/15/vscoderemotework/3.png" alt="安装ssh"><br>然后使用ssh-keygen生成密钥，然后使用ssh-copy-id将密钥拷贝到远程机器上。由于这步和git配置相同，而且OpenSSH中没有ssh-copy-id命令，所以我用的是git bash做的。<br><img src="/2019/05/15/vscoderemotework/4.png" alt="配置ssh"></p>
+<h4 id="在VS-Code中配置远程连接"><a href="#在VS-Code中配置远程连接" class="headerlink" title="在VS Code中配置远程连接"></a>在VS Code中配置远程连接</h4><p>点击侧边栏中的远程连接图标，并进行配置：<br><img src="/2019/05/15/vscoderemotework/5.png" alt="配置远程连接"><br><img src="/2019/05/15/vscoderemotework/6.png" alt="配置远程连接"><br><img src="/2019/05/15/vscoderemotework/7.png" alt="配置远程连接"></p>
+<h4 id="连接远程机器"><a href="#连接远程机器" class="headerlink" title="连接远程机器"></a>连接远程机器</h4><p>使用右键进行连接，首次连接会在远程机器上部署远程开发相应环境，连接完成后可以看到左下角显示连接的远程机器名称。<br><img src="/2019/05/15/vscoderemotework/8.png" alt="连接远程机器"><br><img src="/2019/05/15/vscoderemotework/9.png" alt="连接远程机器"></p>
+<h4 id="打开远程开发代码"><a href="#打开远程开发代码" class="headerlink" title="打开远程开发代码"></a>打开远程开发代码</h4><p>连接远程机器成功之后，点击打开文件夹，就会显示出远程机器上的目录结构，选择代码目录，即可打开远程机器上的代码。<br><img src="/2019/05/15/vscoderemotework/11.png" alt="打开远程代码"><br><img src="/2019/05/15/vscoderemotework/12.png" alt="打开远程代码"></p>
+<h4 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h4><p><img src="/2019/05/15/vscoderemotework/13.png" alt="调试远程代码"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">VSCode</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/15/vscoderemotework/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-testtilestratablend" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -958,88 +1050,6 @@
 
 
   
-    <article id="post-centosyum404" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/14/centosyum404/">解决CentOS服务器使用Yum连接源失败的问题</a>
-    </h1>
-  
-
-        
-        <a href="/2018/12/14/centosyum404/" class="archive-article-date">
-  	<time datetime="2018-12-14T07:00:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天又协调到一台服务器，CentOS操作系统的，准备部署Node.js服务。</p>
-<p>上来第一步就用yum update进行更新，更新时发现有很多源连接失败，提示<code>404 Not Found</code>之类的。仍然能搜索到更新，但是安装失败。</p>
-<p>由于使用<code>yum install</code>仍然可用，所以暂时没理这个问题。所有环境都部署好了，需要使用git下截代码的时候，提示yum install无法安装git，这个时候其实也可以下载代码zip，然后到服务器解压，但是想到后期如果有代码更新可能会比较麻烦，所以考虑解决这个问题。</p>
-<p>到网上搜到了这个<a href="http://blog.51cto.com/17532/2298743" target="_blank" rel="noopener">解决方案</a>，照着做竟然解决了。</p>
-<p>1.首先备份/etc/yum.repos.d/CentOS-Base.repo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</div></pre></td></tr></table></figure></p>
-<p>2.到<a href="http://mirrors.163.com/.help/centos.html" target="_blank" rel="noopener">这里</a>下载相应版本的repo文件</p>
-<p>3.将下载后的repo文件改名为<code>CentOS-Base.repo</code>，并使用rz上传到<code>/etc/yum.repos.d/</code>目录下。</p>
-<p>4.清理并重置缓存<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum clean all</div><div class="line">yum makecache</div></pre></td></tr></table></figure></p>
-<p>然后<code>yum update</code>和<code>yum install git</code>都可以正常使用了，问题解决！</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/12/14/centosyum404/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1225,11 +1235,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
