@@ -142,6 +142,101 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-tilestratadisk" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/14/tilestratadisk/">TileStrata缓存深入研究</a>
+    </h1>
+  
+
+        
+        <a href="/2018/09/14/tilestratadisk/" class="archive-article-date">
+  	<time datetime="2018-09-14T08:06:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用缓存技术可以加快重复浏览效率，随之而来的是数据更新如何更新缓存的问题，针对这个问题，我们做了研究和思考，可能比较粗浅，权当记录。</p>
+<h4 id="方案一：不缓存"><a href="#方案一：不缓存" class="headerlink" title="方案一：不缓存"></a>方案一：不缓存</h4><p>这样可以解决缓存更新的问题，但是也无法体验缓存带来的效率提升。</p>
+<h4 id="方案二：缓存超时失效"><a href="#方案二：缓存超时失效" class="headerlink" title="方案二：缓存超时失效"></a>方案二：缓存超时失效</h4><p>tilestrata-disk提供的更新解决方案，是两个参数：<br>1.maxage参数<br>maxage参数的意思是，瓦片存在最长时间是多少，单位是秒，超过这个时间之后，如果有请求进来，则会就删除该缓存，并重新缓存。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// cache: cache with maxage</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;<span class="attr">maxage</span>: <span class="number">3600</span>, <span class="attr">dir</span>: <span class="string">'./tiles/mylayer'</span>&#125;));</div></pre></td></tr></table></figure></p>
+<p>2.refreshage参数<br>这个参数研究了好半天，才了解其意思。如果瓦片存在时间超过了refreshage的时长，如果有请求进来，则会返回之前的瓦片，返回之后删除之前的瓦片，并重新缓存，这样之后的请求拿到的都是新瓦片。官方原话：<code>you have tile that&#39;s old enough it should be regenerated, but it&#39;s not old enough to warrant making the user wait for a new tile to be rendered.</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">.use(disk.cache(&#123;</div><div class="line">    dir: <span class="string">'./tiles/mylayer'</span>,</div><div class="line">    refreshage: <span class="number">3600</span>, <span class="comment">// 1 hour</span></div><div class="line">    maxage: <span class="number">3600</span>*<span class="number">24</span>*<span class="number">7</span> <span class="comment">// 1 week</span></div><div class="line">&#125;));</div></pre></td></tr></table></figure>
+<p>也就是说这两个参数的区别，都是超时，需要更新，只不过maxage需要等待重新缓存结果返回并使用，refreshage不需要等待，直接返回上一个缓存，返回之后又更新了旧缓存。</p>
+<p>tilestrata-disk也提供了通过回调的方式，动态修改缓存位置、以及超时时间等，例如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// cache: cache with maxage function (advanced)</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;</div><div class="line">        dir: <span class="string">'./tiles/mylayer'</span>,</div><div class="line">        maxage: <span class="function"><span class="keyword">function</span>(<span class="params">server, req</span>) </span>&#123;</div><div class="line">            <span class="keyword">if</span> (req.z &gt; <span class="number">15</span>) <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// don't cache</span></div><div class="line">            <span class="keyword">if</span> (req.z &gt; <span class="number">13</span>) <span class="keyword">return</span> <span class="number">3600</span>;</div><div class="line">            <span class="keyword">return</span> <span class="number">3600</span>*<span class="number">24</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line"></div><div class="line"><span class="comment">// cache: custom directory layout</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;<span class="attr">path</span>: <span class="string">'./tiles/&#123;layer&#125;/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;-&#123;filename&#125;'</span>&#125;));</div><div class="line"></div><div class="line"><span class="comment">// cache: custom directory layout (via callback)</span></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    .use(<span class="comment">/* some provider */</span>)</div><div class="line">    .use(disk.cache(&#123;<span class="attr">path</span>: <span class="function"><span class="keyword">function</span>(<span class="params">tile</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">'./tiles/'</span> + tile.layer + <span class="string">'/'</span> + tile.z + <span class="string">'/'</span> <span class="comment">/* ... */</span></div><div class="line">    &#125;&#125;));</div></pre></td></tr></table></figure></p>
+<h4 id="方案三：强制缓存失效"><a href="#方案三：强制缓存失效" class="headerlink" title="方案三：强制缓存失效"></a>方案三：强制缓存失效</h4><p>这里介绍一个工具：<a href="https://github.com/naturalatlas/tilemantle" target="_blank" rel="noopener">TileMantle</a>，该工具可以用来提前生成缓存，以及将缓存设置为失效。</p>
+<p><a href="https://github.com/naturalatlas/tilestrata#rebuilding-the-tile-cache" target="_blank" rel="noopener">TileStrata官方文档</a>中提到了这种模式的使用方法，不过还没有尝试。</p>
+<p>关于瓦片缓存更新问题，有可能是这三种方案配合使用，达到最终目的。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">DataCache</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/09/14/tilestratadisk/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-nodemapnikvectortiles" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -475,11 +570,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
         		</li>
       		
 		</ul>
@@ -1013,91 +1108,6 @@
 
 
   
-    <article id="post-csharpdecompile2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/08/csharpdecompile2/">试水C#成果反编译(二)</a>
-    </h1>
-  
-
-        
-        <a href="/2018/06/08/csharpdecompile2/" class="archive-article-date">
-  	<time datetime="2018-06-08T01:49:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>上一篇介绍了使用ILSpy和Reflexil插件对简单程序的反编译和破解。现在用一个真实软件为例，对其进行破解。</p>
-<p>这里破解的软件是代码转换工具<a href="https://www.tangiblesoftwaresolutions.com/product_details/products.html" target="_blank" rel="noopener">Converters</a>，可以转换C#、Java、C++和VB.Net四种语言，功能比较强大，转换之后的代码可用度比较高。这个软件免费版功能受限，高级版要上百刀。在网上看到了这篇<a href="http://www.cnblogs.com/yiyan127/p/CSharp_CrackJava2CSharpConverter.html" target="_blank" rel="noopener">参考文章</a>，所以也想试试对其进行破解。</p>
-<p>首先用ILSpy打开CSharp to Java Converter软件<br><img src="/2018/06/08/csharpdecompile2/1.png" alt="打开软件"><br>可以看到，这个成果是做过混淆的，里面的类名称、函数名称和变量名称都变成了意义不明的代号。</p>
-<p>因为ILSpy中的搜索不是很好用，所以需要将代码保存之后，用VS打开查找和定位相关代码。<br><img src="/2018/06/08/csharpdecompile2/2.png" alt="保存代码"><br><img src="/2018/06/08/csharpdecompile2/3.png" alt="保存代码"></p>
-<p>我们想破解这个软件对用户授权的判断，就需要找一个突破口。在这里我以程序标题提示Free Edition为突破口，来查找授权判断代码。<br><img src="/2018/06/08/csharpdecompile2/4.png" alt="突破口"></p>
-<p>全局搜索Free Edition，找到拼接程序标题的代码：<br><img src="/2018/06/08/csharpdecompile2/5.png" alt="定位代码"><br><img src="/2018/06/08/csharpdecompile2/6.png" alt="定位代码"><br>可以看出标题是否显示FreeEdition是由App._g13变量控制的，现在只需要找到App._g13变量在哪里赋值即可：<br><img src="/2018/06/08/csharpdecompile2/7.png" alt="定位代码"><br>可以看出在程序启动后，通过App.Copyright_Tangible_Software_Solutions_g30方法对App._g13进行赋值，定位Copyright_Tangible_Software_Solutions_g30方法：<br><img src="/2018/06/08/csharpdecompile2/8.png" alt="定位代码"><br>也就是说只需要把这个方法的返回值直接改为true即可。</p>
-<p>返回ILSpy软件，搜索Copyright_Tangible_Software_Solutions_g30：<br><img src="/2018/06/08/csharpdecompile2/9.png" alt="定位代码"><br>打开Reflexil插件，先用Replace All with Code方法修改：<br><img src="/2018/06/08/csharpdecompile2/10.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/11.png" alt="修改代码"><br>用这种方法修改的代码编译报错，所以这种方法行不通，考虑修改IL源码。</p>
-<p>对于修改IL源码不是特别清楚的小伙伴，可以新建一个简单的工程，将写好后的代码编译并在ILSpy中打开，照着原样拷贝到这里即可。<br><img src="/2018/06/08/csharpdecompile2/12.png" alt="修改代码"><br>就是这里的6行代码。</p>
-<p>清除所有<br><img src="/2018/06/08/csharpdecompile2/13.png" alt="修改代码"><br>依次创建<br><img src="/2018/06/08/csharpdecompile2/14.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/15.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/16.png" alt="修改代码"><br>由于第4行是一个跳转指令，所以最后创建<br><img src="/2018/06/08/csharpdecompile2/17.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/18.png" alt="修改代码"><br>添加跳转指令<br><img src="/2018/06/08/csharpdecompile2/19.png" alt="修改代码"><br>默认添加是在最后一行，需要拖拽到相应位置<br><img src="/2018/06/08/csharpdecompile2/20.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/21.png" alt="修改代码"></p>
-<p>修改之后启动程序并没有达到想要的效果，使用ILSpy打开破解之后的程序，发现这里的代码不并是return true，有些不是很理解，在一个简单程序上做如下修改，却是正常的。<br><img src="/2018/06/08/csharpdecompile2/22.png" alt="修改代码"></p>
-<p>憋了很久，打算硬着头皮试一下，猜想这6行代码里，ldc.i4.1是创建了一个数值为1的int变量，ret是返回，是不是只保留这两行就可以了呢？修改并验证：<br><img src="/2018/06/08/csharpdecompile2/23.png" alt="修改代码"><br><img src="/2018/06/08/csharpdecompile2/24.png" alt="修改代码"><br>发现代码正常了，启动软件测试：<br><img src="/2018/06/08/csharpdecompile2/25.png" alt="验证结果"><br>发现程序标题中的Free Edition已经没有了，原来Unlock the Premium Edition按钮也没有了，测试转换代码也没有行数之类的限制，破解生效了。</p>
-<p>俗话说，知己知彼百战不殆，了解反编译和破解过程，是为了更好的保护自主知识版权，希望大家多多支持正版软件。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/06/08/csharpdecompile2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1247,11 +1257,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
+                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -142,6 +142,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-testtilestrataunderzoom" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/29/testtilestrataunderzoom/">试用TileStrata-underzoom插件</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/29/testtilestrataunderzoom/" class="archive-article-date">
+  	<time datetime="2019-05-29T04:07:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>TileStrata真是个神仙宝藏框架，今天试用的是<a href="https://github.com/naturalatlas/tilestrata-underzoom" target="_blank" rel="noopener">tilestrata-underzoom</a>插件，通过介绍能看出这个插件允许使用低级别的瓦片拼成高级别的瓦片，目前我知道的一个用途是能解决绘制高级别瓦片速度慢的问题。</p>
+<h4 id="1-编写代码"><a href="#1-编写代码" class="headerlink" title="1.编写代码"></a>1.编写代码</h4><p>首先，编写瓦片服务代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> tilestrata = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata'</span>);</div><div class="line"><span class="keyword">const</span> mapnik = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata-mapnik'</span>);</div><div class="line"><span class="keyword">const</span> dependency = <span class="built_in">require</span>(<span class="string">'tilestrata-dependency'</span>);</div><div class="line"><span class="keyword">const</span> underzoom = <span class="built_in">require</span>(<span class="string">'tilestrata-underzoom'</span>);</div><div class="line"><span class="keyword">const</span> disk = <span class="built_in">require</span>(<span class="string">'tilestrata-disk'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> strata = tilestrata(&#123;</div><div class="line">    balancer: &#123;</div><div class="line">      host: <span class="string">'0.0.0.0:22221'</span></div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line"></div><div class="line"><span class="comment">//原始地图服务</span></div><div class="line">strata.layer(<span class="string">'oriimage'</span>)</div><div class="line">    .route(<span class="string">'tile.png'</span>)</div><div class="line">        <span class="comment">//.use(disk.cache(&#123;dir: 'oricache'&#125;))</span></div><div class="line">        .use(mapnik(&#123;</div><div class="line">            pathname: <span class="string">'mapnik.xml'</span>,</div><div class="line">            OriX: <span class="number">-180</span>,</div><div class="line">            OriY: <span class="number">90</span>,</div><div class="line">            FirstDPI: <span class="number">1.40625</span></div><div class="line">        &#125;));</div><div class="line"></div><div class="line"><span class="comment">//underzoom地图服务</span></div><div class="line">strata.layer(<span class="string">'underzoom'</span>).route(<span class="string">'tile.png'</span>)</div><div class="line">    <span class="comment">//.use(disk.cache(&#123;dir: 'underzoomcache'&#125;))</span></div><div class="line">	.use(underzoom(&#123;</div><div class="line">		source: dependency(<span class="string">'oriimage'</span>, <span class="string">'tile.png'</span>),</div><div class="line">		size: <span class="number">256</span>,</div><div class="line">		zooms: <span class="number">6</span></div><div class="line">    &#125;));</div><div class="line"></div><div class="line"><span class="keyword">var</span> port = process.env[<span class="string">'port'</span>];</div><div class="line">strata.listen(port);</div></pre></td></tr></table></figure></p>
+<h4 id="2-验证拼接结果"><a href="#2-验证拼接结果" class="headerlink" title="2.验证拼接结果"></a>2.验证拼接结果</h4><p>验证两个瓦片服务绘制出来的瓦片是否相同：</p>
+<p>普通瓦片服务：<br><img src="/2019/05/29/testtilestrataunderzoom/1.png" alt="瓦片对比"></p>
+<p>underzoom瓦片服务：<br><img src="/2019/05/29/testtilestrataunderzoom/2.png" alt="瓦片对比"></p>
+<p>由于Mapnik的线宽符号单位是像素，所以在比较高级别会因为边线太宽而糊在一起，看的不是很清楚。相比之下，使用underzoom由于是使用低级瓦片拼接而成，图形边界比较明显。</p>
+<h4 id="3-验证瓦片绘制效率"><a href="#3-验证瓦片绘制效率" class="headerlink" title="3.验证瓦片绘制效率"></a>3.验证瓦片绘制效率</h4><p>接下来使用<a href="https://www.npmjs.com/package/@conorpai/tilemantle" target="_blank" rel="noopener">tilemantle</a>工具进行瓦片请求，获取瓦片加载时间：</p>
+<p>普通瓦片服务：<br><img src="/2019/05/29/testtilestrataunderzoom/3.png" alt="请求时间"></p>
+<p>underzoom瓦片服务：<br><img src="/2019/05/29/testtilestrataunderzoom/4.png" alt="请求时间"></p>
+<p>可以看出，使用underzoom拼接绘制效率比普通瓦片效率高，而且如果增加瓦片服务集群，会明显提升并行绘制效率，进而提升underzoom拼接瓦片效率，在以后的实施过程中，如果遇到了高级别瓦片绘制效率瓶颈，可以考虑使用这个方案。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">TileStrata</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/29/testtilestrataunderzoom/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-vscoderemotework" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -953,103 +1036,6 @@
 
 
   
-    <article id="post-centospostgresqlpgdata" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/29/centospostgresqlpgdata/">CentOS系统下变更Postgresqsl数据存储位置</a>
-    </h1>
-  
-
-        
-        <a href="/2018/12/29/centospostgresqlpgdata/" class="archive-article-date">
-  	<time datetime="2018-12-29T01:59:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-12-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天是2018年最后一个工作日，准备记录一下在CentOS系统下变更Postgresql数据存储位置的方法。</p>
-<p>2018年1月，当时懵懵懂懂的体验了Postgresql的安装，到现在对这个数据库算是基本了解了，也感受到了pg数据库和PostGIS插件的强大，希望2019年把pg大法发扬光大！<br><img src="/2018/12/29/centospostgresqlpgdata/1.png" alt="pg大法好"></p>
-<p>昨天发现服务器磁盘空间满了，提示<code>No space left on device</code>导致无法导入数据。<br><img src="/2018/12/29/centospostgresqlpgdata/2.png" alt="磁盘空间不足"></p>
-<p>使用<code>df -h</code>查看磁盘空间：<br><img src="/2018/12/29/centospostgresqlpgdata/3.png" alt="查看磁盘空间"><br>由于之前默认安装，所以pg数据库的数据都在主磁盘目录下。发现有一个16T的磁盘，所以准备把pg数据库的数据转到/data目录下。</p>
-<p>之前在ubuntu系统做过pg数据库数据迁移，即修改<code>/etc/postgresql/版本/main/postgresql.conf</code>配置文件，将<code>data_directory</code>变量内容改成新的数据路径，重启数据库即可。</p>
-<p>但是我发现在CentOS系统下，这个<code>postgresql.conf</code>文件就在数据目录下，将数据目录移走之后，配置文件也移走了，那pg数据库怎么知道新的<code>postgresql.conf</code>在哪里呢，一脸懵逼。。</p>
-<p>在网上用<code>data_directory</code>为关键词找了半天，最后发现CentOS下数据目录没有用这个变量，可以参考<a href="https://blog.csdn.net/wk1134314305/article/details/79054248" target="_blank" rel="noopener">这篇博客</a>。</p>
-<p>也就是说CentOS系统下在服务配置文件里，记录了PGDATA数据目录，服务启动时会到这个目录下进行加载，所以需要修改的是这个文件。</p>
-<p>再顺一遍处理过程：</p>
-<h4 id="1-关闭数据库服务"><a href="#1-关闭数据库服务" class="headerlink" title="1.关闭数据库服务"></a>1.关闭数据库服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service postgresql-10 stop</div></pre></td></tr></table></figure>
-<h4 id="2-将原数据库Data拷贝到新的目录下"><a href="#2-将原数据库Data拷贝到新的目录下" class="headerlink" title="2.将原数据库Data拷贝到新的目录下"></a>2.将原数据库Data拷贝到新的目录下</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -rf /var/lib/pgsql/10 /data/pgsql/10</div></pre></td></tr></table></figure>
-<h4 id="3-为新目录设置postgres用户权限"><a href="#3-为新目录设置postgres用户权限" class="headerlink" title="3.为新目录设置postgres用户权限"></a>3.为新目录设置postgres用户权限</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo chown -R postgres:postgres /data/pgsql/10</div><div class="line">sudo chmod 700 /data/pgsql/10</div></pre></td></tr></table></figure>
-<h4 id="4-修改数据库服务配置文件"><a href="#4-修改数据库服务配置文件" class="headerlink" title="4.修改数据库服务配置文件"></a>4.修改数据库服务配置文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /usr/lib/systemd/system/postgresql-10.service</div></pre></td></tr></table></figure>
-<p>修改如下部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># Location of database directory</div><div class="line">Environment=PGDATA=/data/pgsql/10/data/</div></pre></td></tr></table></figure></p>
-<p>修改之后，使用如下命令使其生效：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl daemon-reload</div></pre></td></tr></table></figure></p>
-<h4 id="5-重启数据库"><a href="#5-重启数据库" class="headerlink" title="5.重启数据库"></a>5.重启数据库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">service postgresql-10 start</div></pre></td></tr></table></figure>
-<h4 id="6-删除原数据目录"><a href="#6-删除原数据目录" class="headerlink" title="6.删除原数据目录"></a>6.删除原数据目录</h4><p>做这一步需要慎重，由于我是第一次处理，而且数据比较重要，所以又拷贝了一份数据目录做为备份，然后使用如下命令删除原数据目录：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf /var/lib/pgsql</div></pre></td></tr></table></figure></p>
-<h4 id="7-验证数据库是否正常"><a href="#7-验证数据库是否正常" class="headerlink" title="7.验证数据库是否正常"></a>7.验证数据库是否正常</h4><p>使用数据库工具连接数据库、通过服务等方式对数据库做验证，验证结果一切正常。</p>
-<p>最后，使用<code>df -h</code>看一下数据目录迁移之后磁盘情况：<br><img src="/2018/12/29/centospostgresqlpgdata/4.png" alt="查看磁盘空间"></p>
-<p>致此，CentOS系统下pg数据库的数据目录迁移工作顺利完成！<br>最后祝2019年工作顺利！</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Postgresql</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/12/29/centospostgresqlpgdata/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1199,11 +1185,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
+                <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">
