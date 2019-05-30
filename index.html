@@ -162,7 +162,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括<a href="http://www.baiguangnan.com/2018/01/31/postgis/" target="_blank" rel="noopener">如何部署PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/09/29/usenodemapnikwithpostgisoncentos/" target="_blank" rel="noopener">如何配置PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/12/29/centospostgresqlpgdata/" target="_blank" rel="noopener">如何迁移PostgreSQL数据库存储目录位置</a>，<a href="http://www.baiguangnan.com/2019/01/03/centosyumupdatepostgiscrash/" target="_blank" rel="noopener">如何部署PostGIS插件，如何更新PostGIS插件</a>，<a href="http://www.baiguangnan.com/2019/01/22/centospostgismvt/" target="_blank" rel="noopener">如何编译带ST_AsMVT函数的PostGIS插件</a>等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，发现上面说的那些只需要一个命令就可解决。。</p>
+        <p>回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括<a href="http://www.baiguangnan.com/2018/01/31/postgis/" target="_blank" rel="noopener">如何在不同的操作系统下部署PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/09/29/usenodemapnikwithpostgisoncentos/" target="_blank" rel="noopener">如何配置PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/12/29/centospostgresqlpgdata/" target="_blank" rel="noopener">如何迁移PostgreSQL数据库存储目录位置</a>，<a href="http://www.baiguangnan.com/2019/01/03/centosyumupdatepostgiscrash/" target="_blank" rel="noopener">如何部署PostGIS插件，如何更新PostGIS插件</a>，<a href="http://www.baiguangnan.com/2019/01/22/centospostgismvt/" target="_blank" rel="noopener">如何编译带ST_AsMVT函数的PostGIS插件</a>等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，发现上面说的那些只需要一个命令就可解决。。</p>
 <h4 id="选择Docker镜像"><a href="#选择Docker镜像" class="headerlink" title="选择Docker镜像"></a>选择Docker镜像</h4><p>在Docker Hub和网上搜索了一下，<a href="https://hub.docker.com/r/mdillon/postgis" target="_blank" rel="noopener">mdillon/postgis</a>是大家建议使用的，针对我们现在使用的PostgreSQL和PostGIS的版本，我选择了<code>10-alpine</code>镜像，总大小只有48M。</p>
 <h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>镜像pull到本地之后(不pull在启动的时候发现本地没有也会从Docker Hub上先下载再启动)，启动镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=dlwy mdillon/postgis:10-alpine</div></pre></td></tr></table></figure></p>
 <p>其中：<br>–name为设置容器名称<br>-d为设置容器在后台运行<br>-p为设置端口映射<br>-v为设置数据库存储目录映射，可以将数据库存储目录保存在主机目录，防止容器被删除之后数据库中的数据丢失<br>-e为设置数据库参数，这里设置的是数据库管理员密码</p>
@@ -1129,10 +1129,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
@@ -1149,15 +1145,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1181,15 +1181,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
