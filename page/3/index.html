@@ -142,6 +142,94 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-testrtmplive" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/17/testrtmplive/">试水直播技术</a>
+    </h1>
+  
+
+        
+        <a href="/2018/09/17/testrtmplive/" class="archive-article-date">
+  	<time datetime="2018-09-17T07:07:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>周末和陈同学就行业形式进行了深入探(xian)讨(liao)，他们公司最近使用直播技术，开发了一套外业内容采集(无人机影像、手机视频)，内业查看指挥等一套东西。对于直播技术，之前了解不多，所以也想试试效果。</p>
+<p>查了一些资料，比较容易上手的是用<a href="https://github.com/ossrs/srs" target="_blank" rel="noopener">Simple-RTMP-Server(srs)</a>作为服务器，各端使用推流、拉流进行直播和查看，接下来主要介绍这方面的内容。</p>
+<h4 id="1-srs部署"><a href="#1-srs部署" class="headerlink" title="1.srs部署"></a>1.srs部署</h4><p>查看官方文档，srs部署比较简单，本次选择的系统是Ubuntu 18.04。<br>首先下载Release源码，解压后进入trunk目录下，执行<code>./configure</code>，然后现实是残酷的，报错了。。<br><img src="/2018/09/17/testrtmplive/1.png" alt="报错"></p>
+<p>到srs上搜issue，找到了<a href="https://github.com/ossrs/srs/issues/1065" target="_blank" rel="noopener">解决方案</a>，解压<code>3rdparty/http-parser-2.1.zip</code>，找到<code>http_parser.c</code>，修改那个注释，重新压缩，就可以了。</p>
+<p>执行<code>make</code>进行编译，然后执行<code>./etc/init.d/srs start</code>就可以开启服务了。</p>
+<h4 id="2-拉流"><a href="#2-拉流" class="headerlink" title="2.拉流"></a>2.拉流</h4><p>这里我们介绍使用<a href="http://www.videolan.org/vlc/" target="_blank" rel="noopener">VLC</a>客户端进行拉流，查看直播内容。</p>
+<p>ubuntu下安装VLC：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install vlc browser-plugin-vlc</div></pre></td></tr></table></figure></p>
+<p>安装完成之后启动，在媒体菜单中选择打开网络串流，在网络中输入网络URL即可。目前还没有推流，看不到效果，具体效果可以在后面体现。<br><img src="/2018/09/17/testrtmplive/2.png" alt="拉流"></p>
+<h4 id="3-推流"><a href="#3-推流" class="headerlink" title="3.推流"></a>3.推流</h4><p>这里介绍两端推流方式，一个是ubuntu使用<a href="https://obsproject.com/" target="_blank" rel="noopener">OBS</a>进行推流，一个是在安卓推流。</p>
+<h5 id="OBS推流"><a href="#OBS推流" class="headerlink" title="OBS推流"></a>OBS推流</h5><p>首先安装OBS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:obsproject/obs-studio</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install obs-studio</div></pre></td></tr></table></figure></p>
+<p>打开软件之后，首先在右侧设置流服务器，启动srs服务器的IP是192.168.1.140，后边的可以自定义，只要推和拉一致即可。<br><img src="/2018/09/17/testrtmplive/3.png" alt="设置"><br>然后设置来源，这里使用的是屏幕捕获。<br><img src="/2018/09/17/testrtmplive/4.png" alt="设置来源"><br>都设置好了之后，使用右侧开始推流就可以了。<br><img src="/2018/09/17/testrtmplive/5.png" alt="开始推流"></p>
+<p>在VLC中查看：<br><img src="/2018/09/17/testrtmplive/6.png" alt="查看推流"></p>
+<h5 id="安卓推流"><a href="#安卓推流" class="headerlink" title="安卓推流"></a>安卓推流</h5><p>这里使用的是<a href="https://github.com/begeekmyfriend/yasea" target="_blank" rel="noopener">yasea</a>，下载源码，编译部署即可。<br>修改代码中的流服务器地址：<br><img src="/2018/09/17/testrtmplive/7.png" alt="修改URL"></p>
+<p>最后的效果：<br><img src="/2018/09/17/testrtmplive/8.jpg" alt="效果"></p>
+<p>这里介绍的比较粗浅，如果想把这个功能做精，甚至达到陈同学那边上线的样子，可能还需要再下功夫，加油吧，再不疯狂就老了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">直播</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/09/17/testrtmplive/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-tilestratadisk" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -570,11 +658,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
         		</li>
       		
 		</ul>
@@ -1019,95 +1107,6 @@
 
 
   
-    <article id="post-configcdn" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/12/configcdn/">阿里云CDN加速配置</a>
-    </h1>
-  
-
-        
-        <a href="/2018/06/12/configcdn/" class="archive-article-date">
-  	<time datetime="2018-06-12T06:10:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://photos.baiguangnan.com" target="_blank" rel="noopener">个人网站</a>和<a href="http://baiguangnan.com" target="_blank" rel="noopener">博客</a>搭建已经快一年了，最大的一块心病就是图片加载太慢了。。</p>
-<p>想当初刚买到阿里云服务器兴冲冲的部署写好的个人网站，首次在浏览器上打开花了一分多钟才刷出图片来，心情真是down到谷底。当时以为是哪里没配置好，最后才发现买的阿里云服务器网络带宽是1M，下载图片太慢了。</p>
-<p>2017年10月阿里云搞活动，给我发了个通知，CDN服务2年包月20G才9毛钱，当时还不知道CDN是什么，就是觉得便宜，买着玩吧。<br><img src="/2018/06/12/configcdn/0.png" alt="购买CDN"></p>
-<p>后来用七牛云比较多，再加上网上的了解，知道CDN可以解决我的个人网站和博客图片加载速度慢的问题，就试了一下。官方配置文档在<a href="https://help.aliyun.com/document_detail/27112.html?spm=a2c4g.11186623.6.553.mMaNIz" target="_blank" rel="noopener">这里</a>。</p>
-<p>首先进入<a href="http://cdn.console.aliyun.com" target="_blank" rel="noopener">CDN控制台</a>，在域名管理页面中添加域名。<br><img src="/2018/06/12/configcdn/1.png" alt="域名管理"><br><img src="/2018/06/12/configcdn/2.png" alt="添加域名"><br>因为博客使用的是Github Pages：<a href="http://conorpai.github.io" target="_blank" rel="noopener">http://conorpai.github.io</a>，所以IP需要添加Github Pages的IP，使用ping命令获取其IP。<br><img src="/2018/06/12/configcdn/3.png" alt="获取IP"></p>
-<p>添加域名完成之后，会分配CNAME，拷贝待用。<br><img src="/2018/06/12/configcdn/1.png" alt="添加域名完成"></p>
-<p>进入域名管理控制台：<br><img src="/2018/06/12/configcdn/4.png" alt="域名管理"></p>
-<p>修改baiguangnan.com的解析，将@.baiguangnan.com的记录类型由之前的A换成CNAME，并在记录值中添加之前拷贝的CNAME。<br><img src="/2018/06/12/configcdn/5.png" alt="域名DNS解析"></p>
-<p>修改时可能会遇到一些冲突，我是把冲突的删掉了，暂时还不清楚后果是什么。。</p>
-<p>同理，修改photos.baiguangnan.com的DNS解析：<br><img src="/2018/06/12/configcdn/6.png" alt="域名DNS解析"></p>
-<p>保存之后就可以感受CDN加速的效果了(可能有一些延迟)。<br><img src="/2018/06/12/configcdn/8.png" alt="CDN生效"></p>
-<p>因为之前申请了其它域名，但是只有baiguangnan.com做了备案，没有备案的域名不能使用CDN加速。。<br><img src="/2018/06/12/configcdn/7.png" alt="未备案域名不能使用CDN加速"></p>
-<p>可以做一下对比：<br>未加速：<a href="http://conorpai.com" target="_blank" rel="noopener">http://conorpai.com</a><br>CDN加速：<a href="http://photos.baiguangnan.com" target="_blank" rel="noopener">http://photos.baiguangnan.com</a></p>
-<h4 id="HTTPS网站的CDN加速"><a href="#HTTPS网站的CDN加速" class="headerlink" title="HTTPS网站的CDN加速"></a>HTTPS网站的CDN加速</h4><p>昨天帮哥们的网站做CDN加速，本来以为也很简单，但是由于他的网站做了HTTPS，需要做一些额外限制，找了一些教程终于搞定了，下面说一下方法。</p>
-<p>第一步还是添加域名，添加完成之后点击域名后面的配置功能：<br><img src="/2018/06/12/configcdn/9.png" alt="配置HTTPS"><br>找到HTTPS设置，修改配置：<br><img src="/2018/06/12/configcdn/10.png" alt="配置HTTPS"><br>开启HTTPS设置，选择证书来源，并填入证书名称、公钥和私钥，然后确定即可。<br><img src="/2018/06/12/configcdn/11.png" alt="配置HTTPS"><br>最后配置回源，防止出现循环重定向问题。<br><img src="/2018/06/12/configcdn/12.png" alt="配置HTTPS"></p>
-<p>至此配置完成，最后强推一波哥们的摄影博客<a href="https://photo.wandoer.com" target="_blank" rel="noopener">https://photo.wandoer.com</a>，大家多多关注。<br><img src="/2018/06/12/configcdn/13.png" alt="摄影博客"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">个人网站搭建</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/06/12/configcdn/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1229,11 +1228,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1257,15 +1256,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1285,11 +1284,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">

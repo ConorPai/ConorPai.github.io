@@ -6,17 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: Simplify | ConorPai的博客</title>
+  <title>使用Docker部署PostgreSQL数据库、PostGIS插件 | ConorPai的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="宅男，爱猫，爱技术，爱乒乓。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ConorPai的博客">
-<meta property="og:url" content="http://yoursite.com/tags/Simplify/index.html">
+  <meta name="description" content="回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括如何部署PostgreSQL数据库，如何配置PostgreSQL数据库，如何迁移PostgreSQL数据库存储目录位置，如何部署PostGIS插件，如何更新PostGIS插件，如何编译带ST_AsMVT函数的PostGIS插件等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，">
+<meta name="keywords" content="PostGIS,PostgreSQL,Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Docker部署PostgreSQL数据库、PostGIS插件">
+<meta property="og:url" content="http://yoursite.com/2019/05/30/postgiswithdocker/index.html">
 <meta property="og:site_name" content="ConorPai的博客">
-<meta property="og:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta property="og:description" content="回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括如何部署PostgreSQL数据库，如何配置PostgreSQL数据库，如何迁移PostgreSQL数据库存储目录位置，如何部署PostGIS插件，如何更新PostGIS插件，如何编译带ST_AsMVT函数的PostGIS插件等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，">
+<meta property="og:updated_time" content="2019-05-30T04:28:58.520Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ConorPai的博客">
-<meta name="twitter:description" content="宅男，爱猫，爱技术，爱乒乓。">
+<meta name="twitter:title" content="使用Docker部署PostgreSQL数据库、PostGIS插件">
+<meta name="twitter:description" content="回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括如何部署PostgreSQL数据库，如何配置PostgreSQL数据库，如何迁移PostgreSQL数据库存储目录位置，如何部署PostGIS插件，如何更新PostGIS插件，如何编译带ST_AsMVT函数的PostGIS插件等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，">
   
   
     <link rel="icon" href="/favicon.png">
@@ -140,36 +142,40 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-postgiswithdocker" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/03/postgistoposimplify/" class="archive-article-date">
-  	<time datetime="2019-04-03T01:03:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-03</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/03/postgistoposimplify/">使用PostGIS进行拓扑抽稀</a>
+    <h1 class="article-title" itemprop="name">
+      使用Docker部署PostgreSQL数据库、PostGIS插件
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/05/30/postgiswithdocker/" class="archive-article-date">
+  	<time datetime="2019-05-30T04:13:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括<a href="http://www.baiguangnan.com/2018/01/31/postgis/" target="_blank" rel="noopener">如何部署PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/09/29/usenodemapnikwithpostgisoncentos/" target="_blank" rel="noopener">如何配置PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/12/29/centospostgresqlpgdata/" target="_blank" rel="noopener">如何迁移PostgreSQL数据库存储目录位置</a>，<a href="http://www.baiguangnan.com/2019/01/03/centosyumupdatepostgiscrash/" target="_blank" rel="noopener">如何部署PostGIS插件，如何更新PostGIS插件</a>，<a href="http://www.baiguangnan.com/2019/01/22/centospostgismvt/" target="_blank" rel="noopener">如何编译带ST_AsMVT函数的PostGIS插件</a>等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，发现上面说的那些只需要一个命令就可解决。。</p>
+<h4 id="选择Docker镜像"><a href="#选择Docker镜像" class="headerlink" title="选择Docker镜像"></a>选择Docker镜像</h4><p>在Docker Hub和网上搜索了一下，<a href="https://hub.docker.com/r/mdillon/postgis" target="_blank" rel="noopener">mdillon/postgis</a>是大家建议使用的，针对我们现在使用的PostgreSQL和PostGIS的版本，我选择了<code>10-alpine</code>镜像，总大小只有48M。</p>
+<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>镜像pull到本地之后(不pull在启动的时候发现本地没有也会从Docker Hub上先下载再启动)，启动镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=dlwy mdillon/postgis:10-alpine</div></pre></td></tr></table></figure></p>
+<p>其中：<br>–name为设置容器名称<br>-d为设置容器在后台运行<br>-p为设置端口映射<br>-v为设置数据库存储目录映射，可以将数据库存储目录保存在主机目录，防止容器被删除之后数据库中的数据丢失<br>-e为设置数据库参数，这里设置的是数据库管理员密码</p>
+<h4 id="Docker部署如何解决之前的问题"><a href="#Docker部署如何解决之前的问题" class="headerlink" title="Docker部署如何解决之前的问题"></a>Docker部署如何解决之前的问题</h4><p>1.部署和配置PostgreSQL、PostGIS：镜像中内置的PostgreSQL数据库配置文件已修改，支持局域网访问。内置了PostGIS插件。<br>2.更改PostgreSQL数据库存储目录位置，只需要通过-v指定目录映射即可。<br>3.支持ST_AsMVT函数，镜像中的PostGIS已经是基于protobuf-c编译的了，可以支持ST_AsMVT函数。</p>
+<h4 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h4><p>除了之前的问题之外：<br>1.使用Docker部署还可以在性能比较好的机器上部署多套数据库，通过-p端口号映射进行区分，部署的PostgreSQL数据库版本也可以不同，为以后的数据库负载均衡、读写分离、主从备份等创造条件。<br>2.通过Docker-Compose或者k8s进行容器编排，方便数据库、服务、前端等快速部署，减少运维人员使用难度。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -179,29 +185,132 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Topology</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Simplify</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Docker</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2019/05/30/postgiswithdocker/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/05/29/testtilestrataunderzoom/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">试用TileStrata-underzoom插件</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2019/05/30/postgiswithdocker/",
+  owner: 'ConorPai',
+  repo: 'ConorPai.github.io',
+  oauth: {
+    client_id: 'aac6922172f5d88659e5',
+    client_secret: 'f2d38d3ebafbec35b62b21c956a8d33184c596a3',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+  
 
 
           </div>
@@ -224,9 +333,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

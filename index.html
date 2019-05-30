@@ -142,6 +142,93 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-postgiswithdocker" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/30/postgiswithdocker/">使用Docker部署PostgreSQL数据库、PostGIS插件</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/30/postgiswithdocker/" class="archive-article-date">
+  	<time datetime="2019-05-30T04:13:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括<a href="http://www.baiguangnan.com/2018/01/31/postgis/" target="_blank" rel="noopener">如何部署PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/09/29/usenodemapnikwithpostgisoncentos/" target="_blank" rel="noopener">如何配置PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/12/29/centospostgresqlpgdata/" target="_blank" rel="noopener">如何迁移PostgreSQL数据库存储目录位置</a>，<a href="http://www.baiguangnan.com/2019/01/03/centosyumupdatepostgiscrash/" target="_blank" rel="noopener">如何部署PostGIS插件，如何更新PostGIS插件</a>，<a href="http://www.baiguangnan.com/2019/01/22/centospostgismvt/" target="_blank" rel="noopener">如何编译带ST_AsMVT函数的PostGIS插件</a>等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，发现上面说的那些只需要一个命令就可解决。。</p>
+<h4 id="选择Docker镜像"><a href="#选择Docker镜像" class="headerlink" title="选择Docker镜像"></a>选择Docker镜像</h4><p>在Docker Hub和网上搜索了一下，<a href="https://hub.docker.com/r/mdillon/postgis" target="_blank" rel="noopener">mdillon/postgis</a>是大家建议使用的，针对我们现在使用的PostgreSQL和PostGIS的版本，我选择了<code>10-alpine</code>镜像，总大小只有48M。</p>
+<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>镜像pull到本地之后(不pull在启动的时候发现本地没有也会从Docker Hub上先下载再启动)，启动镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=dlwy mdillon/postgis:10-alpine</div></pre></td></tr></table></figure></p>
+<p>其中：<br>–name为设置容器名称<br>-d为设置容器在后台运行<br>-p为设置端口映射<br>-v为设置数据库存储目录映射，可以将数据库存储目录保存在主机目录，防止容器被删除之后数据库中的数据丢失<br>-e为设置数据库参数，这里设置的是数据库管理员密码</p>
+<h4 id="Docker部署如何解决之前的问题"><a href="#Docker部署如何解决之前的问题" class="headerlink" title="Docker部署如何解决之前的问题"></a>Docker部署如何解决之前的问题</h4><p>1.部署和配置PostgreSQL、PostGIS：镜像中内置的PostgreSQL数据库配置文件已修改，支持局域网访问。内置了PostGIS插件。<br>2.更改PostgreSQL数据库存储目录位置，只需要通过-v指定目录映射即可。<br>3.支持ST_AsMVT函数，镜像中的PostGIS已经是基于protobuf-c编译的了，可以支持ST_AsMVT函数。</p>
+<h4 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h4><p>除了之前的问题之外：<br>1.使用Docker部署还可以在性能比较好的机器上部署多套数据库，通过-p端口号映射进行区分，部署的PostgreSQL数据库版本也可以不同，为以后的数据库负载均衡、读写分离、主从备份等创造条件。<br>2.通过Docker-Compose或者k8s进行容器编排，方便数据库、服务、前端等快速部署，减少运维人员使用难度。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/30/postgiswithdocker/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-testtilestrataunderzoom" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -945,97 +1032,6 @@
 
 
   
-    <article id="post-centosyumupdatepostgiscrash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/03/centosyumupdatepostgiscrash/">记一次PostGIS版本更新导致的问题</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/03/centosyumupdatepostgiscrash/" class="archive-article-date">
-  	<time datetime="2019-01-03T06:24:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天手欠，在现场服务器上<code>yum update</code>了一下，发现三个更新：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/1.png" alt="yum更新"></p>
-<p>更新强迫症患者没过脑的yes了一下，然后整个PostGIS插件失效：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/2.png" alt="PostGIS插件失效"></p>
-<p>因为是生产服务器，马上有人反馈功能报错，顿时慌的一批。。马上上网搜解决方案。</p>
-<p>由于是yum的更新，首先想到的是能否进行回滚，所以查了一下PostGIS和GEOS的版本：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/3.png" alt="查看版本"></p>
-<p>PostGIS的版本肯定无法回滚了，GEOS的3.6版本和3.7版本在本机上都有安装，这条路也走不通了。</p>
-<p>用ldd命令查看postgis-2.4.so依赖关系：<br><img src="/2019/01/03/centosyumupdatepostgiscrash/4.png" alt="查看依赖"><br>没有依赖缺失。</p>
-<p>那就拿<code>GEOSFrechetDistanceDensify</code>关键字看看能不能搜到结果。</p>
-<p>其间也在尝试重启数据库服务、更新插件等，都没有效果，直到看到有人说<code>GEOSFrechetDistanceDensify</code>是GEOS3.7版本新增加的函数，那就说明PostGIS插件本来应该依赖GEOS3.7版本，但是现在引用的是GEOS3.6版本，导致这个函数找不到了。</p>
-<p>所以解决方案是卸载GEOS3.6版本，让PostGIS引用GEOS3.7版本即可。</p>
-<h4 id="首先卸载GEOS3-6版本"><a href="#首先卸载GEOS3-6版本" class="headerlink" title="首先卸载GEOS3.6版本"></a>首先卸载GEOS3.6版本</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/5.png" alt="卸载3.6"></p>
-<h4 id="然后卸载GEOS3-7版本"><a href="#然后卸载GEOS3-7版本" class="headerlink" title="然后卸载GEOS3.7版本"></a>然后卸载GEOS3.7版本</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/6.png" alt="卸载3.6"><br>这里发现，由于卸载了GEOS3.7版本，导致依赖GEOS3.7的PostGIS也被卸载了，也从侧面证实新版本PostGIS插件依赖GEOS3.7版本。</p>
-<h4 id="重新安装GEOS3-7和PostGIS"><a href="#重新安装GEOS3-7和PostGIS" class="headerlink" title="重新安装GEOS3.7和PostGIS"></a>重新安装GEOS3.7和PostGIS</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/7.png" alt="重新安装"><br><img src="/2019/01/03/centosyumupdatepostgiscrash/8.png" alt="重新安装"></p>
-<h4 id="再次查看postgis-2-4-so的依赖关系"><a href="#再次查看postgis-2-4-so的依赖关系" class="headerlink" title="再次查看postgis-2.4.so的依赖关系"></a>再次查看postgis-2.4.so的依赖关系</h4><p><img src="/2019/01/03/centosyumupdatepostgiscrash/9.png" alt="查看依赖"><br>可以看到，都引用到了GEOS3.7版本上。</p>
-<h4 id="升级PostGIS插件"><a href="#升级PostGIS插件" class="headerlink" title="升级PostGIS插件"></a>升级PostGIS插件</h4><p>执行SQL：<code>alter extension postgis update</code>更新插件，然后验证PostGIS插件可以正常使用了，问题解决。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/03/centosyumupdatepostgiscrash/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1157,11 +1153,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">个人网站搭建</a>
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1185,15 +1181,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">NPM</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Node.js</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1213,11 +1209,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
