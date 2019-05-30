@@ -29,6 +29,7 @@ docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql
 1.部署和配置PostgreSQL、PostGIS：镜像中内置的PostgreSQL数据库配置文件已修改，支持局域网访问。内置了PostGIS插件。
 2.更改PostgreSQL数据库存储目录位置，只需要通过-v指定目录映射即可。
 3.支持ST_AsMVT函数，镜像中的PostGIS已经是基于protobuf-c编译的了，可以支持ST_AsMVT函数。
+4.升级PostgreSQL、PostGIS版本，只需要pull最新版本的镜像，删除旧版本容器，启动新容器即可。
 
 #### One More Thing
 除了之前的问题之外：
