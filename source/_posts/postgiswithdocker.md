@@ -7,7 +7,7 @@ tags:
 	- Docker
 ---
 
-回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括[如何部署PostgreSQL数据库](http://www.baiguangnan.com/2018/01/31/postgis/)，[如何配置PostgreSQL数据库](http://www.baiguangnan.com/2018/09/29/usenodemapnikwithpostgisoncentos/)，[如何迁移PostgreSQL数据库存储目录位置](http://www.baiguangnan.com/2018/12/29/centospostgresqlpgdata/)，[如何部署PostGIS插件，如何更新PostGIS插件](http://www.baiguangnan.com/2019/01/03/centosyumupdatepostgiscrash/)，[如何编译带ST_AsMVT函数的PostGIS插件](http://www.baiguangnan.com/2019/01/22/centospostgismvt/)等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，发现上面说的那些只需要一个命令就可解决。。
+回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括[如何在不同的操作系统下部署PostgreSQL数据库](http://www.baiguangnan.com/2018/01/31/postgis/)，[如何配置PostgreSQL数据库](http://www.baiguangnan.com/2018/09/29/usenodemapnikwithpostgisoncentos/)，[如何迁移PostgreSQL数据库存储目录位置](http://www.baiguangnan.com/2018/12/29/centospostgresqlpgdata/)，[如何部署PostGIS插件，如何更新PostGIS插件](http://www.baiguangnan.com/2019/01/03/centosyumupdatepostgiscrash/)，[如何编译带ST_AsMVT函数的PostGIS插件](http://www.baiguangnan.com/2019/01/22/centospostgismvt/)等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，发现上面说的那些只需要一个命令就可解决。。
 
 #### 选择Docker镜像
 在Docker Hub和网上搜索了一下，[mdillon/postgis](https://hub.docker.com/r/mdillon/postgis)是大家建议使用的，针对我们现在使用的PostgreSQL和PostGIS的版本，我选择了`10-alpine`镜像，总大小只有48M。
