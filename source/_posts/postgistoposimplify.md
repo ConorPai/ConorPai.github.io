@@ -31,7 +31,7 @@ CREATE EXTENSION postgis_topology;
 
 这里使用GDAL提供的ogr2ogr命令行工具来做数据导入Shapefile格式的省界数据：
 ```bash
-ogr2ogr -f "PostgreSQL" PG:"host=localhost port=5432 dbname=TopoSimplify user=postgres password=dlwy" /Users/paiconor/Downloads/拓扑抽稀效果/原始数据/CHN_adm1.shp -lco GEOMETRY_NAME=geom -lco FID=pk_uid -nlt PROMOTE_TO_MULTI -progress
+ogr2ogr -f "PostgreSQL" PG:"host=localhost port=5432 dbname=TopoSimplify user=postgres password=1234" /Users/paiconor/Downloads/拓扑抽稀效果/原始数据/CHN_adm1.shp -lco GEOMETRY_NAME=geom -lco FID=pk_uid -nlt PROMOTE_TO_MULTI -progress
 ```
 ![导入数据](postgistoposimplify/3.png)
 

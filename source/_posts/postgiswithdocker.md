@@ -15,7 +15,7 @@ tags:
 #### 启动容器
 镜像pull到本地之后(不pull在启动的时候发现本地没有也会从Docker Hub上先下载再启动)，启动镜像：
 ```bash
-docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=dlwy mdillon/postgis:10-alpine
+docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=1234 mdillon/postgis:10-alpine
 ```
 
 其中：

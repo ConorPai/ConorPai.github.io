@@ -104,7 +104,7 @@ server.layer('mylayer').route('tile.mvt')
     pgConfig: {
       host: '192.168.1.140',
       user: 'postgres',
-      password: 'dlwy',
+      password: '1234',
       database: 'pgdata',
       port: '5432'
     }}));

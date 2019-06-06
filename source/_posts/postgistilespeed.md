@@ -15,7 +15,7 @@ tags:
 
 因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：
 ```bash
-ogr2ogr -f "PostgreSQL" PG:"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=dlwy" PG:"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=dlwy" "t_hunan_09" -progress
+ogr2ogr -f "PostgreSQL" PG:"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=1234" PG:"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=1234" "t_hunan_09" -progress
 ```
 
 这样就把生产数据库中的`t_hunan_09`导入到测试数据库中。

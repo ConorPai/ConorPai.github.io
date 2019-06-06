@@ -3,7 +3,7 @@ title: CentOS系统下变更Postgresqsl数据存储位置
 date: 2018-12-29 09:59:20
 tags: 
 	- CentOS
-	- Postgresql
+	- PostgreSQL
 ---
 
 今天是2018年最后一个工作日，准备记录一下在CentOS系统下变更Postgresql数据存储位置的方法。
