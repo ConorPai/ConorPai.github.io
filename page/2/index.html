@@ -142,6 +142,96 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-centosupdatepostgisto2-5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/04/centosupdatepostgisto2-5/">升级CentOS系统下PostgreSQL10的PostGIS插件大版本</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/04/centosupdatepostgisto2-5/" class="archive-article-date">
+  	<time datetime="2019-01-04T00:50:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>昨天<code>yum update</code>的惊魂未定，同事又反馈过来一个问题：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sql执行错误：error: Relate Operation called with a LWGEOMCOLLECTION <span class="built_in">type</span>.  This is unsupported.</div></pre></td></tr></table></figure></p>
+<p>到网上搜了一下，这个错误是由于使用ST_Intersects方法，不支持对GeometryCollection类型的支持导致的，详情看<a href="https://postgis.net/docs/ST_Intersects.html" target="_blank" rel="noopener">这里</a>。</p>
+<p>但是这里提示说PostGIS 2.5.0版本以后可以支持GeometryCollection类型，所以升级PostGIS插件版本是一种选择。<br><img src="/2019/01/04/centosupdatepostgisto2-5/1.jpg" alt="新版支持"></p>
+<p>但是由于这是一个大版本升级，考虑稳定性的情况下，看看还有没有其它的解决方案。</p>
+<p>带有GeometryCollection类型的数据，是通过ST_Intersection求交操作得到的，所以避免不了结果集中存在点线面的集合，所以像ST_CollectionHomogenize、ST_CollectionExtract等函数无法处理这样的数据。</p>
+<p>再就是求交查询时排除几何类型是ST_GeometryCollection的记录，但是这样会导致结果和地图上看到的不一致，所以这条路也走不通。</p>
+<p>基于昨天升级PostGIS小版本号积累的经验，又在其它的数据库上进行了PostGIS由2.4升级2.5的实验，所以决定在夜深人静的时候升级生产服务器上的PostGIS大版本。</p>
+<h4 id="首先，停止PostgreSQL数据库服务"><a href="#首先，停止PostgreSQL数据库服务" class="headerlink" title="首先，停止PostgreSQL数据库服务"></a>首先，停止PostgreSQL数据库服务</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/2.png" alt="停止服务"></p>
+<h4 id="然后，卸载PostGIS-2-4版本"><a href="#然后，卸载PostGIS-2-4版本" class="headerlink" title="然后，卸载PostGIS 2.4版本"></a>然后，卸载PostGIS 2.4版本</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/3.png" alt="卸载2.4版本"></p>
+<h4 id="然后，安装PostGIS-2-5版本"><a href="#然后，安装PostGIS-2-5版本" class="headerlink" title="然后，安装PostGIS 2.5版本"></a>然后，安装PostGIS 2.5版本</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/4.png" alt="安装2.5版本"></p>
+<h4 id="重启PostgreSQL数据库服务"><a href="#重启PostgreSQL数据库服务" class="headerlink" title="重启PostgreSQL数据库服务"></a>重启PostgreSQL数据库服务</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/5.png" alt="重启服务"></p>
+<h4 id="执行插件升级SQL语句"><a href="#执行插件升级SQL语句" class="headerlink" title="执行插件升级SQL语句"></a>执行插件升级SQL语句</h4><p>接下来在各个空间数据库内，执行PostGIS插件更新语句：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> extension postgis <span class="keyword">update</span></div></pre></td></tr></table></figure></p>
+<h4 id="正确性验证"><a href="#正确性验证" class="headerlink" title="正确性验证"></a>正确性验证</h4><p>通过一些简单的功能验证，证明新版插件可以正常运行，至此，PostGIS插件大版本升级结束。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/04/centosupdatepostgisto2-5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-centosyumupdatepostgiscrash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -290,7 +380,7 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Postgresql</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
         		</li>
       		
 		</ul>
@@ -533,7 +623,7 @@
 <p>修改后：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/******************************************************************************</span></div><div class="line"><span class="comment">### TileBBox ###</span></div><div class="line"><span class="comment">Given a Web Mercator tile ID as (z, x, y), returns a bounding-box</span></div><div class="line"><span class="comment">geometry of the area covered by that tile.</span></div><div class="line"><span class="comment">__Parameters:__</span></div><div class="line"><span class="comment">- `integer` z - A tile zoom level.</span></div><div class="line"><span class="comment">- `integer` x - A tile x-position.</span></div><div class="line"><span class="comment">- `integer` y - A tile y-position.</span></div><div class="line"><span class="comment">- `integer` srid - SRID of the desired target projection of the bounding</span></div><div class="line"><span class="comment">  box. Defaults to 3857 (Web Mercator).</span></div><div class="line"><span class="comment">__Returns:__ `geometry(polygon)`</span></div><div class="line"><span class="comment">******************************************************************************/</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">or</span> <span class="keyword">replace</span> <span class="keyword">function</span> TileBBox (z <span class="built_in">int</span>, x <span class="built_in">int</span>, y <span class="built_in">int</span>, srid <span class="built_in">int</span> = <span class="number">4490</span>)</div><div class="line">    <span class="keyword">returns</span> geometry</div><div class="line">    <span class="keyword">language</span> plpgsql immutable <span class="keyword">as</span></div><div class="line">$func$</div><div class="line"><span class="keyword">declare</span></div><div class="line">    orix <span class="built_in">numeric</span> := <span class="number">-180</span>;</div><div class="line">    oriy numeric := 90;</div><div class="line">    res numeric := 1.40625 * 256 / (2^z);</div><div class="line">    bbox geometry;</div><div class="line"><span class="keyword">begin</span></div><div class="line">    bbox := ST_MakeEnvelope(</div><div class="line">        orix + (x * res),</div><div class="line">        oriy - (y * res) - res,</div><div class="line">        orix + (x * res) + res,</div><div class="line">        oriy - (y * res),</div><div class="line">        <span class="number">4490</span></div><div class="line">    );</div><div class="line">    if srid = 4490 then</div><div class="line">        return bbox;</div><div class="line">    else</div><div class="line">        return ST_Transform(bbox, srid);</div><div class="line">    <span class="keyword">end</span> <span class="keyword">if</span>;</div><div class="line"><span class="keyword">end</span>;</div><div class="line">$func$;</div></pre></td></tr></table></figure></p>
 <h4 id="3-PostGISMVT虽然支持了经纬度数据，但出图结果还是Web墨卡托"><a href="#3-PostGISMVT虽然支持了经纬度数据，但出图结果还是Web墨卡托" class="headerlink" title="3.PostGISMVT虽然支持了经纬度数据，但出图结果还是Web墨卡托"></a>3.PostGISMVT虽然支持了经纬度数据，但出图结果还是Web墨卡托</h4><p>在深入了解TileStrara-PostGISMVT源码过程中发现，虽然支持数据源是经纬度的，但是最终出图结果还是Web墨卡托的，这点可以通过<a href="https://github.com/Stezii/tilestrata-postgismvt/blob/master/index.js" target="_blank" rel="noopener">官方源码</a>中写死的3857进行确认。</p>
 <p>这里我临时(数据和出图结果是同一坐标系)修改了代码，将写死3857的地方使用${lyr.srid}进行修改，这样出图结果就是经纬度的了。修改结果已经上传到npm库，名称是<code>@conorpai/tilestrata-postgismvt</code>。</p>
-<h4 id="4-发布地图服务"><a href="#4-发布地图服务" class="headerlink" title="4.发布地图服务"></a>4.发布地图服务</h4><p>根据官方的文档，写了如下代码进行矢量瓦片服务发布：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> headers = <span class="built_in">require</span>(<span class="string">'tilestrata-headers'</span>);</div><div class="line"><span class="keyword">var</span> postgismvt = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata-postgismvt'</span>);</div><div class="line"><span class="keyword">var</span> server = tilestrata();</div><div class="line"></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.mvt'</span>)</div><div class="line">  .use(headers(&#123;</div><div class="line">      <span class="string">'Access-Control-Allow-Origin'</span>: <span class="string">'*'</span></div><div class="line">  &#125;))</div><div class="line">  .use(postgismvt(&#123;</div><div class="line">    lyr: &#123;</div><div class="line">      table: <span class="string">'zyjg_bhtb'</span>,</div><div class="line">      geometry: <span class="string">'geom'</span>,</div><div class="line">      srid: <span class="number">4490</span>,</div><div class="line">      minZoom: <span class="number">0</span>,</div><div class="line">      maxZoom: <span class="number">22</span>,</div><div class="line">      buffer: <span class="number">0</span>,</div><div class="line">      fields: <span class="string">'pk_uid c_xianname c_xiangname c_cunname c_xiaoban d_area'</span>,</div><div class="line">      resolution: <span class="number">4096</span>,</div><div class="line">    &#125;,</div><div class="line">    pgConfig: &#123;</div><div class="line">      host: <span class="string">'192.168.1.140'</span>,</div><div class="line">      user: <span class="string">'postgres'</span>,</div><div class="line">      password: <span class="string">'dlwy'</span>,</div><div class="line">      database: <span class="string">'pgdata'</span>,</div><div class="line">      port: <span class="string">'5432'</span></div><div class="line">    &#125;&#125;));</div><div class="line"></div><div class="line">server.listen(<span class="number">7997</span>);</div></pre></td></tr></table></figure></p>
+<h4 id="4-发布地图服务"><a href="#4-发布地图服务" class="headerlink" title="4.发布地图服务"></a>4.发布地图服务</h4><p>根据官方的文档，写了如下代码进行矢量瓦片服务发布：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> headers = <span class="built_in">require</span>(<span class="string">'tilestrata-headers'</span>);</div><div class="line"><span class="keyword">var</span> postgismvt = <span class="built_in">require</span>(<span class="string">'@conorpai/tilestrata-postgismvt'</span>);</div><div class="line"><span class="keyword">var</span> server = tilestrata();</div><div class="line"></div><div class="line">server.layer(<span class="string">'mylayer'</span>).route(<span class="string">'tile.mvt'</span>)</div><div class="line">  .use(headers(&#123;</div><div class="line">      <span class="string">'Access-Control-Allow-Origin'</span>: <span class="string">'*'</span></div><div class="line">  &#125;))</div><div class="line">  .use(postgismvt(&#123;</div><div class="line">    lyr: &#123;</div><div class="line">      table: <span class="string">'zyjg_bhtb'</span>,</div><div class="line">      geometry: <span class="string">'geom'</span>,</div><div class="line">      srid: <span class="number">4490</span>,</div><div class="line">      minZoom: <span class="number">0</span>,</div><div class="line">      maxZoom: <span class="number">22</span>,</div><div class="line">      buffer: <span class="number">0</span>,</div><div class="line">      fields: <span class="string">'pk_uid c_xianname c_xiangname c_cunname c_xiaoban d_area'</span>,</div><div class="line">      resolution: <span class="number">4096</span>,</div><div class="line">    &#125;,</div><div class="line">    pgConfig: &#123;</div><div class="line">      host: <span class="string">'192.168.1.140'</span>,</div><div class="line">      user: <span class="string">'postgres'</span>,</div><div class="line">      password: <span class="string">'1234'</span>,</div><div class="line">      database: <span class="string">'pgdata'</span>,</div><div class="line">      port: <span class="string">'5432'</span></div><div class="line">    &#125;&#125;));</div><div class="line"></div><div class="line">server.listen(<span class="number">7997</span>);</div></pre></td></tr></table></figure></p>
 <h4 id="5-前端加载显示"><a href="#5-前端加载显示" class="headerlink" title="5.前端加载显示"></a>5.前端加载显示</h4><p>以下代码使用Openlayers显示MVT矢量瓦片，并支持选择和显示属性。</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!Doctype html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">http://www.w3.org/1999/xhtml</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">Content-Type</span> <span class="attr">content</span>=<span class="string">"text/html;charset=utf-8"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">X-UA-Compatible</span> <span class="attr">content</span>=<span class="string">"IE=edge,chrome=1"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">content</span>=<span class="string">always</span> <span class="attr">name</span>=<span class="string">referrer</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>矢量瓦片地图服务示例<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!--Let browser know website is optimized for mobile--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, user-scalable=no, initial-scale=1.0"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"ol.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"index.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"ol-debug.js"</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">main</span> <span class="attr">class</span>=<span class="string">"bodymain"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"map"</span> <span class="attr">class</span>=<span class="string">"map"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">pre</span> <span class="attr">id</span>=<span class="string">"info"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">main</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> selection = &#123;&#125;;</span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> idProp = <span class="string">'pk_uid'</span>;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> vtLayer = <span class="keyword">new</span> ol.layer.VectorTile(&#123;</span></div><div class="line"><span class="javascript">            source: <span class="keyword">new</span> ol.source.VectorTile(&#123;</span></div><div class="line"><span class="javascript">                format: <span class="keyword">new</span> ol.format.MVT(),</span></div><div class="line"><span class="javascript">                projection: <span class="string">'EPSG:4326'</span>,</span></div><div class="line"><span class="javascript">                url: <span class="string">'http://localhost:7997/mylayer/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;/tile.mvt'</span></span></div><div class="line"><span class="undefined">            &#125;),</span></div><div class="line"><span class="javascript">            style: <span class="function"><span class="keyword">function</span> (<span class="params">feature, resolution</span>) </span>&#123;</span></div><div class="line"><span class="javascript">                <span class="keyword">var</span> selected = !!selection[feature.get(idProp)];</span></div><div class="line"><span class="javascript">                <span class="keyword">return</span> <span class="keyword">new</span> ol.style.Style(&#123;</span></div><div class="line"><span class="javascript">                    stroke: <span class="keyword">new</span> ol.style.Stroke(&#123;</span></div><div class="line"><span class="javascript">                        color: selected ? <span class="string">'rgb(255, 0, 0)'</span> : <span class="string">'rgb(0, 102, 204)'</span>,</span></div><div class="line"><span class="undefined">                        width: selected ? 4 : 2</span></div><div class="line"><span class="undefined">                    &#125;)</span></div><div class="line"><span class="undefined">                &#125;)</span></div><div class="line"><span class="undefined">            &#125;</span></div><div class="line"><span class="undefined">        &#125;);</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> map = <span class="keyword">new</span> ol.Map(&#123;</span></div><div class="line"><span class="javascript">        target: <span class="string">'map'</span>,</span></div><div class="line"><span class="javascript">        view: <span class="keyword">new</span> ol.View(&#123;</span></div><div class="line"><span class="undefined">            center: [0, 0],</span></div><div class="line"><span class="javascript">            projection: <span class="string">'EPSG:4326'</span>,</span></div><div class="line"><span class="undefined">            zoom: 1</span></div><div class="line"><span class="undefined">        &#125;),</span></div><div class="line"><span class="undefined">        layers: [</span></div><div class="line"><span class="javascript">            <span class="keyword">new</span> ol.layer.Tile(&#123;</span></div><div class="line"><span class="javascript">                title: <span class="string">"OSM"</span>,</span></div><div class="line"><span class="javascript">                source: <span class="keyword">new</span> ol.source.OSM(&#123;</span></div><div class="line"><span class="undefined">                    attributions: []</span></div><div class="line"><span class="undefined">                &#125;)</span></div><div class="line"><span class="undefined">            &#125;),</span></div><div class="line"><span class="undefined">            vtLayer</span></div><div class="line"><span class="undefined">        ]</span></div><div class="line"><span class="undefined">    &#125;);</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> info = <span class="built_in">document</span>.getElementById(<span class="string">'info'</span>);</span></div><div class="line"><span class="javascript">    map.on(<span class="string">'singleclick'</span>, showInfo);</span></div><div class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">showInfo</span>(<span class="params">event</span>) </span>&#123;</span></div><div class="line"><span class="undefined">        selection = &#123;&#125;;</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> features = map.getFeaturesAtPixel(event.pixel);</span></div><div class="line"><span class="javascript">        <span class="keyword">if</span> (!features) &#123;</span></div><div class="line"><span class="undefined">            vtLayer.setStyle(vtLayer.getStyle());</span></div><div class="line"><span class="javascript">            info.innerText = <span class="string">''</span>;</span></div><div class="line"><span class="undefined">            info.style.opacity = 0;</span></div><div class="line"><span class="javascript">            <span class="keyword">return</span>;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> feature = features[<span class="number">0</span>];</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> fid = feature.get(idProp);</span></div><div class="line"><span class="undefined">        selection[fid] = feature;</span></div><div class="line"><span class="undefined">        vtLayer.setStyle(vtLayer.getStyle());</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> properties = feature.getProperties();</span></div><div class="line"><span class="javascript">        info.innerText = <span class="built_in">JSON</span>.stringify(properties, <span class="literal">null</span>, <span class="number">2</span>);</span></div><div class="line"><span class="undefined">        info.style.opacity = 1;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>最后上图镇楼：<br><img src="/2018/11/29/testpostgismvt/1.png" alt="矢量瓦片显示效果"></p>
@@ -886,7 +976,7 @@
       
         <p>之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。</p>
 <h5 id="服务器环境"><a href="#服务器环境" class="headerlink" title="服务器环境"></a>服务器环境</h5><p>协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。</p>
-<h5 id="数据入库"><a href="#数据入库" class="headerlink" title="数据入库"></a>数据入库</h5><p>因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=dlwy"</span> PG:<span class="string">"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=dlwy"</span> <span class="string">"t_hunan_09"</span> -progress</div></pre></td></tr></table></figure></p>
+<h5 id="数据入库"><a href="#数据入库" class="headerlink" title="数据入库"></a>数据入库</h5><p>因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=1234"</span> PG:<span class="string">"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=1234"</span> <span class="string">"t_hunan_09"</span> -progress</div></pre></td></tr></table></figure></p>
 <p>这样就把生产数据库中的<code>t_hunan_09</code>导入到测试数据库中。</p>
 <h5 id="启动瓦片服务"><a href="#启动瓦片服务" class="headerlink" title="启动瓦片服务"></a>启动瓦片服务</h5><p>配置好mapnik的配图XML，使用tilestrata-balancer做负载均衡，启动了48个node进程进行测试，然而现实是残酷的，每张瓦片的请求时间是10秒左右。</p>
 <p>然后就去参考OpenStreetMap的PostGIS数据库和配图方案，并没有什么特别的，gist空间索引也重建了，还是没有效果。</p>
@@ -961,138 +1051,9 @@
 
 
   
-    <article id="post-usenodemapnikwithpostgisoncentos" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/29/usenodemapnikwithpostgisoncentos/">在CentOS7上部署node-mapnik，并使用PostGIS数据源发布瓦片服务</a>
-    </h1>
-  
-
-        
-        <a href="/2018/09/29/usenodemapnikwithpostgisoncentos/" class="archive-article-date">
-  	<time datetime="2018-09-29T02:53:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-09-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近在一台干净的CentOS服务器上部署基于Mapnik和PostGIS数据源的瓦片服务，走了很多弯路。后来有时间又装了一台虚拟机重新部署了一下，现在将部署流程记录下来，方便以后查阅。</p>
-<h4 id="1-基础环境配置"><a href="#1-基础环境配置" class="headerlink" title="1 基础环境配置"></a>1 基础环境配置</h4><h5 id="1-1-解决YUM提示503问题"><a href="#1-1-解决YUM提示503问题" class="headerlink" title="1.1 解决YUM提示503问题"></a>1.1 解决YUM提示503问题</h5><p>在CentOS下一般用yum来部署软件，但是刚装好的虚拟机yum提示503，而ping外网能ping通，在网上查了一下需要扩充DNS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/resolv.conf</div></pre></td></tr></table></figure></p>
-<p>加入：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">nameserver 8.8.8.8</div><div class="line">nameserver 8.8.4.4</div><div class="line">nameserver 144.144.144.144</div></pre></td></tr></table></figure></p>
-<p>保存后重启虚拟机，就可以正常使用yum了，赶紧使用<code>yum update</code>更新一下。</p>
-<h5 id="1-2-基础软件安装"><a href="#1-2-基础软件安装" class="headerlink" title="1.2 基础软件安装"></a>1.2 基础软件安装</h5><p>接下来会使用ifconfig命令查看本机IP，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install net-tools</div></pre></td></tr></table></figure></p>
-<p>查到IP之后就可以用xshell进行连接了，使用xshell进行文件传输需要rz/sz命令，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install lrzsz</div></pre></td></tr></table></figure></p>
-<p>后期需要使用wget下载文件，如果找不到则需安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install wget</div></pre></td></tr></table></figure></p>
-<p>安装后期需要的解压程序：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum install unzip</div><div class="line">yum install bzip2</div></pre></td></tr></table></figure></p>
-<p>安装后期需要的<code>C++</code>编译器g++：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install gcc-c++</div></pre></td></tr></table></figure></p>
-<h4 id="2-PostgreSQL及PostGIS部署"><a href="#2-PostgreSQL及PostGIS部署" class="headerlink" title="2 PostgreSQL及PostGIS部署"></a>2 PostgreSQL及PostGIS部署</h4><h5 id="2-1-PostgreSQL安装及配置"><a href="#2-1-PostgreSQL安装及配置" class="headerlink" title="2.1 PostgreSQL安装及配置"></a>2.1 PostgreSQL安装及配置</h5><p>首先添加PostgreSQL数据库安装来源：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat10-10-2.noarch.rpm</div></pre></td></tr></table></figure></p>
-<p>然后就可以安装PostgreSQL服务端和客户端了：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install postgresql10-server postgresql10</div></pre></td></tr></table></figure></p>
-<p>初始化数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/pgsql-10/bin/postgresql-10-setup initdb</div></pre></td></tr></table></figure></p>
-<p>启动数据库服务，并修改为随系统一起启动：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">systemctl start postgresql-10</div><div class="line">systemctl <span class="built_in">enable</span> postgresql-10</div></pre></td></tr></table></figure></p>
-<p>修改默认用户(postgres)密码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres psql -c <span class="string">"alter user postgres with password '1234';"</span></div></pre></td></tr></table></figure></p>
-<p>修改配置文件，允许局域网访问：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /var/lib/pgsql/10/data/postgresql.conf</div></pre></td></tr></table></figure></p>
-<p>将 #listen_addresses = ‘localhost’ 的注释去掉并改为 listen_addresses = ‘*’，修改max_connections按需求更改，默认最大支持100个连接。修改之后保存并退出。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /var/lib/pgsql/10/data/pg_hba.conf</div></pre></td></tr></table></figure>
-<p>在最后一行添加：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">host	all		all		0.0.0.0/0	md5</div></pre></td></tr></table></figure></p>
-<p>保存并退出。</p>
-<p>重启数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart postgresql-10</div></pre></td></tr></table></figure></p>
-<p>防火墙需要打开5432端口：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --add-port=5432/tcp</div><div class="line">firewall-cmd —reload</div></pre></td></tr></table></figure></p>
-<h5 id="2-2-PostGIS插件安装及配置"><a href="#2-2-PostGIS插件安装及配置" class="headerlink" title="2.2 PostGIS插件安装及配置"></a>2.2 PostGIS插件安装及配置</h5><p>首先安装PostGIS的一个依赖：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install epel-release</div></pre></td></tr></table></figure></p>
-<p>然后安装PostGIS：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install postgis24_10</div></pre></td></tr></table></figure></p>
-<p>然后可以验证安装是否成功，先创建一个数据库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres createdb gis</div></pre></td></tr></table></figure></p>
-<p>为该数据库安装PostGIS插件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u postgres psql -d gis -c <span class="string">'CREATE EXTENSION postgis;'</span></div></pre></td></tr></table></figure></p>
-<p>如果没报错，则可往该数据库导入数据了。</p>
-<h4 id="3-安装node-mapnik及瓦片服务组件"><a href="#3-安装node-mapnik及瓦片服务组件" class="headerlink" title="3 安装node-mapnik及瓦片服务组件"></a>3 安装node-mapnik及瓦片服务组件</h4><h5 id="3-1-安装Node-js"><a href="#3-1-安装Node-js" class="headerlink" title="3.1 安装Node.js"></a>3.1 安装Node.js</h5><p>由于node-mapnik的3.7.2版本只能用LTS的Node.js安装，所以这里添加8.x版本Node.js来源。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -</div></pre></td></tr></table></figure></p>
-<p>安装Node.js：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install nodejs</div></pre></td></tr></table></figure></p>
-<p>安装之后Node.js版本是8.12.0，npm版本是6.4.1。</p>
-<h5 id="3-2-安装node-mapnik及瓦片服务组件"><a href="#3-2-安装node-mapnik及瓦片服务组件" class="headerlink" title="3.2 安装node-mapnik及瓦片服务组件"></a>3.2 安装node-mapnik及瓦片服务组件</h5><p>创建部署目录之后，安装node-mapnik：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install mapnik@3.7.2</div></pre></td></tr></table></figure></p>
-<p>这个过程有些漫长，提示成功后，安装其它的瓦片服务组件。</p>
-<p>安装之后把代码上传并启动服务，然而报错：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/1.png" alt="启动报错"><br>提示动态库无法加载，应该是缺少依赖，使用ldd命令查看依赖：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/2.png" alt="查看依赖"><br>发现libstdc++.so.6的GLIBCXX_3.4.20不存在，使用如下命令进行确认：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">strings /usr/lib64/libstdc++.so.6 | grep GLIBCXX</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/3.png" alt="确认问题"><br>确实没有GLIBCXX_3.4.20，接下来确认gcc版本：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/4.png" alt="确认gcc版本"><br>确实是gcc版本太旧了，而且还没有找到使用yum升级的方法(或者不用升级gcc，只升级stdc++库版本就可以)，我在这里通过编译最新版本gcc来解决。</p>
-<h5 id="3-3-升级gcc"><a href="#3-3-升级gcc" class="headerlink" title="3.3 升级gcc"></a>3.3 升级gcc</h5><p>查找最新版本gcc，当前是8.2.0，创建一个独立的gcc编译目录，进入后，使用wget进行下载：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.gz</div></pre></td></tr></table></figure></p>
-<p>下载之后解压缩，然后进入gcc-8.2.0目录下，使用如下脚本下载、配置、安装依赖库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./contrib/download_prerequisites</div></pre></td></tr></table></figure></p>
-<p>创建一个编译成果目录，并进入：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir gcc-build-8.2.0</div><div class="line"><span class="built_in">cd</span> gcc-build-8.2.0</div></pre></td></tr></table></figure></p>
-<p>使用如下命令进行配置：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">../configure -<span class="built_in">enable</span>-checking=release -<span class="built_in">enable</span>-languages=c,c++ -<span class="built_in">disable</span>-multilib</div></pre></td></tr></table></figure></p>
-<p>完成后使用如下命令进行编译：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make -j4</div></pre></td></tr></table></figure></p>
-<p>-j4选项是make对多核处理器的优化，如果不成功请使用make，注意此过程非常耗时。</p>
-<p>编译完成之后使用<code>make install</code>进行部署。</p>
-<p>查看gcc版本：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/5.png" alt="确认gcc版本"></p>
-<p>但此时查看stdc++库发现还是旧的，需要进一步处理。</p>
-<p>查找编译成果目录下的stdc++库：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find . -name <span class="string">"libstdc++.so*"</span></div></pre></td></tr></table></figure></p>
-<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/6.png" alt="查找stdc++库"></p>
-<p>将其拷贝到<code>/usr/lib64</code>目录下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp ./stage1-x86_64-pc-linux-gnu/libstdc++-v3/src/.libs/libstdc++.so.6.0.25 /usr/lib64</div></pre></td></tr></table></figure></p>
-<p>重建<code>/usr/lib64/libstdc++.so.6</code>软连接：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rm -f /usr/lib64/libstdc++.so.6</div><div class="line">ln -s /usr/lib64/libstdc++.so.6.0.25 /usr/lib64/libstdc++.so.6</div></pre></td></tr></table></figure></p>
-<p><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/7.png" alt="重建软连接"><br>再次查看发现要求的GLIBCXX_3.4.20已经包含了，用ldd再测postgis.input库的依赖：<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/9.png" alt="重建软连接"><br>没有提示问题。</p>
-<p>启动瓦片服务后，使用前端加载验证，一切正常，至此部署全部完成。<br><img src="/2018/09/29/usenodemapnikwithpostgisoncentos/8.png" alt="验证部署"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/09/29/usenodemapnikwithpostgisoncentos/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -1207,7 +1168,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1251,15 +1212,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1271,7 +1228,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">

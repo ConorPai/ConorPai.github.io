@@ -142,6 +142,112 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-nodemapniktest" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/25/nodemapniktest/">使用Mapnik发布简单的地图服务</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/25/nodemapniktest/" class="archive-article-date">
+  	<time datetime="2018-06-25T03:11:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://mapnik.org" target="_blank" rel="noopener">Mapnik</a>是一个开放源代码的地图学工具集，提供基于客户端与服务器端的地图渲染使用，以<code>C++</code>撰写。Mapnik的原始开发者，Artem Pavlenko将目标明确设置为通过使用子像素反锯齿功能来创建美丽的地图。Mapnik现在也有Cairo渲染后端。Mapnik使用<code>Boost C++ Libraries</code>来处理如存储器管理、访问文件系统、正规表达式与解析XML等的一般软件工作。地图的外观可以使用XML文件来定义，也可以通过<code>C++</code>、<code>Python</code>与<code>Node.js</code>等编程语言来建构。</p>
+<p>本文将要介绍在Ubuntu服务器上部署node-mapnik，通过配置好的XML发布地图服务，并使用Openlayers显示该地图服务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">说明：下面介绍的各个步骤可以实现上述目标，但不一定是最简、最优流程，可能存在多余的过程，就如其它教程里要求编译mapnik、boost之类的，经验证不需要这步操作。</div></pre></td></tr></table></figure>
+<h4 id="1-安装Node-js"><a href="#1-安装Node-js" class="headerlink" title="1.安装Node.js"></a>1.安装Node.js</h4><p>如果没有安装Node.js，需要安装Node.js LTS版本(目前是8.11.3，最新版安装node-mapnik好像出问题了)。如果没有安装过可以使用命令进行安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">apt-get install nodejs</div><div class="line">apt-get install npm</div></pre></td></tr></table></figure></p>
+<p>安装之后验证版本：<br><img src="/2018/06/25/nodemapniktest/1.jpg" alt="安装Node.js"><br>由于npm访问国外网站过慢，可以切换成淘宝npm镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</div></pre></td></tr></table></figure></p>
+<p>Node.js版本和npm版都不是最新的，需要进行更新，这里使用<code>n</code>模块进行升级：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g n</div></pre></td></tr></table></figure></p>
+<p>安装完成之后就可以通过命令安装latest、stable、lts和指定版本等，这里安装lts版本：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">n lts</div></pre></td></tr></table></figure></p>
+<p><img src="/2018/06/25/nodemapniktest/2.jpg" alt="安装Node.js"></p>
+<p>安装完成之后发现node.js和npm版本没有发生变化，需要将原来的node删除，并创建一个软链接到n目录下的node，所在位置如下：<br><img src="/2018/06/25/nodemapniktest/3.jpg" alt="安装Node.js"><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rm /usr/bin/node</div><div class="line">ln -s /usr/<span class="built_in">local</span>/n/versions/node/8.11.3/bin/node /usr/bin/node</div><div class="line">rm /usr/bin/npm</div><div class="line">ln -s /usr/<span class="built_in">local</span>/n/versions/node/8.11.3/bin/npm /usr/bin/npm</div></pre></td></tr></table></figure></p>
+<p><img src="/2018/06/25/nodemapniktest/4.jpg" alt="安装Node.js"><br>npm升级到最新版本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm i -g npm</div></pre></td></tr></table></figure></p>
+<p><img src="/2018/06/25/nodemapniktest/5.jpg" alt="安装Node.js"></p>
+<h4 id="2-安装node-mapnik"><a href="#2-安装node-mapnik" class="headerlink" title="2.安装node-mapnik"></a>2.安装node-mapnik</h4><p>全局安装node-gyp和node-pre-gyp：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install -g node-gyp</div><div class="line">npm install -g node-pre-gyp</div></pre></td></tr></table></figure></p>
+<p>node-mapnik模块我没有全局安装，安装到当前目录下。首先创建文件夹并进入：<br><img src="/2018/06/25/nodemapniktest/6.jpg" alt="安装node-mapnik"><br>安装node-mapnik模块：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install mapnik</div></pre></td></tr></table></figure></p>
+<p>如果出现安装失败的情况，有的是因为一些资源下载失败，尝试科学上网、不断重试直到安装成功。<br><img src="/2018/06/25/nodemapniktest/7.jpg" alt="安装node-mapnik"><br><img src="/2018/06/25/nodemapniktest/8.jpg" alt="安装node-mapnik"></p>
+<p>安装成功后，我们验证一下模块是否可用，我们使用<a href="https://github.com/mapnik/node-mapnik" target="_blank" rel="noopener">node-mapnik github</a>上的示例代码进行测试：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mapnik = <span class="built_in">require</span>(<span class="string">'mapnik'</span>);</div><div class="line"><span class="keyword">new</span> mapnik.Image.open(<span class="string">'input.jpg'</span>).save(<span class="string">'output.png'</span>);</div></pre></td></tr></table></figure></p>
+<p>使用vim创建test.js测试脚本，并写入上述代码，并保存：<br><img src="/2018/06/25/nodemapniktest/9.jpg" alt="安装node-mapnik"><br>拷入input.jpg(可以使用xshell的rz，我用的是Windows10的Ubuntu子系统，直接把input.jpg拷贝到<code>C:\Users\PaiConor\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\node-mapnik</code>目录下就可以了)，启动测试脚本，如果生成了output.png，则mapnik模块安装成功。<br><img src="/2018/06/25/nodemapniktest/10.jpg" alt="安装node-mapnik"></p>
+<h4 id="3-配置Mapnik配图样式XML"><a href="#3-配置Mapnik配图样式XML" class="headerlink" title="3.配置Mapnik配图样式XML"></a>3.配置Mapnik配图样式XML</h4><p>根据Mapnik的XML配置格式，配了一个简单的地图：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Map</span> <span class="attr">background-color</span>=<span class="string">"rgb(255,255,255)"</span> <span class="attr">srs</span>=<span class="string">"+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">Style</span> <span class="attr">name</span>=<span class="string">"My Style"</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="xml">    <span class="tag">&lt;<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="xml">      <span class="tag">&lt;<span class="name">PolygonSymbolizer</span> <span class="attr">fill</span>=<span class="string">"#f2eff9"</span> /&gt;</span></span></div><div class="line"><span class="xml">      <span class="tag">&lt;<span class="name">LineSymbolizer</span> <span class="attr">stroke</span>=<span class="string">"rgb(255,0,0)"</span> <span class="attr">stroke-width</span>=<span class="string">"1"</span> /&gt;</span></span></div><div class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">Rule</span>&gt;</span></span></div><div class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">Layer</span> <span class="attr">name</span>=<span class="string">"world"</span> <span class="attr">srs</span>=<span class="string">"+proj=longlat +ellps=GRS80 +no_defs"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">StyleName</span>&gt;</span>My Style<span class="tag">&lt;/<span class="name">StyleName</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Datasource</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">Parameter</span> <span class="attr">name</span>=<span class="string">"file"</span>&gt;</span>shapefile/aaa<span class="tag">&lt;/<span class="name">Parameter</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">Parameter</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>shape<span class="tag">&lt;/<span class="name">Parameter</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">Datasource</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Layer</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">Map</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这里的shapefile数据是国家2000经纬度坐标系的，最开始地图也是这个空间参考，但是需要前端访问时对应到这个空间参考上，有些麻烦，所以直接修改地图空间参考为比较流行的Web墨卡托投影坐标系了，图层进行动态投影显示。</p>
+<p>配好之后可以使用下面的脚本生成图片，验证配图效果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mapnik = <span class="built_in">require</span>(<span class="string">'mapnik'</span>);</div><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line"><span class="comment">// register fonts and datasource plugins</span></div><div class="line">mapnik.register_default_fonts();</div><div class="line">mapnik.register_default_input_plugins();</div><div class="line"></div><div class="line"><span class="keyword">var</span> map = <span class="keyword">new</span> mapnik.Map(<span class="number">4096</span>, <span class="number">4096</span>);</div><div class="line">map.load(<span class="string">'../data/style.xml'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err,map</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">    map.zoomAll();</div><div class="line">    <span class="keyword">var</span> im = <span class="keyword">new</span> mapnik.Image(<span class="number">4096</span>, <span class="number">4096</span>);</div><div class="line">    map.render(im, <span class="function"><span class="keyword">function</span>(<span class="params">err,im</span>) </span>&#123;</div><div class="line">      <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">      im.encode(<span class="string">'png'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err,buffer</span>) </span>&#123;</div><div class="line">          <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">          fs.writeFile(<span class="string">'map.png'</span>,buffer, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">              <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</div><div class="line">              <span class="built_in">console</span>.log(<span class="string">'saved map image to map.png'</span>);</div><div class="line">          &#125;);</div><div class="line">      &#125;);</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h4 id="4-发布地图服务"><a href="#4-发布地图服务" class="headerlink" title="4.发布地图服务"></a>4.发布地图服务</h4><p>Mapnik搞定的是地图渲染，但是发布瓦片服务，还需要使用<a href="https://github.com/naturalatlas/tilestrata" target="_blank" rel="noopener">TileStrata</a>来进行。</p>
+<p>安装TileStrata及其插件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">npm install tilestrata</div><div class="line"></div><div class="line">npm install tilestrata-disk</div><div class="line"></div><div class="line">npm install tilestrata-mapnik</div></pre></td></tr></table></figure></p>
+<p>安装完成后创建瓦片服务脚本app.js，并输入以下内容：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tilestrata = <span class="built_in">require</span>(<span class="string">'tilestrata'</span>);</div><div class="line"><span class="keyword">var</span> disk = <span class="built_in">require</span>(<span class="string">'tilestrata-disk'</span>);</div><div class="line"><span class="keyword">var</span> mapnik = <span class="built_in">require</span>(<span class="string">'tilestrata-mapnik'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> strata = tilestrata();</div><div class="line"></div><div class="line"><span class="comment">//layer名称不能为空</span></div><div class="line">strata.layer(<span class="string">'map'</span>)</div><div class="line">  .route(<span class="string">'tile.png'</span>)    					<span class="comment">//route方法中不能使用正则表达式</span></div><div class="line">  .use(disk.cache(&#123;<span class="attr">dir</span>: <span class="string">'./tilecache'</span>&#125;))    <span class="comment">//设置瓦片缓存在当前目录的tilecache之目录中</span></div><div class="line">  .use(mapnik(&#123;</div><div class="line">    pathname: <span class="string">'../data/test.xml'</span></div><div class="line">  &#125;));</div><div class="line"></div><div class="line">strata.listen(<span class="number">8099</span>);</div></pre></td></tr></table></figure></p>
+<p>启动脚本：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node app.js</div></pre></td></tr></table></figure></p>
+<p>如果会计算某一级别行列号可以通过<code>http://127.0.0.1:8099/map/{z}/{x}/{y}/tile.png</code>模式验证瓦片服务是否发布成功，也可以通过下面的方法，使用Openlayers加载瓦片服务进行验证。</p>
+<h4 id="5-使用Openlayers访问瓦片服务"><a href="#5-使用Openlayers访问瓦片服务" class="headerlink" title="5.使用Openlayers访问瓦片服务"></a>5.使用<a href="http://openlayers.org" target="_blank" rel="noopener">Openlayers</a>访问瓦片服务</h4><p>到Openlayers官网上下载了新版本编译成果，创建前端目录，将ol.js拷贝到js子文件夹下，将ol.css拷贝到css子文件夹下，并创建index.html，内容如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!Doctype html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">http://www.w3.org/1999/xhtml</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">Content-Type</span> <span class="attr">content</span>=<span class="string">"text/html;charset=utf-8"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">X-UA-Compatible</span> <span class="attr">content</span>=<span class="string">"IE=edge,chrome=1"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">content</span>=<span class="string">always</span> <span class="attr">name</span>=<span class="string">referrer</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Mapnik地图服务示例<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"./css/ol.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"./js/ol.js"</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"map"</span> <span class="attr">style</span>=<span class="string">"width: 100%"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> tileStrataMapLayer = <span class="keyword">new</span> ol.layer.Tile(&#123;</span></div><div class="line"><span class="undefined">        opacity: 0.6,</span></div><div class="line"><span class="javascript">        source: <span class="keyword">new</span> ol.source.XYZ(&#123;</span></div><div class="line"><span class="javascript">            url: <span class="string">'http://127.0.0.1:8099/map/&#123;z&#125;/&#123;x&#125;/&#123;y&#125;/tile.png'</span></span></div><div class="line"><span class="undefined">        &#125;)</span></div><div class="line"><span class="undefined">    &#125;);</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="keyword">new</span> ol.Map(&#123;</span></div><div class="line"><span class="undefined">        layers: [</span></div><div class="line"><span class="javascript">            <span class="keyword">new</span> ol.layer.Tile(&#123;</span></div><div class="line"><span class="javascript">                source: <span class="keyword">new</span> ol.source.OSM()</span></div><div class="line"><span class="undefined">            &#125;),</span></div><div class="line"><span class="undefined">            tileStrataMapLayer,</span></div><div class="line"><span class="undefined">        ],</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">        view: <span class="keyword">new</span> ol.View(&#123;</span></div><div class="line"><span class="undefined">            center: [106.81, 31.55],</span></div><div class="line"><span class="javascript">            projection: <span class="string">'EPSG:4326'</span>,</span></div><div class="line"><span class="undefined">            zoom: 14</span></div><div class="line"><span class="undefined">        &#125;),</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">        target: <span class="string">'map'</span></span></div><div class="line"><span class="undefined">    &#125;);</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这里使用Openlayers加载了Mapnik瓦片服务，并叠加了一个OSM图层，用于对比叠加效果，最终效果如下：<br><img src="/2018/06/25/nodemapniktest/11.png" alt="Openlayers访问瓦片服务"></p>
+<p>以上介绍的只是做了简单的地图发布，离最终高并发地图服务还有一段距离，需要继续研究和探索。</p>
+<p>此篇博文参考<a href="http://www.cnblogs.com/think8848/p/6262696.html" target="_blank" rel="noopener">think8848的博客</a>，特此感谢！</p>
+<p>2018年7月4日更新：<br>node-mapnik在6月30号发布了4.0版本，支持了最新的node.js版本(10.5.0)，以及Mapnik的pre-release master版本(3.1？)。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Mapnik</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/25/nodemapniktest/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-configcdn" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -888,90 +994,9 @@
 
 
   
-    <article id="post-csharpclr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/08/csharpclr/">C#垃圾回收机制新的理解</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/08/csharpclr/" class="archive-article-date">
-  	<time datetime="2018-05-08T02:49:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近程序中报了一个十分诡异的异常。调试状态下不出现，直接运行EXE时100%报错。根据已往的经验肯定是垃圾回收机制的锅，因为在调试状态下变量保存的时间会比较长，直接运行回收比较频繁，只要变量被回收就会报错。</p>
-<p>这里说明一下为什么C#变量被回收了会报错，是因为我们底层使用C++开发，上层封装成C#类，虽然上层看起来不再使用这个变量了，但是底层可能会用到，所以一旦被销毁底层就会报错。</p>
-<p>以往出现这种问题主要有两种解决方案：1.看上层代码调用是否有问题；2.在底层加日志反馈具体的报错信息。但是看了一遍代码并没有发现有什么问题，在底层加了比较全的日志反而不报错了，对底层日志做了删减发现在某一处加了日志之后不报错，不加就报错，但是这个位置也没有看出来什么问题，都是正常的调用。</p>
-<p>头疼了很久也没有找出来解决方案，感觉有可能是内存错乱导致的崩溃，这就比较麻烦了。所以决定完全重写上层代码，用最简模式减少上层干扰，代码重写完成后发现了一个新的问题，代码大概如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">funtion1</span>(<span class="params"></span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="comment">//打开数据源</span></div><div class="line">    DataSource ds = IWorkspaceFactory.Open();</div><div class="line">    </div><div class="line">    <span class="comment">//调用方法进行大量运算、频繁申请内存等操作</span></div><div class="line">    StaticClass.StaticFuction(ds);</div><div class="line">    </div><div class="line">    <span class="comment">//其它无关代码</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>就是在StaticClass.StaticFuction执行过程中，发现数据源被释放了，导致报错。<br>但是根据我以往的经验引用型变量在出作用域之后才会被垃圾回收，怎么提前回收了？看了半天发现之后的代码没有再用到数据源，难到是CLR分析到变量不再使用而提前释放了？<br>为了验证这个问题，我在StaticClass.StaticFuction之后调用了数据源的一个无关紧要的方法，大概如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">funtion1</span>(<span class="params"></span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="comment">//打开数据源</span></div><div class="line">    DataSource ds = IWorkspaceFactory.Open();</div><div class="line">    </div><div class="line">    <span class="comment">//调用方法进行大量运算、频繁申请内存等操作</span></div><div class="line">    StaticClass.StaticFuction(ds);</div><div class="line">    </div><div class="line">    <span class="comment">//调用数据源方法，验证数据源是否得以保留</span></div><div class="line">    ds.GetTableCount();</div><div class="line">    </div><div class="line">    <span class="comment">//其它无关代码</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>验证结果是不再报错正常运行，即上面的结论是正确的。</p>
-<p>反观之前报错部分的上层代码，也是同样问题，修改后可以正常运行。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//大量循环、查询、空间分析等操作</span></div><div class="line"><span class="keyword">foreach</span> (KeyValuePair&lt;<span class="keyword">string</span>, List&lt;<span class="keyword">int</span>&gt;&gt; pVar <span class="keyword">in</span> pDicUnValue)</div><div class="line">&#123;</div><div class="line">    <span class="comment">//创建查询条件</span></div><div class="line">    IMZQueryDef pQuerydef = <span class="keyword">new</span> mzQueryDef();</div><div class="line">    pQuerydef.QueryType = mzQueryType.mzQueryGeneral;</div><div class="line">    </div><div class="line">    <span class="comment">//查询(在底层执行查询过程中，上层回收了查询条件，导致底层再用查询条件时报错)</span></div><div class="line">    IMZFeatureCursor mzFeatuCur = m_sourceLayer.DatasetVector.Query(pQuerydef);</div><div class="line">	</div><div class="line">    <span class="comment">//无关紧要代码，防止查询条件被释放</span></div><div class="line">    <span class="keyword">string</span> s = pQuerydef.QueryFilter;</div><div class="line">    </div><div class="line">    <span class="comment">//其它无关代码</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的代码是我们比较常见的空间查询代码，一直没有出现过类似问题，看来是由于我们进行了大量的空间查询、内存申请等操作，导致CLR尽可能多的回收内存空间以保证程序正常运行，才出现这样的问题。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C#</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/08/csharpclr/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
     </nav>
   
 
@@ -1086,7 +1111,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1130,15 +1155,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1150,7 +1171,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">

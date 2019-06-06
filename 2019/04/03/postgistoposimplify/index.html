@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/04/03/postgistoposimplify/11.png">
 <meta property="og:image" content="http://yoursite.com/2019/04/03/postgistoposimplify/12.png">
 <meta property="og:image" content="http://yoursite.com/2019/04/03/postgistoposimplify/13.png">
-<meta property="og:updated_time" content="2019-04-03T03:26:12.861Z">
+<meta property="og:updated_time" content="2019-06-06T07:40:23.933Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用PostGIS进行拓扑抽稀">
 <meta name="twitter:description" content="抽稀，是指减少图形的节点密度。有些图形例如国界、省界、市界等节点数能达到几万个，这样的图形在渲染和空间关系判断等环节中效率会很慢，所以在一些要求不是很严格的情况下，可以使用抽稀方法减少图形的节点密度，加快处理效率。 对于抽稀的要求，最重要的是要基本保持原图形的形状，这个大部分抽稀算法都可以达到。今天我们说的是进一步的要求，就是相邻图形抽稀之后不能出现重叠和缝隙。 下面是使用PostGIS的ST_S">
@@ -183,7 +183,7 @@
 <h4 id="1-创建PostgreSQL数据库"><a href="#1-创建PostgreSQL数据库" class="headerlink" title="1.创建PostgreSQL数据库"></a>1.创建PostgreSQL数据库</h4><p>如果数据已经入库，则可以跳过该操作。<br><img src="/2019/04/03/postgistoposimplify/2.png" alt="创建数据库"></p>
 <h4 id="2-创建PostGIS和Topology扩展"><a href="#2-创建PostGIS和Topology扩展" class="headerlink" title="2.创建PostGIS和Topology扩展"></a>2.创建PostGIS和Topology扩展</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION postgis;</div><div class="line"><span class="keyword">CREATE</span> EXTENSION postgis_topology;</div></pre></td></tr></table></figure>
 <h4 id="3-导入数据"><a href="#3-导入数据" class="headerlink" title="3.导入数据"></a>3.导入数据</h4><p>如果处理的PostgreSQL数据库中已有数据，则跳过该操作。</p>
-<p>这里使用GDAL提供的ogr2ogr命令行工具来做数据导入Shapefile格式的省界数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=localhost port=5432 dbname=TopoSimplify user=postgres password=dlwy"</span> /Users/paiconor/Downloads/拓扑抽稀效果/原始数据/CHN_adm1.shp -lco GEOMETRY_NAME=geom -lco FID=pk_uid -nlt PROMOTE_TO_MULTI -progress</div></pre></td></tr></table></figure></p>
+<p>这里使用GDAL提供的ogr2ogr命令行工具来做数据导入Shapefile格式的省界数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=localhost port=5432 dbname=TopoSimplify user=postgres password=1234"</span> /Users/paiconor/Downloads/拓扑抽稀效果/原始数据/CHN_adm1.shp -lco GEOMETRY_NAME=geom -lco FID=pk_uid -nlt PROMOTE_TO_MULTI -progress</div></pre></td></tr></table></figure></p>
 <p><img src="/2019/04/03/postgistoposimplify/3.png" alt="导入数据"></p>
 <h4 id="4-复制数据"><a href="#4-复制数据" class="headerlink" title="4.复制数据"></a>4.复制数据</h4><p>由于处理过程中将会给数据添加字段，为了不破坏数据，将会复制一份数据进行拓扑抽稀操作。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> chn_adm1_bak <span class="keyword">as</span> <span class="keyword">select</span> * <span class="keyword">from</span> chn_adm1</div></pre></td></tr></table></figure></p>
 <h4 id="5-创建拓扑"><a href="#5-创建拓扑" class="headerlink" title="5.创建拓扑"></a>5.创建拓扑</h4><p>创建拓扑需要传入拓扑模式名称和数据的SRID，拓扑模式名称使用的是数据名称后面加上“_topo”标识，数据的SRID通过geometry_columns视图看到是4326。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> topology.CreateTopology(<span class="string">'chn_adm1_topo'</span>, <span class="number">4326</span>);</div></pre></td></tr></table></figure></p>
@@ -465,7 +465,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -509,15 +509,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -529,7 +525,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">

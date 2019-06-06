@@ -142,6 +142,88 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-testpgdblink" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/06/testpgdblink/">试用DBLink进行PostgreSQL跨库查询</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/06/testpgdblink/" class="archive-article-date">
+  	<time datetime="2019-06-06T07:26:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近接到个需求，如果两种数据分别存储于不同服务器的不同PostgreSQL数据库上，能否进行跨库叠加分析。上网搜了一些资料只说了使用DBLink扩展可以达到跨度查询和更新的目的，所以就验证一下。</p>
+<p>手头上两台服务器，两个数据分别在123、140服务器中，验证方式是先在123中使用DBLink查询140服务器中的数据，如果可行，再测试叠加分析。</p>
+<h4 id="安装DBLink扩展"><a href="#安装DBLink扩展" class="headerlink" title="安装DBLink扩展"></a>安装DBLink扩展</h4><p>在123服务器上的PostgreSQL数据库中，安装DBLink扩展：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> extension dblink</div></pre></td></tr></table></figure></p>
+<h4 id="使用DBLink进行跨库查询"><a href="#使用DBLink进行跨库查询" class="headerlink" title="使用DBLink进行跨库查询"></a>使用DBLink进行跨库查询</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dblink(<span class="string">'dbname=lydb host=192.168.1.140 port=5432 user=postgres password=1234'</span>,<span class="string">'select pk_uid,geom from ldgx_36_jiangxi.ldgx2016_p'</span>) t (pk_uid <span class="built_in">integer</span>, geom geometry)</div></pre></td></tr></table></figure>
+<p><img src="/2019/06/06/testpgdblink/1.png" alt="跨库查询"><br><img src="/2019/06/06/testpgdblink/2.png" alt="跨库查询"></p>
+<p>可以看到，跨库查询可以正常进行，那跨库叠加分析是否可行呢？</p>
+<h4 id="使用DBLink进行跨库叠加分析"><a href="#使用DBLink进行跨库叠加分析" class="headerlink" title="使用DBLink进行跨库叠加分析"></a>使用DBLink进行跨库叠加分析</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> dst.pk_uid, st_intersection(src.geom, dst.geom) geom <span class="keyword">from</span> zrbhq src <span class="keyword">inner</span> <span class="keyword">join</span> (<span class="keyword">select</span> * <span class="keyword">from</span> dblink(<span class="string">'dbname=lydb host=192.168.1.140 port=5432 user=postgres password=1234'</span>,<span class="string">'select pk_uid,geom from ldgx_36_jiangxi.ldgx2016_p'</span>) <span class="keyword">as</span> t(pk_uid <span class="built_in">integer</span>, geom GEOMETRY)) dst <span class="keyword">on</span> st_intersects(src.geom, dst.geom)</div></pre></td></tr></table></figure>
+<p><img src="/2019/06/06/testpgdblink/3.png" alt="跨库叠加分析"></p>
+<p>证明跨库叠加分析是可以实现的，但是效率可能不高，遇到大数据量的叠加分析会比较耗时，建议避免这种情况出现。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/06/testpgdblink/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-postgiswithdocker" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -164,7 +246,7 @@
       
         <p>回顾自己写的文章，讲如何部署PostgreSQL和PostGIS有好几篇，包括<a href="http://www.baiguangnan.com/2018/01/31/postgis/" target="_blank" rel="noopener">如何在不同的操作系统下部署PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/09/29/usenodemapnikwithpostgisoncentos/" target="_blank" rel="noopener">如何配置PostgreSQL数据库</a>，<a href="http://www.baiguangnan.com/2018/12/29/centospostgresqlpgdata/" target="_blank" rel="noopener">如何迁移PostgreSQL数据库存储目录位置</a>，<a href="http://www.baiguangnan.com/2019/01/03/centosyumupdatepostgiscrash/" target="_blank" rel="noopener">如何部署PostGIS插件，如何更新PostGIS插件</a>，<a href="http://www.baiguangnan.com/2019/01/22/centospostgismvt/" target="_blank" rel="noopener">如何编译带ST_AsMVT函数的PostGIS插件</a>等，最近在使用Docker，所以找了一下PostgreSQL和PostGIS的Docker镜像，发现上面说的那些只需要一个命令就可解决。。</p>
 <h4 id="选择Docker镜像"><a href="#选择Docker镜像" class="headerlink" title="选择Docker镜像"></a>选择Docker镜像</h4><p>在Docker Hub和网上搜索了一下，<a href="https://hub.docker.com/r/mdillon/postgis" target="_blank" rel="noopener">mdillon/postgis</a>是大家建议使用的，针对我们现在使用的PostgreSQL和PostGIS的版本，我选择了<code>10-alpine</code>镜像，总大小只有48M。</p>
-<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>镜像pull到本地之后(不pull在启动的时候发现本地没有也会从Docker Hub上先下载再启动)，启动镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=dlwy mdillon/postgis:10-alpine</div></pre></td></tr></table></figure></p>
+<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>镜像pull到本地之后(不pull在启动的时候发现本地没有也会从Docker Hub上先下载再启动)，启动镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name postgresql -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=1234 mdillon/postgis:10-alpine</div></pre></td></tr></table></figure></p>
 <p>其中：<br>–name为设置容器名称<br>-d为设置容器在后台运行<br>-p为设置端口映射<br>-v为设置数据库存储目录映射，可以将数据库存储目录保存在主机目录，防止容器被删除之后数据库中的数据丢失<br>-e为设置数据库参数，这里设置的是数据库管理员密码</p>
 <h4 id="Docker部署如何解决之前的问题"><a href="#Docker部署如何解决之前的问题" class="headerlink" title="Docker部署如何解决之前的问题"></a>Docker部署如何解决之前的问题</h4><p>1.部署和配置PostgreSQL、PostGIS：镜像中内置的PostgreSQL数据库配置文件已修改，支持局域网访问。内置了PostGIS插件。<br>2.更改PostgreSQL数据库存储目录位置，只需要通过-v指定目录映射即可。<br>3.支持ST_AsMVT函数，镜像中的PostGIS已经是基于protobuf-c编译的了，可以支持ST_AsMVT函数。<br>4.升级PostgreSQL、PostGIS版本，只需要pull最新版本的镜像，删除旧版本容器，启动新容器即可。</p>
 <h4 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h4><p>除了之前的问题之外：<br>1.使用Docker部署还可以在性能比较好的机器上部署多套数据库，通过-p端口号映射进行区分，部署的PostgreSQL数据库版本也可以不同，为以后的数据库负载均衡、读写分离、主从备份等创造条件。<br>2.通过Docker-Compose或者k8s进行容器编排，方便数据库、服务、前端等快速部署，减少运维人员使用难度。</p>
@@ -512,7 +594,7 @@
 <h4 id="1-创建PostgreSQL数据库"><a href="#1-创建PostgreSQL数据库" class="headerlink" title="1.创建PostgreSQL数据库"></a>1.创建PostgreSQL数据库</h4><p>如果数据已经入库，则可以跳过该操作。<br><img src="/2019/04/03/postgistoposimplify/2.png" alt="创建数据库"></p>
 <h4 id="2-创建PostGIS和Topology扩展"><a href="#2-创建PostGIS和Topology扩展" class="headerlink" title="2.创建PostGIS和Topology扩展"></a>2.创建PostGIS和Topology扩展</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION postgis;</div><div class="line"><span class="keyword">CREATE</span> EXTENSION postgis_topology;</div></pre></td></tr></table></figure>
 <h4 id="3-导入数据"><a href="#3-导入数据" class="headerlink" title="3.导入数据"></a>3.导入数据</h4><p>如果处理的PostgreSQL数据库中已有数据，则跳过该操作。</p>
-<p>这里使用GDAL提供的ogr2ogr命令行工具来做数据导入Shapefile格式的省界数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=localhost port=5432 dbname=TopoSimplify user=postgres password=dlwy"</span> /Users/paiconor/Downloads/拓扑抽稀效果/原始数据/CHN_adm1.shp -lco GEOMETRY_NAME=geom -lco FID=pk_uid -nlt PROMOTE_TO_MULTI -progress</div></pre></td></tr></table></figure></p>
+<p>这里使用GDAL提供的ogr2ogr命令行工具来做数据导入Shapefile格式的省界数据：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=localhost port=5432 dbname=TopoSimplify user=postgres password=1234"</span> /Users/paiconor/Downloads/拓扑抽稀效果/原始数据/CHN_adm1.shp -lco GEOMETRY_NAME=geom -lco FID=pk_uid -nlt PROMOTE_TO_MULTI -progress</div></pre></td></tr></table></figure></p>
 <p><img src="/2019/04/03/postgistoposimplify/3.png" alt="导入数据"></p>
 <h4 id="4-复制数据"><a href="#4-复制数据" class="headerlink" title="4.复制数据"></a>4.复制数据</h4><p>由于处理过程中将会给数据添加字段，为了不破坏数据，将会复制一份数据进行拓扑抽稀操作。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> chn_adm1_bak <span class="keyword">as</span> <span class="keyword">select</span> * <span class="keyword">from</span> chn_adm1</div></pre></td></tr></table></figure></p>
 <h4 id="5-创建拓扑"><a href="#5-创建拓扑" class="headerlink" title="5.创建拓扑"></a>5.创建拓扑</h4><p>创建拓扑需要传入拓扑模式名称和数据的SRID，拓扑模式名称使用的是数据名称后面加上“_topo”标识，数据的SRID通过geometry_columns视图看到是4326。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> topology.CreateTopology(<span class="string">'chn_adm1_topo'</span>, <span class="number">4326</span>);</div></pre></td></tr></table></figure></p>
@@ -942,99 +1024,9 @@
 
 
   
-    <article id="post-centosupdatepostgisto2-5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/04/centosupdatepostgisto2-5/">升级CentOS系统下PostgreSQL10的PostGIS插件大版本</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/04/centosupdatepostgisto2-5/" class="archive-article-date">
-  	<time datetime="2019-01-04T00:50:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>昨天<code>yum update</code>的惊魂未定，同事又反馈过来一个问题：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sql执行错误：error: Relate Operation called with a LWGEOMCOLLECTION <span class="built_in">type</span>.  This is unsupported.</div></pre></td></tr></table></figure></p>
-<p>到网上搜了一下，这个错误是由于使用ST_Intersects方法，不支持对GeometryCollection类型的支持导致的，详情看<a href="https://postgis.net/docs/ST_Intersects.html" target="_blank" rel="noopener">这里</a>。</p>
-<p>但是这里提示说PostGIS 2.5.0版本以后可以支持GeometryCollection类型，所以升级PostGIS插件版本是一种选择。<br><img src="/2019/01/04/centosupdatepostgisto2-5/1.jpg" alt="新版支持"></p>
-<p>但是由于这是一个大版本升级，考虑稳定性的情况下，看看还有没有其它的解决方案。</p>
-<p>带有GeometryCollection类型的数据，是通过ST_Intersection求交操作得到的，所以避免不了结果集中存在点线面的集合，所以像ST_CollectionHomogenize、ST_CollectionExtract等函数无法处理这样的数据。</p>
-<p>再就是求交查询时排除几何类型是ST_GeometryCollection的记录，但是这样会导致结果和地图上看到的不一致，所以这条路也走不通。</p>
-<p>基于昨天升级PostGIS小版本号积累的经验，又在其它的数据库上进行了PostGIS由2.4升级2.5的实验，所以决定在夜深人静的时候升级生产服务器上的PostGIS大版本。</p>
-<h4 id="首先，停止PostgreSQL数据库服务"><a href="#首先，停止PostgreSQL数据库服务" class="headerlink" title="首先，停止PostgreSQL数据库服务"></a>首先，停止PostgreSQL数据库服务</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/2.png" alt="停止服务"></p>
-<h4 id="然后，卸载PostGIS-2-4版本"><a href="#然后，卸载PostGIS-2-4版本" class="headerlink" title="然后，卸载PostGIS 2.4版本"></a>然后，卸载PostGIS 2.4版本</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/3.png" alt="卸载2.4版本"></p>
-<h4 id="然后，安装PostGIS-2-5版本"><a href="#然后，安装PostGIS-2-5版本" class="headerlink" title="然后，安装PostGIS 2.5版本"></a>然后，安装PostGIS 2.5版本</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/4.png" alt="安装2.5版本"></p>
-<h4 id="重启PostgreSQL数据库服务"><a href="#重启PostgreSQL数据库服务" class="headerlink" title="重启PostgreSQL数据库服务"></a>重启PostgreSQL数据库服务</h4><p><img src="/2019/01/04/centosupdatepostgisto2-5/5.png" alt="重启服务"></p>
-<h4 id="执行插件升级SQL语句"><a href="#执行插件升级SQL语句" class="headerlink" title="执行插件升级SQL语句"></a>执行插件升级SQL语句</h4><p>接下来在各个空间数据库内，执行PostGIS插件更新语句：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> extension postgis <span class="keyword">update</span></div></pre></td></tr></table></figure></p>
-<h4 id="正确性验证"><a href="#正确性验证" class="headerlink" title="正确性验证"></a>正确性验证</h4><p>通过一些简单的功能验证，证明新版插件可以正常运行，至此，PostGIS插件大版本升级结束。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/04/centosupdatepostgisto2-5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -1149,7 +1141,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1193,15 +1185,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1213,7 +1201,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">

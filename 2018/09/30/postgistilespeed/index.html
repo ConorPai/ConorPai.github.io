@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/09/30/postgistilespeed/1.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/30/postgistilespeed/2.png">
 <meta property="og:image" content="http://yoursite.com/2018/09/30/postgistilespeed/3.jpg">
-<meta property="og:updated_time" content="2018-09-30T02:48:45.250Z">
+<meta property="og:updated_time" content="2019-06-06T07:41:49.116Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次500万数据量出图效率优化的心路历程">
 <meta name="twitter:description" content="之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。 服务器环境协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。 数据入库因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：1ogr2ogr -f &quot;">
@@ -168,7 +168,7 @@
       
         <p>之前一直在研究使用Mapnik发布动态瓦片服务，最近想用真实数据做一次测试，看实际效果如何。</p>
 <h5 id="服务器环境"><a href="#服务器环境" class="headerlink" title="服务器环境"></a>服务器环境</h5><p>协调到一台CentOS系统服务器，有两个12核CPU，最终模拟成48核，数据是500万左右的面状小班，已入到PostGIS数据库中，空间索引已建好。</p>
-<h5 id="数据入库"><a href="#数据入库" class="headerlink" title="数据入库"></a>数据入库</h5><p>因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=dlwy"</span> PG:<span class="string">"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=dlwy"</span> <span class="string">"t_hunan_09"</span> -progress</div></pre></td></tr></table></figure></p>
+<h5 id="数据入库"><a href="#数据入库" class="headerlink" title="数据入库"></a>数据入库</h5><p>因为是测试，所以将生产环境中的数据导到测试数据库中，这里使用的是GDAL提供的ogr2ogr工具，导入命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ogr2ogr -f <span class="string">"PostgreSQL"</span> PG:<span class="string">"host=192.168.1.122 port=5432 dbname=lindi user=postgres password=1234"</span> PG:<span class="string">"host=192.168.1.123 port=5432 dbname=lindi user=postgres password=1234"</span> <span class="string">"t_hunan_09"</span> -progress</div></pre></td></tr></table></figure></p>
 <p>这样就把生产数据库中的<code>t_hunan_09</code>导入到测试数据库中。</p>
 <h5 id="启动瓦片服务"><a href="#启动瓦片服务" class="headerlink" title="启动瓦片服务"></a>启动瓦片服务</h5><p>配置好mapnik的配图XML，使用tilestrata-balancer做负载均衡，启动了48个node进程进行测试，然而现实是残酷的，每张瓦片的请求时间是10秒左右。</p>
 <p>然后就去参考OpenStreetMap的PostGIS数据库和配图方案，并没有什么特别的，gist空间索引也重建了，还是没有效果。</p>
@@ -446,7 +446,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Postgresql</a>
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -490,15 +490,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -510,7 +506,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
