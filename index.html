@@ -142,6 +142,95 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-areacaculate" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/12/areacaculate/">关于面积计算，我想说点什么</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/12/areacaculate/" class="archive-article-date">
+  	<time datetime="2019-06-12T04:13:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>近几年总会有用户反馈说我们软件计算出来的面积和ArcGIS(ArcMap)不一样，原因是什么。对于这个问题已经解释的嘴都快磨破了，所以想在这里详细说一下原因是什么，如果哪里说的不正确，请指正。</p>
+<h4 id="我们所说的面积计算"><a href="#我们所说的面积计算" class="headerlink" title="我们所说的面积计算"></a>我们所说的面积计算</h4><p>我们说的面积计算，也是常用的，基本上是在高期投影下的计算出来的面积。高斯投影的主要特点：<br>1）有3度分带、6度分带之说，具体的可以看一下下面的图片：<br><img src="/2019/06/12/areacaculate/1.jpg" alt="高斯投影"><br>2）高斯投影是有变形的，越接近中央经线变形越小，越远离中央经线，变形越大</p>
+<h4 id="ArcGIS计算出来的面积一定就是准确的吗"><a href="#ArcGIS计算出来的面积一定就是准确的吗" class="headerlink" title="ArcGIS计算出来的面积一定就是准确的吗"></a>ArcGIS计算出来的面积一定就是准确的吗</h4><p>为了验证这个问题，我创建了一个西安80经纬度的数据，并在114度右侧画了一个长度是0.1度的正方形：<br><img src="/2019/06/12/areacaculate/2.png" alt="创建验证数据"><br><img src="/2019/06/12/areacaculate/3.png" alt="创建验证数据"><br><img src="/2019/06/12/areacaculate/4.jpg" alt="创建验证数据"></p>
+<p>位置示意如下(略夸张)：<br><img src="/2019/06/12/areacaculate/5.png" alt="创建验证数据"></p>
+<p>可见这个正方形应该在3度分带38带内，而且很靠近中央经线。在6度分带20带内，但是在20带的边缘。</p>
+<p>我将这个正方形分别投影到3度分带38带、3度分带37带、6度分带20带：<br><img src="/2019/06/12/areacaculate/6.jpg" alt="数据投影"><br><img src="/2019/06/12/areacaculate/7.jpg" alt="数据投影"><br><img src="/2019/06/12/areacaculate/8.jpg" alt="数据投影"></p>
+<p>通过属性表的计算几何功能，计算每个图形的面积：<br><img src="/2019/06/12/areacaculate/9.png" alt="计算面积"></p>
+<p>可以得到下面的结果：<br>3度分带38带：<br><img src="/2019/06/12/areacaculate/10.jpg" alt="计算面积结果"><br>3度分带37带：<br><img src="/2019/06/12/areacaculate/11.jpg" alt="计算面积结果"><br>6度分带20带：<br><img src="/2019/06/12/areacaculate/12.jpg" alt="计算面积结果"></p>
+<p>由此看出面积大小关系是：<br>3度分带38带 &lt; 6度分带20带 &lt; 3度分带37带</p>
+<p>这个结果的原因是什么，可以看下面的示意图(略夸张)：<br>3度分带38带：<br><img src="/2019/06/12/areacaculate/5.png" alt="位置示意图"><br>6度分带20带：<br><img src="/2019/06/12/areacaculate/13.png" alt="位置示意图"><br>3度分带37带：<br><img src="/2019/06/12/areacaculate/14.png" alt="位置示意图"></p>
+<p>3度分带38带是图形最接近中央经线(114度)的，也就是变形最小的。6度分带20带下的图形离中央经线(117度)小于3度，变形已经比较大了。3度分带37带下的图形离中央经线(111度)大于3度，变形比较大而且比6度分带20带的变形大。</p>
+<p>所以说，面积计算，比较准确的应该是在3度分带下，而且在其所在的分带内计算，使用6度分带、跨带计算都会变形比较大。</p>
+<h4 id="MAPZONE的面积计算逻辑"><a href="#MAPZONE的面积计算逻辑" class="headerlink" title="MAPZONE的面积计算逻辑"></a>MAPZONE的面积计算逻辑</h4><p>根据上面的分析，MAPZONE的面积计算逻辑就很清晰了，就是将图形投影3度分带其所在的带号内进行面积计算，以保证相对准确。而且如果有跨越两个带的图形，MAPZONE会使用两个分带的边界面对图形进行分割，分割出来的部分在各自的分带内进行面积计算，最后再合并成整个的图形面积。</p>
+<h4 id="面积计算还能再精确些吗"><a href="#面积计算还能再精确些吗" class="headerlink" title="面积计算还能再精确些吗"></a>面积计算还能再精确些吗</h4><p>所谓的精确，就是指图形变形小，比较接近实际的图形面积。据我所知，有下面两种办法：<br>1)将高斯投影的中央经线、中央纬线移到图形的中心点，以保证变形最小。<br>之前有一个北京地方坐标系，就是将中央经线、中央纬线移到北京正中心，以保证测量的准确性，其proj4定义如下：<code>+proj=tmerc +lat_0=39.865766 +lon_0=116.35025181 +k=1 +x_0=500000 +y_0=300000 +ellps=krass +units=m +no_defs</code>。其中<code>+lon_0</code>、<code>+lat_0</code>为重新定义的中央经线和中央纬线。<br>2）使用球面面积计算方法<br>这种计算方法的正确性还没有验证过，目前已知PostGIS提供的<a href="http://postgis.net/docs/ST_Area.html" target="_blank" rel="noopener">ST_Area</a>函数可以计算球面面积。</p>
+<h4 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h4><p>如果仔细看高斯投影的分带示意图，可以看到有部分3度分带和6度分带的中央经线是重合的：<br><img src="/2019/06/12/areacaculate/1.jpg" alt="高斯投影"><br>像3度分带的39带和6度分带的20带，如果在不加带号的空间参考下，这两种空间参考的图形坐标是一致的，包括查看空间参考定义都是一样的。<br><img src="/2019/06/12/areacaculate/15.png" alt="同一坐标系"><br><img src="/2019/06/12/areacaculate/16.png" alt="同一坐标系"><br>所以针对参数来说，这两个就是一种坐标系，只有ArcGIS里才通过名称进行区分，成了两种坐标系。</p>
+<h4 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h4><p>因为这个面积的问题，我们的移动端产品计算面积加上了如下设置：<br><img src="/2019/06/12/areacaculate/17.png" alt="移动GIS"><br>可能有的人就是觉得ArcGIS计算才是对的吧。。<br><img src="/2019/06/12/areacaculate/18.jpg" alt="黑人问号"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GIS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/12/areacaculate/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-testpgdblink" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -263,11 +352,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -940,90 +1029,6 @@
 
 
   
-    <article id="post-centosinstallfonts" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/07/centosinstallfonts/">CentOS下安装字体文件</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/07/centosinstallfonts/" class="archive-article-date">
-  	<time datetime="2019-01-07T09:20:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在测试服务器(ubuntu)上配好的图，转移到现场服务器(CentOS)上，发现标注不见了。<br><img src="/2019/01/07/centosinstallfonts/1.png" alt="标注配置"></p>
-<p>考虑了半天，感觉应该是现场服务器上没有Ubuntu上的字体，所以搜了一下如何获取Ubuntu上的字体，并安装到CentOS系统上，参考博客看<a href="https://blog.csdn.net/wlwlwlwl015/article/details/51482065" target="_blank" rel="noopener">这里</a>。</p>
-<p>在Ubuntu系统上的<code>/usr/share/fonts/opentype/noto</code>文件夹内找到配置标注使用的字体<code>Noto Sans CJK SC Regular</code>的字体文件。<br><img src="/2019/01/07/centosinstallfonts/2.png" alt="标注字体"></p>
-<p>在现场服务器上使用<code>fc-list</code>查看已安装的字体，如果<code>fc-list</code>命令找不到，使用命令<code>yum install fontconfig</code>进行安装。</p>
-<p>进入<code>/usr/share/fonts</code>目录下，建立一个自定义文件夹，并将字体文件上传到该文件夹上，然后给该文件夹修改权限：<br><img src="/2019/01/07/centosinstallfonts/3.png" alt="上传字体"></p>
-<p>接下来需要安装ttmkfdir来搜索目录中所有的字体信息，并汇总生成fonts.scale文件:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install ttmkfdir</div></pre></td></tr></table></figure></p>
-<p>然后执行命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ttmkfdir -e /usr/share/X11/fonts/encodings/encodings.dir</div></pre></td></tr></table></figure></p>
-<p>然后编辑字体配置文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/fonts/fonts.conf</div></pre></td></tr></table></figure></p>
-<p><img src="/2019/01/07/centosinstallfonts/4.png" alt="修改配置"></p>
-<p>然后更新字体缓存：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">fc</span>-cache</div></pre></td></tr></table></figure></p>
-<p>再次查看字体文件，已经可以看到<code>Noto Sans CJK SC Regular</code>字体了：<br><img src="/2019/01/07/centosinstallfonts/5.png" alt="查看字体"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/07/centosinstallfonts/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1129,6 +1134,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
               </li>
              
@@ -1141,7 +1150,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1153,19 +1162,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
+                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">TileStrata</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1177,19 +1186,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">TileStrata</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1201,11 +1206,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
