@@ -142,6 +142,86 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-centosconnectwindowssharefolder" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/28/centosconnectwindowssharefolder/">CentOS挂载Windows共享文件夹</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/28/centosconnectwindowssharefolder/" class="archive-article-date">
+  	<time datetime="2019-06-28T08:31:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>CentOS可以使用mount命令挂载Windows共享文件夹，下面是示例：</p>
+<h4 id="创建本机挂载文件夹"><a href="#创建本机挂载文件夹" class="headerlink" title="创建本机挂载文件夹"></a>创建本机挂载文件夹</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir /mnt/windowssharefolder</div></pre></td></tr></table></figure>
+<h4 id="安装cifs"><a href="#安装cifs" class="headerlink" title="安装cifs"></a>安装cifs</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install cifs-utils -y</div></pre></td></tr></table></figure>
+<h4 id="挂载Windows共享文件夹"><a href="#挂载Windows共享文件夹" class="headerlink" title="挂载Windows共享文件夹"></a>挂载Windows共享文件夹</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mount -t cifs -o username=<span class="string">"dlwy"</span>,password=<span class="string">"dlwy"</span> //192.168.1.101/测试版本 /mnt/windowssharefolder</div></pre></td></tr></table></figure>
+<p><img src="/2019/06/28/centosconnectwindowssharefolder/1.png" alt="共享文件夹"></p>
+<h4 id="取消挂载"><a href="#取消挂载" class="headerlink" title="取消挂载"></a>取消挂载</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">umount /mnt/windowssharefolder</div></pre></td></tr></table></figure>
+<h4 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h4><p>如果有的共享文件夹挂载时提示<code>Host is down</code>，可以参考<a href="https://serverfault.com/questions/414074/mount-cifs-host-is-down" target="_blank" rel="noopener">这个解决方案</a>，添加<code>-o vers=2.0</code>之类的。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/28/centosconnectwindowssharefolder/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-areacaculate" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -947,89 +1027,6 @@
 
 
   
-    <article id="post-npm2fa" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/09/npm2fa/">NPM开启两步验证</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/09/npm2fa/" class="archive-article-date">
-  	<time datetime="2019-01-09T02:45:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近NPM模块安全性受到了很多的质疑，具体的可以了解<code>event-stream</code>事件和<a href="https://zhuanlan.zhihu.com/p/43514079" target="_blank" rel="noopener">这篇文章</a>。</p>
-<p><img src="/2019/01/09/npm2fa/1.jpg" alt="npm"></p>
-<p>NPM在近两个月支持了两步验证(Two Factor Authentication或2FA)，之前稀里糊涂的开启了两步验证，后来发布NPM包的时候不让发布，就到网上搜了一下详细验证方法，在这里记录一下。</p>
-<p>NPM官方的说明文档，看<a href="https://docs.npmjs.com/configuring-two-factor-authentication" target="_blank" rel="noopener">这里</a>。</p>
-<p>在NPM的Setting页面里可以看到两步验证的选项：<br><img src="/2019/01/09/npm2fa/2.png" alt="2FA设置"></p>
-<p>输入密码后，可以看到两步验证选项，可以支持身份验证时、身份验证及发布包时使用两步验证，或者关闭两步验证：<br><img src="/2019/01/09/npm2fa/3.png" alt="2FA设置"></p>
-<p>接下来这个扫二维码让我困惑了很久。。一直不知道用什么扫，后来才查到用哪个APP。苹果App Store里搜<code>Authy</code>安装即可：<br><img src="/2019/01/09/npm2fa/4.jpg" alt="扫码APP"></p>
-<p>如果设置为发布包时使用身份验证，在<code>npm publish</code>时，会提示输入OTP(One-Time Password):<br><img src="/2019/01/09/npm2fa/5.png" alt="开启2FA"></p>
-<p>所以在输入之前，需要开启两步验证。<br>首先，输入<code>npm profile enable-2fa auth-and-writes</code>命令：<br><img src="/2019/01/09/npm2fa/6.png" alt="开启2FA"></p>
-<p>然后打开Authy APP，进行添加：<br><img src="/2019/01/09/npm2fa/7.jpg" alt="开启2FA"><br>使用扫码：<br><img src="/2019/01/09/npm2fa/8.jpg" alt="开启2FA"><br>扫码完成：<br><img src="/2019/01/09/npm2fa/9.jpg" alt="开启2FA"><br>这里显示的数字，就是OTP，然后将APP里显示的OTP输入到命令行中：<br><img src="/2019/01/09/npm2fa/10.png" alt="开启2FA"><br>然后就可以正常使用了。在npm publish的时候，输入这里的数字就可以发布了。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NPM</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/09/npm2fa/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1127,6 +1124,14 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
@@ -1136,10 +1141,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">PostGIS</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1159,15 +1160,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
+                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1191,11 +1188,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1215,11 +1212,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
