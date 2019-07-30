@@ -23,7 +23,7 @@ docker run --name devops-jenkins --user=root -p 28080:8080 -p 50000:50000 -v /op
 由于8080端口比较容易被占用，所以这里使用28080做为Jenkins的端口。
 
 #### 配置Jenkins
-启动完成之后，稍等一会儿就可以通过`http://localhost:18080`访问Jenkins了。
+启动完成之后，稍等一会儿就可以通过`http://localhost:28080`访问Jenkins了。
 
 1.配置Jenkins之前，需要解锁Jenkins：
 ![解锁Jenkins](devopswithjenkins/1.png)
@@ -61,7 +61,7 @@ docker run --name devops-jenkins --user=root -p 28080:8080 -p 50000:50000 -v /op
 
 这里的命令就是在本机使用的shell命令，用`&&`连接。
 大致分为以下几个过程：
-1)进入代码目录
+1) 进入代码目录
 2）使用git更新代码
 3）代码混淆
 4）通过Dockerfile构建服务镜像
