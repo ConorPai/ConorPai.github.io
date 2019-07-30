@@ -142,6 +142,102 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-devopswithjenkins" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/30/devopswithjenkins/">使用Docker版本Jenkins持续集成</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/30/devopswithjenkins/" class="archive-article-date">
+  	<time datetime="2019-07-30T12:23:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近使用Docker进行服务部署大大增加了部署的方便性，但是代码更新、代码混淆、Docker镜像构建、上传镜像至仓库、定时编译等一系列操作还是很磨人的。鉴于程序员的懒惰特性，所以引入了Jenkins做持续集成。</p>
+<h4 id="部署Jenkins"><a href="#部署Jenkins" class="headerlink" title="部署Jenkins"></a>部署Jenkins</h4><p>1.首先下载Jenkins镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull jenkins/jenkins</div></pre></td></tr></table></figure></p>
+<p>2.启动Jenkins<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name devops-jenkins --user=root -p 28080:8080 -p 50000:50000 -v /opt/data/jenkins_home:/var/jenkins_home -d jenkins/jenkins</div></pre></td></tr></table></figure></p>
+<p>由于8080端口比较容易被占用，所以这里使用28080做为Jenkins的端口。</p>
+<h4 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h4><p>启动完成之后，稍等一会儿就可以通过<code>http://localhost:18080</code>访问Jenkins了。</p>
+<p>1.配置Jenkins之前，需要解锁Jenkins：<br><img src="/2019/07/30/devopswithjenkins/1.png" alt="解锁Jenkins"></p>
+<p>2.通过页面提示的文件位置，或者查看docker日志，找到密钥，填入即可。<br><img src="/2019/07/30/devopswithjenkins/2.png" alt="解锁Jenkins"></p>
+<p>3.接下来安装插件，可以使用推荐安装，也可以自定义安装：<br><img src="/2019/07/30/devopswithjenkins/3.png" alt="安装插件"></p>
+<p>4.配置管理员用户名、密码：<br><img src="/2019/07/30/devopswithjenkins/4.png" alt="配置管理员"></p>
+<p>5.配置完成：<br><img src="/2019/07/30/devopswithjenkins/5.png" alt="配置完成"><br><img src="/2019/07/30/devopswithjenkins/6.png" alt="配置完成"></p>
+<h4 id="通过Jenkins构建服务镜像"><a href="#通过Jenkins构建服务镜像" class="headerlink" title="通过Jenkins构建服务镜像"></a>通过Jenkins构建服务镜像</h4><p>由于Jenkins使用的是Docker部署，所以Docker容器内部构建服务镜像，我使用<code>Publish Over SSH</code>插件进行构建，这个是目前的方案，如果后面有更好的方案，再更新。</p>
+<p>1.在插件管理器中搜索<code>Publish Over SSH</code>，并进行安装：<br><img src="/2019/07/30/devopswithjenkins/7.png" alt="安装插件"></p>
+<p>2.配置SSH<br>在[系统管理]-[系统设置]中找到Publish Over SSH区域，在上面增加本机访问用户名、密码(或SSH密钥)：<br><img src="/2019/07/30/devopswithjenkins/8.png" alt="配置SSH"><br>配置之后可以验证是否能够连通：<br><img src="/2019/07/30/devopswithjenkins/9.png" alt="配置SSH"></p>
+<p>3.创建Jenkins任务<br><img src="/2019/07/30/devopswithjenkins/10.png" alt="创建任务"><br>我创建的是<code>构建一个自由网格的软件项目</code>，在构建中增加一个<code>Send files or execute commands over SSH</code>步骤，即通过SSH执行一个命令。<br><img src="/2019/07/30/devopswithjenkins/11.png" alt="配置SSH"><br><img src="/2019/07/30/devopswithjenkins/12.png" alt="配置SSH"></p>
+<p>这里的命令就是在本机使用的shell命令，用<code>&amp;&amp;</code>连接。<br>大致分为以下几个过程：<br>1)进入代码目录<br>2）使用git更新代码<br>3）代码混淆<br>4）通过Dockerfile构建服务镜像<br>5）上传服务镜像至仓库</p>
+<p>如果命令执行时间过长，需要修改超时时间：<br><img src="/2019/07/30/devopswithjenkins/13.png" alt="配置SSH"></p>
+<p>如果需要定时构建，在构建触发器中设置定时构建：<br><img src="/2019/07/30/devopswithjenkins/14.png" alt="定时构建"></p>
+<p>这里：<br>1）日程表中的内容，可以到网上搜一下具体的含义；<br>2）jenkins的Docker时间不是本地时间，修改的方法后面再研究(可能需要在启动容器的时候，传入环境变量)</p>
+<h4 id="构建服务镜像"><a href="#构建服务镜像" class="headerlink" title="构建服务镜像"></a>构建服务镜像</h4><p>通过手动启动，或者定时启动构建任务，即可进行服务镜像构建：<br><img src="/2019/07/30/devopswithjenkins/15.png" alt="构建服务镜像"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">DevOps</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Jenkins</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/30/devopswithjenkins/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-centosconnectwindowssharefolder" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -433,11 +529,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostgreSQL</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -927,106 +1023,6 @@
 
 
   
-    <article id="post-centospostgismvt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/22/centospostgismvt/">CentOS下使用PostGIS的ST_AsMVT函数</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/22/centospostgismvt/" class="archive-article-date">
-  	<time datetime="2019-01-22T06:55:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近准备在生产环境(CentOS系统)上试用矢量瓦片，所有都部署妥当之后请求矢量瓦片报错，Missing  libprotobuf-c。使用yum安装，包括源码编译protobuf-c之后，还是报这个错，后来看了PostGIS的源码，判断是由于CentOS里使用yum安装的PostGIS版本，编译时没有protobuf-c环境，所以如果需要用ST_AsMVT函数，需要配置好protobuf-c之后，重新编译PostGIS才可以。<br><img src="/2019/01/22/centospostgismvt/1.png" alt="源码"><br><img src="/2019/01/22/centospostgismvt/2.png" alt="源码"></p>
-<h4 id="首先编译protobuf和protobuf-c"><a href="#首先编译protobuf和protobuf-c" class="headerlink" title="首先编译protobuf和protobuf-c"></a>首先编译protobuf和protobuf-c</h4><p>从Git上下载<a href="https://github.com/protocolbuffers/protobuf" target="_blank" rel="noopener">protobuf</a>和<a href="https://github.com/protobuf-c/protobuf-c" target="_blank" rel="noopener">protobuf-c</a>代码，并依次编译。</p>
-<p>这两个编译比较简单，略过。。</p>
-<h4 id="配置PostGIS"><a href="#配置PostGIS" class="headerlink" title="配置PostGIS"></a>配置PostGIS</h4><p>下载2.5.1版本PostGIS源码，然后使用<code>./autogen.sh</code>脚本初始化。<br><img src="/2019/01/22/centospostgismvt/3.png" alt="初始化"><br>初始化完成之后，使用<code>./configure</code>检查编译环境，我这里报了几个错，依次处理就可以了。</p>
-<p>指向了旧版本Postgresql上：<br><img src="/2019/01/22/centospostgismvt/4.png" alt="环境检查"><br>Postgresql版本是通过pg_config命令获取的，所以只需要查找到10版本的pg_config命令位置，做为configure参数传入即可。<br><img src="/2019/01/22/centospostgismvt/5.png" alt="环境检查"><br><img src="/2019/01/22/centospostgismvt/6.png" alt="环境检查"></p>
-<p>安装各个组件的devel开发版本，包括<code>postgresql10-devel</code>、<code>geos37-devel</code>、<code>proj-devel</code>。</p>
-<p>configure顺利完成：<br><img src="/2019/01/22/centospostgismvt/7.png" alt="环境检查"></p>
-<p>可以看到PROTOBUFC的检查状态是yes，就可以使用make进行编译了。<br><img src="/2019/01/22/centospostgismvt/8.png" alt="环境检查"></p>
-<h4 id="编译、部署PostGIS"><a href="#编译、部署PostGIS" class="headerlink" title="编译、部署PostGIS"></a>编译、部署PostGIS</h4><p>果不其然，编译是报错找不到SFCGAL头文件之类的，在网上查了半天，才知道这个组件包必须使用大写，否则yum查不到。。<br><img src="/2019/01/22/centospostgismvt/9.png" alt="编译报错"></p>
-<p>然后就可以正常编译了，编译完成之后使用make install进行部署。</p>
-<h4 id="使用编译好的PostGIS库"><a href="#使用编译好的PostGIS库" class="headerlink" title="使用编译好的PostGIS库"></a>使用编译好的PostGIS库</h4><p>这次虽然没有报Missing libprotobuf-c，但是报表无法加载<code>libprotobuf-c.so.1</code>，使用ldd查看postgis-2.5.so确实没有找到。</p>
-<p>使用find查找，可以找到：<br><img src="/2019/01/22/centospostgismvt/10.png" alt="引用报错"></p>
-<p>在网上查了半天，发现了<a href="https://www.jianshu.com/p/e08dbc60a3b2" target="_blank" rel="noopener">这篇贴子</a>，即编辑<code>/etc/ld.so.conf</code>文件，加入libprotobuf-c.so.1所在位置路径，刷新缓存之后，再编译就正常了。</p>
-<p>最后查看postgis-2.5.so的引用关系：<br><img src="/2019/01/22/centospostgismvt/11.png" alt="引用报错"></p>
-<p>引用正常，使用ST_AsMVT就可以正常使用了。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">PostGIS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PostGISMVT</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Vector Tiles</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/22/centospostgismvt/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1128,15 +1124,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1152,6 +1144,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PostgreSQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">C#</a>
               </li>
              
@@ -1160,7 +1156,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+                <a href="javascript:void(0)" class="js-tag color2">DevOps</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Jenkins</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1169,6 +1169,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1196,10 +1200,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Topology</a>
               </li>
              
@@ -1208,15 +1208,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
               </li>
              
               <li class="article-tag-list-item">
