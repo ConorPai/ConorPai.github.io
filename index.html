@@ -166,7 +166,7 @@
 <h4 id="部署Jenkins"><a href="#部署Jenkins" class="headerlink" title="部署Jenkins"></a>部署Jenkins</h4><p>1.首先下载Jenkins镜像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull jenkins/jenkins</div></pre></td></tr></table></figure></p>
 <p>2.启动Jenkins<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name devops-jenkins --user=root -p 28080:8080 -p 50000:50000 -v /opt/data/jenkins_home:/var/jenkins_home -d jenkins/jenkins</div></pre></td></tr></table></figure></p>
 <p>由于8080端口比较容易被占用，所以这里使用28080做为Jenkins的端口。</p>
-<h4 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h4><p>启动完成之后，稍等一会儿就可以通过<code>http://localhost:18080</code>访问Jenkins了。</p>
+<h4 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h4><p>启动完成之后，稍等一会儿就可以通过<code>http://localhost:28080</code>访问Jenkins了。</p>
 <p>1.配置Jenkins之前，需要解锁Jenkins：<br><img src="/2019/07/30/devopswithjenkins/1.png" alt="解锁Jenkins"></p>
 <p>2.通过页面提示的文件位置，或者查看docker日志，找到密钥，填入即可。<br><img src="/2019/07/30/devopswithjenkins/2.png" alt="解锁Jenkins"></p>
 <p>3.接下来安装插件，可以使用推荐安装，也可以自定义安装：<br><img src="/2019/07/30/devopswithjenkins/3.png" alt="安装插件"></p>
@@ -176,7 +176,7 @@
 <p>1.在插件管理器中搜索<code>Publish Over SSH</code>，并进行安装：<br><img src="/2019/07/30/devopswithjenkins/7.png" alt="安装插件"></p>
 <p>2.配置SSH<br>在[系统管理]-[系统设置]中找到Publish Over SSH区域，在上面增加本机访问用户名、密码(或SSH密钥)：<br><img src="/2019/07/30/devopswithjenkins/8.png" alt="配置SSH"><br>配置之后可以验证是否能够连通：<br><img src="/2019/07/30/devopswithjenkins/9.png" alt="配置SSH"></p>
 <p>3.创建Jenkins任务<br><img src="/2019/07/30/devopswithjenkins/10.png" alt="创建任务"><br>我创建的是<code>构建一个自由网格的软件项目</code>，在构建中增加一个<code>Send files or execute commands over SSH</code>步骤，即通过SSH执行一个命令。<br><img src="/2019/07/30/devopswithjenkins/11.png" alt="配置SSH"><br><img src="/2019/07/30/devopswithjenkins/12.png" alt="配置SSH"></p>
-<p>这里的命令就是在本机使用的shell命令，用<code>&amp;&amp;</code>连接。<br>大致分为以下几个过程：<br>1)进入代码目录<br>2）使用git更新代码<br>3）代码混淆<br>4）通过Dockerfile构建服务镜像<br>5）上传服务镜像至仓库</p>
+<p>这里的命令就是在本机使用的shell命令，用<code>&amp;&amp;</code>连接。<br>大致分为以下几个过程：<br>1) 进入代码目录<br>2）使用git更新代码<br>3）代码混淆<br>4）通过Dockerfile构建服务镜像<br>5）上传服务镜像至仓库</p>
 <p>如果命令执行时间过长，需要修改超时时间：<br><img src="/2019/07/30/devopswithjenkins/13.png" alt="配置SSH"></p>
 <p>如果需要定时构建，在构建触发器中设置定时构建：<br><img src="/2019/07/30/devopswithjenkins/14.png" alt="定时构建"></p>
 <p>这里：<br>1）日程表中的内容，可以到网上搜一下具体的含义；<br>2）jenkins的Docker时间不是本地时间，修改的方法后面再研究(可能需要在启动容器的时候，传入环境变量)</p>
@@ -1120,15 +1120,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GIS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1156,6 +1156,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">DevOps</a>
               </li>
              
@@ -1164,15 +1168,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1232,11 +1232,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">直播</a>
+                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">DataCache</a>
+                <a href="javascript:void(0)" class="js-tag color3">直播</a>
               </li>
              
               <li class="article-tag-list-item">
