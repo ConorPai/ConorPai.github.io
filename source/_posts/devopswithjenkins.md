@@ -55,13 +55,13 @@ docker run --name devops-jenkins --user=root -p 28080:8080 -p 50000:50000 -v /op
 
 3.创建Jenkins任务
 ![创建任务](devopswithjenkins/10.png)
-我创建的是`构建一个自由网格的软件项目`，在构建中增加一个`Send files or execute commands over SSH`步骤，即通过SSH执行一个命令。
+我创建的是`构建一个自由风格的软件项目`，在构建中增加一个`Send files or execute commands over SSH`步骤，即通过SSH执行一个命令。
 ![配置SSH](devopswithjenkins/11.png)
 ![配置SSH](devopswithjenkins/12.png)
 
 这里的命令就是在本机使用的shell命令，用`&&`连接。
 大致分为以下几个过程：
-1) 进入代码目录
+1）进入代码目录
 2）使用git更新代码
 3）代码混淆
 4）通过Dockerfile构建服务镜像
