@@ -142,6 +142,108 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-installdockeroffline" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/20/installdockeroffline/">离线环境下Docker环境部署解决方案</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/20/installdockeroffline/" class="archive-article-date">
+  	<time datetime="2019-08-20T03:12:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在Docker的实际应用过程中，避免不了需要将Docker部署到离线环境下，为了解决这个问题，我做了离线部署实验，现在将部署流程介绍一下。</p>
+<h4 id="实验准备"><a href="#实验准备" class="headerlink" title="实验准备"></a>实验准备</h4><p>准备两台虚拟机，一台可以联网，一台无法联网，可以联网的虚拟机是为了Docker部署做准备。</p>
+<h4 id="Docker环境部署"><a href="#Docker环境部署" class="headerlink" title="Docker环境部署"></a>Docker环境部署</h4><h5 id="使用联网机器下载Docker部署包"><a href="#使用联网机器下载Docker部署包" class="headerlink" title="使用联网机器下载Docker部署包"></a>使用联网机器下载Docker部署包</h5><p>1.在可以连网的机器上，安装yum扩展：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install -y yum-utils</div></pre></td></tr></table></figure>
+<p>2.添加docker-ce的yum来源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</div></pre></td></tr></table></figure>
+<p>3.创建文件夹保存Docker部署包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir /home/dockerinstall</div></pre></td></tr></table></figure>
+<p>4.将Docker及其依赖包下载至部署包文件夹中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install --downloadonly --downloaddir=/home/dockerinstall docker-ce</div></pre></td></tr></table></figure>
+<p>这里需要找一台干净的虚拟机，否则有些部署过的包会下载不下来，导致在离线机上部署会导致安装失败。<br>提取Docker部署包的过程，可以只做一次，后面反复部署的时候可以使用这个成果进行离线部署。</p>
+<p><img src="/2019/08/20/installdockeroffline/1.png" alt="下载部署包"></p>
+<p>5.将离线部署包拷贝到U盘中</p>
+<h5 id="离线机上部署Docker"><a href="#离线机上部署Docker" class="headerlink" title="离线机上部署Docker"></a>离线机上部署Docker</h5><p>1.U盘挂载</p>
+<p>在网上找了好多方法都无法正确识别U盘，我用的方法是肉眼看-_-!!!，看插上U盘之后Dev目录下多了什么文件，就把这个文件挂载起来看一下是不是。<br><img src="/2019/08/20/installdockeroffline/2.png" alt="U盘挂载"><br><img src="/2019/08/20/installdockeroffline/3.png" alt="U盘挂载"></p>
+<p>2.离线安装Docker</p>
+<p>进入离线部署包目录下，使用<code>yum localinstall *</code>安装所有部署包。<br><img src="/2019/08/20/installdockeroffline/4.png" alt="离线安装"></p>
+<p>3.启动Docker服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">usermod -aG docker $(whoami)</div><div class="line">systemctl <span class="built_in">enable</span> docker.service</div><div class="line">systemctl start docker.service</div></pre></td></tr></table></figure>
+<p><img src="/2019/08/20/installdockeroffline/5.png" alt="启动服务"></p>
+<h4 id="Docker镜像迁移-以PostGIS镜像为例"><a href="#Docker镜像迁移-以PostGIS镜像为例" class="headerlink" title="Docker镜像迁移(以PostGIS镜像为例)"></a>Docker镜像迁移(以PostGIS镜像为例)</h4><p>这里使用的是Docker save和load的方式，通过镜像本地文件进行迁移。</p>
+<h5 id="Docker镜像导出"><a href="#Docker镜像导出" class="headerlink" title="Docker镜像导出"></a>Docker镜像导出</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker save mdillon/postgis &gt; /home/postgis.tar</div></pre></td></tr></table></figure>
+<p><img src="/2019/08/20/installdockeroffline/6.png" alt="镜像导出"></p>
+<h5 id="Docker镜像导入"><a href="#Docker镜像导入" class="headerlink" title="Docker镜像导入"></a>Docker镜像导入</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker load &lt; /mnt/usb/postgis.tar</div></pre></td></tr></table></figure>
+<p><img src="/2019/08/20/installdockeroffline/7.png" alt="镜像导入"></p>
+<h4 id="测试验证"><a href="#测试验证" class="headerlink" title="测试验证"></a>测试验证</h4><p>1.启动PostGIS容器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --name postgresql --restart=always -d -p 5432:5432 -v /home/pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=1234 mdillon/postgis:10-alpine</div></pre></td></tr></table></figure></p>
+<p><img src="/2019/08/20/installdockeroffline/8.png" alt="启动容器"></p>
+<p>2.打开5432端口<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --permanent --add-port=5432/tcp</div><div class="line">firewall-cmd --reload</div></pre></td></tr></table></figure></p>
+<p>3.连接测试<br><img src="/2019/08/20/installdockeroffline/9.png" alt="连接测试"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/20/installdockeroffline/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-devopswithjenkins" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -939,90 +1041,6 @@
 
 
   
-    <article id="post-vscoderemotedebugnodejs" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/13/vscoderemotedebugnodejs/">使用VSCode远程调试服务器部署的Node.js服务</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/13/vscoderemotedebugnodejs/" class="archive-article-date">
-  	<time datetime="2019-03-13T03:55:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>使用 Node.js 发布的服务，如果出了问题，除了查看日志之外，还可以使用 VSCode 进行远程调试。</p>
-<p>服务端启动服务的时候，需要使用 inspect 参数指定远程调试端口。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --inspect=10.10.10.15:9229 app.js</div></pre></td></tr></table></figure></p>
-<p>其中的 IP 地址需要使用具体的 IP 地址，如果使用127.0.0.1会导致连接不上。端口号需要使用 firewall-cmd 打开。<br>启动成功后：<br><img src="/2019/03/13/vscoderemotedebugnodejs/1.png" alt="启动成功"></p>
-<p>在本地新建一个空文件夹，并使用 VSCode 打开：<br><img src="/2019/03/13/vscoderemotedebugnodejs/2.png" alt="启动VSCODE"><br>在调试栏中配置 launch.json：<br><img src="/2019/03/13/vscoderemotedebugnodejs/3.png" alt="配置VSCODE"><br>选择环境中使用 Node.js 环境：<br><img src="/2019/03/13/vscoderemotedebugnodejs/4.png" alt="配置VSCODE"><br>默认配置是本地调试配置，使用右下角添加配置功能，添加附加到远程程序配置<br><img src="/2019/03/13/vscoderemotedebugnodejs/5.png" alt="配置VSCODE"><br><img src="/2019/03/13/vscoderemotedebugnodejs/6.png" alt="配置VSCODE"><br><img src="/2019/03/13/vscoderemotedebugnodejs/7.png" alt="配置VSCODE"><br>添加远程配置之后，修改其address、port和remoteRoot配置：<br>address配置修改为远程服务器IP，port配置修改为远程服务器调试端口，remoteRoot配置修改为远程服务器代码所在目录绝对路径。name配置也可以自由修改。<br>修改后：<br><img src="/2019/03/13/vscoderemotedebugnodejs/8.png" alt="配置VSCODE"><br>将调试中的配置项，选择远程调试配置，并启动调试：<br><img src="/2019/03/13/vscoderemotedebugnodejs/9.png" alt="配置VSCODE"><br>启动调试后，远程服务器会提示Debugger attached，证明连接成功。<br><img src="/2019/03/13/vscoderemotedebugnodejs/10.png" alt="配置VSCODE"></p>
-<p>然后需要调试哪个文件，往文件夹里按与服务器相同的目录结构扔文件即可。<br><img src="/2019/03/13/vscoderemotedebugnodejs/11.png" alt="远程调试"></p>
-<p>如果找不到文件会提示：<br><img src="/2019/03/13/vscoderemotedebugnodejs/12.png" alt="远程调试"></p>
-<p>这种调试方法也适用于使用 cluster 模块 fork 子进程的模式。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">VSCode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/13/vscoderemotedebugnodejs/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1124,11 +1142,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
+                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
+                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1160,6 +1178,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">DevOps</a>
               </li>
              
@@ -1168,11 +1190,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+                <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1192,11 +1214,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1208,15 +1230,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1224,7 +1242,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">

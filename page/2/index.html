@@ -142,6 +142,90 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-vscoderemotedebugnodejs" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/13/vscoderemotedebugnodejs/">使用VSCode远程调试服务器部署的Node.js服务</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/13/vscoderemotedebugnodejs/" class="archive-article-date">
+  	<time datetime="2019-03-13T03:55:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用 Node.js 发布的服务，如果出了问题，除了查看日志之外，还可以使用 VSCode 进行远程调试。</p>
+<p>服务端启动服务的时候，需要使用 inspect 参数指定远程调试端口。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --inspect=10.10.10.15:9229 app.js</div></pre></td></tr></table></figure></p>
+<p>其中的 IP 地址需要使用具体的 IP 地址，如果使用127.0.0.1会导致连接不上。端口号需要使用 firewall-cmd 打开。<br>启动成功后：<br><img src="/2019/03/13/vscoderemotedebugnodejs/1.png" alt="启动成功"></p>
+<p>在本地新建一个空文件夹，并使用 VSCode 打开：<br><img src="/2019/03/13/vscoderemotedebugnodejs/2.png" alt="启动VSCODE"><br>在调试栏中配置 launch.json：<br><img src="/2019/03/13/vscoderemotedebugnodejs/3.png" alt="配置VSCODE"><br>选择环境中使用 Node.js 环境：<br><img src="/2019/03/13/vscoderemotedebugnodejs/4.png" alt="配置VSCODE"><br>默认配置是本地调试配置，使用右下角添加配置功能，添加附加到远程程序配置<br><img src="/2019/03/13/vscoderemotedebugnodejs/5.png" alt="配置VSCODE"><br><img src="/2019/03/13/vscoderemotedebugnodejs/6.png" alt="配置VSCODE"><br><img src="/2019/03/13/vscoderemotedebugnodejs/7.png" alt="配置VSCODE"><br>添加远程配置之后，修改其address、port和remoteRoot配置：<br>address配置修改为远程服务器IP，port配置修改为远程服务器调试端口，remoteRoot配置修改为远程服务器代码所在目录绝对路径。name配置也可以自由修改。<br>修改后：<br><img src="/2019/03/13/vscoderemotedebugnodejs/8.png" alt="配置VSCODE"><br>将调试中的配置项，选择远程调试配置，并启动调试：<br><img src="/2019/03/13/vscoderemotedebugnodejs/9.png" alt="配置VSCODE"><br>启动调试后，远程服务器会提示Debugger attached，证明连接成功。<br><img src="/2019/03/13/vscoderemotedebugnodejs/10.png" alt="配置VSCODE"></p>
+<p>然后需要调试哪个文件，往文件夹里按与服务器相同的目录结构扔文件即可。<br><img src="/2019/03/13/vscoderemotedebugnodejs/11.png" alt="远程调试"></p>
+<p>如果找不到文件会提示：<br><img src="/2019/03/13/vscoderemotedebugnodejs/12.png" alt="远程调试"></p>
+<p>这种调试方法也适用于使用 cluster 模块 fork 子进程的模式。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">VSCode</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/13/vscoderemotedebugnodejs/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-centospostgismvt" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -959,94 +1043,6 @@
 
 
   
-    <article id="post-testnodeoracledb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/26/testnodeoracledb/">试用Node.js连接Oracle数据库</a>
-    </h1>
-  
-
-        
-        <a href="/2018/11/26/testnodeoracledb/" class="archive-article-date">
-  	<time datetime="2018-11-26T06:18:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近项目要求使用Node.js连接Oracle数据库，用Node.js连接Oracle是比较麻烦的，不像使用mysql，Mogondb，redis等有相当丰富的库。就连官方提供的oracledb也在linux上安装的时候屡屡失败。我根据网上的文档做了部署和验证，最终走通，下面把在CentOS系统上的配置过程记录一下。</p>
-<h4 id="1-安装Oracle客户端"><a href="#1-安装Oracle客户端" class="headerlink" title="1.安装Oracle客户端"></a>1.安装Oracle客户端</h4><p>首先使用<code>yum update</code>进行系统更新，然后使用<code>yum install libaio libaio-devel</code>安装依赖库。</p>
-<p>然后到<a href="https://www.oracle.com/technetwork/database/database-technologies/instant-client/downloads/index.html" target="_blank" rel="noopener">Oracle Instant Clinet</a>官方下载页面下载客户端。我这里下载的是<code>Instant Client for Linux x86-64</code>，使用的版本是12.2.0.1.0。</p>
-<p>需要下载两个文件：<code>instantclient-basic-linux.x64-12.2.0.1.0.zip</code>和<code>instantclient-sdk-linux.x64-12.2.0.1.0.zip</code>。</p>
-<p>创建目录<code>/usr/local/oracle</code>，并将下载的两个文件解压到这个目录下。</p>
-<p>进入解压目录<code>instantclient_12_2</code>，并为<code>libclntsh.so</code>创建软连接：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ln -s libclntsh.so.12.1 libclntsh.so</div></pre></td></tr></table></figure></p>
-<p>添加环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/profile</div></pre></td></tr></table></figure></p>
-<p>将如下命令拷贝到文件底部，并保存：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/oracle/instantclient_12_2:<span class="variable">$LD_LIBRARY_PATH</span></div><div class="line"><span class="built_in">export</span> OCI_LIB_DIR=/usr/<span class="built_in">local</span>/oracle/instantclient_12_2</div><div class="line"><span class="built_in">export</span> OCI_INC_DIR=/usr/<span class="built_in">local</span>/oracle/instantclient_12_2/sdk/include</div><div class="line"><span class="built_in">export</span> NLS_LANG=AMERICAN_AMERICA.UTF8</div></pre></td></tr></table></figure></p>
-<p>应用环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">source</span> /etc/profile</div></pre></td></tr></table></figure></p>
-<h4 id="2-安装node-oracledb，及测试"><a href="#2-安装node-oracledb，及测试" class="headerlink" title="2.安装node-oracledb，及测试"></a>2.安装node-oracledb，及测试</h4><p>执行<code>npm install oracledb</code>进行安装，然后编辑下面的脚本，执行查看结果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> oracledb = <span class="built_in">require</span>(<span class="string">'oracledb'</span>);</div><div class="line">oracledb.getConnection(&#123;</div><div class="line">  user          : <span class="string">"user"</span>,</div><div class="line">  password      : <span class="string">"password"</span>,</div><div class="line">  connectString : <span class="string">"(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.100)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=orcl)))"</span></div><div class="line">&#125;,</div><div class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err,connection</span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span>(err)&#123;</div><div class="line">    <span class="built_in">console</span>.error(err.message);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">  connection.execute(</div><div class="line">    <span class="string">"select sysdate from dual"</span>,[],<span class="function"><span class="keyword">function</span>(<span class="params">err,result</span>)</span>&#123;</div><div class="line">       <span class="keyword">if</span>(err)&#123;</div><div class="line">         <span class="built_in">console</span>.error(err.message);</div><div class="line">         <span class="keyword">return</span>;</div><div class="line">       &#125;</div><div class="line">       <span class="built_in">console</span>.log(result.rows);</div><div class="line">     &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>如果打印出当前时间，则表示环境配置正常。<br><img src="/2018/11/26/testnodeoracledb/1.png" alt="打印时间"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Oracle</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/11/26/testnodeoracledb/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1148,11 +1144,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
+                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">GIS</a>
+                <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1184,6 +1180,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">DevOps</a>
               </li>
              
@@ -1192,11 +1192,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
+                <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1216,11 +1216,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1232,15 +1232,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1248,7 +1244,7 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
