@@ -6,11 +6,11 @@ tags: Docker
 
 在Docker的实际应用过程中，避免不了需要将Docker部署到离线环境下，为了解决这个问题，我做了离线部署实验，现在将部署流程介绍一下。
 
-#### 实验准备
+### 实验准备
 
 准备两台虚拟机，一台可以联网，一台无法联网，可以联网的虚拟机是为了Docker部署做准备。
 
-#### Docker环境部署
+### Docker环境部署
 
 ##### 使用联网机器下载Docker部署包
 
@@ -67,7 +67,7 @@ systemctl start docker.service
 ```
 ![启动服务](installdockeroffline/5.png)
 
-#### Docker镜像迁移(以PostGIS镜像为例)
+### Docker镜像迁移(以PostGIS镜像为例)
 
 这里使用的是Docker save和load的方式，通过镜像本地文件进行迁移。
 
