@@ -163,8 +163,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>在Docker的实际应用过程中，避免不了需要将Docker部署到离线环境下，为了解决这个问题，我做了离线部署实验，现在将部署流程介绍一下。</p>
-<h4 id="实验准备"><a href="#实验准备" class="headerlink" title="实验准备"></a>实验准备</h4><p>准备两台虚拟机，一台可以联网，一台无法联网，可以联网的虚拟机是为了Docker部署做准备。</p>
-<h4 id="Docker环境部署"><a href="#Docker环境部署" class="headerlink" title="Docker环境部署"></a>Docker环境部署</h4><h5 id="使用联网机器下载Docker部署包"><a href="#使用联网机器下载Docker部署包" class="headerlink" title="使用联网机器下载Docker部署包"></a>使用联网机器下载Docker部署包</h5><p>1.在可以连网的机器上，安装yum扩展：</p>
+<h3 id="实验准备"><a href="#实验准备" class="headerlink" title="实验准备"></a>实验准备</h3><p>准备两台虚拟机，一台可以联网，一台无法联网，可以联网的虚拟机是为了Docker部署做准备。</p>
+<h3 id="Docker环境部署"><a href="#Docker环境部署" class="headerlink" title="Docker环境部署"></a>Docker环境部署</h3><h5 id="使用联网机器下载Docker部署包"><a href="#使用联网机器下载Docker部署包" class="headerlink" title="使用联网机器下载Docker部署包"></a>使用联网机器下载Docker部署包</h5><p>1.在可以连网的机器上，安装yum扩展：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install -y yum-utils</div></pre></td></tr></table></figure>
 <p>2.添加docker-ce的yum来源</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</div></pre></td></tr></table></figure>
@@ -182,7 +182,7 @@
 <p>3.启动Docker服务</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">usermod -aG docker $(whoami)</div><div class="line">systemctl <span class="built_in">enable</span> docker.service</div><div class="line">systemctl start docker.service</div></pre></td></tr></table></figure>
 <p><img src="/2019/08/20/installdockeroffline/5.png" alt="启动服务"></p>
-<h4 id="Docker镜像迁移-以PostGIS镜像为例"><a href="#Docker镜像迁移-以PostGIS镜像为例" class="headerlink" title="Docker镜像迁移(以PostGIS镜像为例)"></a>Docker镜像迁移(以PostGIS镜像为例)</h4><p>这里使用的是Docker save和load的方式，通过镜像本地文件进行迁移。</p>
+<h3 id="Docker镜像迁移-以PostGIS镜像为例"><a href="#Docker镜像迁移-以PostGIS镜像为例" class="headerlink" title="Docker镜像迁移(以PostGIS镜像为例)"></a>Docker镜像迁移(以PostGIS镜像为例)</h3><p>这里使用的是Docker save和load的方式，通过镜像本地文件进行迁移。</p>
 <h5 id="Docker镜像导出"><a href="#Docker镜像导出" class="headerlink" title="Docker镜像导出"></a>Docker镜像导出</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker save mdillon/postgis &gt; /home/postgis.tar</div></pre></td></tr></table></figure>
 <p><img src="/2019/08/20/installdockeroffline/6.png" alt="镜像导出"></p>
 <h5 id="Docker镜像导入"><a href="#Docker镜像导入" class="headerlink" title="Docker镜像导入"></a>Docker镜像导入</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker load &lt; /mnt/usb/postgis.tar</div></pre></td></tr></table></figure>
@@ -1138,15 +1138,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GIS</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CentOS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1174,14 +1174,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">C++</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">DevOps</a>
               </li>
              
@@ -1190,11 +1182,23 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
+                <a href="javascript:void(0)" class="js-tag color4">无人机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Mapnik</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">TileStrata</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1206,19 +1210,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">TileStrata</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
+                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OpenStreetMap</a>
+                <a href="javascript:void(0)" class="js-tag color5">PhotoScan</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1230,19 +1230,19 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">ST_Transform</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">eCognition</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpatiaLite</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
               </li>
              
               <li class="article-tag-list-item">
